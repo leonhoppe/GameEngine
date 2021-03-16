@@ -15,6 +15,7 @@ public class ScreenObject {
     protected Animation animation;
     protected float layer;
     protected boolean visible;
+    protected boolean renderBounds;
 
     protected void render(Graphics2D g) {
         Point pos = Screen.calculateScreenPosition(transform);
@@ -37,7 +38,7 @@ public class ScreenObject {
         g.setTransform(original);
     }
 
-    protected ScreenObject() { transform = new Transform(); sprite = new Sprite(); layer = 0f; visible = false; }
+    protected ScreenObject() { transform = new Transform(); sprite = new Sprite(); layer = 0f; visible = false; renderBounds = false; }
 
     public void fixedUpdate() {}
     public void update() {}
@@ -58,9 +59,18 @@ public class ScreenObject {
     public float getLayer() { return layer; }
     public boolean isVisible() { return visible; }
 
+    public void renderBounds(boolean value) { renderBounds = value; }
+
     protected Area getShape() {
         AffineTransform trans = new AffineTransform();
         trans.translate(transform.position.x + (transform.scale.width / 2f), transform.position.y + (transform.scale.height / 2f));
+        trans.rotate(transform.rotation.getAngle(), transform.position.x, -transform.position.y);
+        return new Area(trans.createTransformedShape(getRawShape()));
+    }
+    protected Area getScreenShape() {
+        Point pos = Screen.calculateScreenPosition(transform);
+        AffineTransform trans = new AffineTransform();
+        trans.translate(pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
         trans.rotate(transform.rotation.getAngle(), transform.position.x, -transform.position.y);
         return new Area(trans.createTransformedShape(getRawShape()));
     }

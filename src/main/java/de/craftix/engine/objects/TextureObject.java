@@ -7,6 +7,7 @@ import de.craftix.engine.var.Vector2;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Area;
 
 public class TextureObject extends ScreenObject {
     public TextureObject(Sprite texture, Point position, Dimension size) {
@@ -31,7 +32,7 @@ public class TextureObject extends ScreenObject {
     protected void render(Graphics2D g) {
         AffineTransform original = g.getTransform();
         g.translate(transform.position.x + (transform.scale.width / 2f), transform.position.y + (transform.scale.height / 2f));
-        g.rotate(transform.rotation.getAngle(), transform.position.x - (transform.scale.width / 2f), -transform.position.y + (transform.scale.height / 2f));
+        g.rotate(transform.rotation.getAngle(), 0, 0);
 
         if (sprite.texture == null && sprite.color != null && animation == null) {
             g.setColor(sprite.color);
@@ -46,5 +47,17 @@ public class TextureObject extends ScreenObject {
 
         g.setColor(Color.BLACK);
         g.setTransform(original);
+    }
+
+    @Override
+    protected Area getShape() {
+        AffineTransform trans = new AffineTransform();
+        trans.translate(transform.position.x + (transform.scale.width / 2f), transform.position.y + (transform.scale.height / 2f));
+        trans.rotate(transform.rotation.getAngle(), 0, 0);
+        return new Area(trans.createTransformedShape(getRawShape()));
+    }
+    @Override
+    protected Area getScreenShape() {
+        return getShape();
     }
 }

@@ -11,12 +11,13 @@ import java.awt.*;
 
 public class Main extends GameEngine {
     private final SpriteMap blocks = new SpriteMap(5, Sprite.load("terrain.png"), 16, 16);
-    private final GameObject test = new GameObject(blocks.getSprite(3), new Vector2(0, 0), new Dimension(50, 50));
+    private final GameObject test = new GameObject(blocks.getSprite(3), new Vector2(0, 0), new Dimension(100, 100));
 
     public static void main(String[] args) {
         Screen.antialiasing(true);
         Screen.showFrames(true);
-        Screen.showGrid(true);
+        Screen.showGrid(false);
+        Screen.setResizeable(true);
         setup(800, 600, "GameEngine", new Main(), 120);
     }
 
@@ -24,13 +25,12 @@ public class Main extends GameEngine {
     public void initialise() {
         getActiveScene().setBackground(blocks.getSprite(1));
 
-        test.transform.rotation.rotate(45);
         instantiate(test);
         instantiate(new GameObject(blocks.getSprite(2), new Vector2(0, 100), new Dimension(50, 50)));
     }
 
     @Override
-    public void fixedUpdate() {
-        test.transform.position.x--;
+    public void update() {
+        test.transform.rotation.rotate(0.01f);
     }
 }

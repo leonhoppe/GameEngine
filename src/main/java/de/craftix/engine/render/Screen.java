@@ -10,24 +10,23 @@ import de.craftix.engine.var.Vector2;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Shape;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.sql.Timestamp;
-import java.time.LocalDateTime;
+import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Screen extends JLabel {
-    public final JFrame frame;
+    protected static Screen instance;
 
     private static int bufferedFPS;
     private static long lastFrame;
     private static Logger logger;
+    private static JFrame frame = new JFrame();
     private static boolean showGrid = false;
     private static int gridSize = 50;
     private static boolean showFrames = false;
-    private static int width;
-    private static int height;
     private static boolean antialiasing;
     private static int fps;
     private static int deltaTime;
@@ -35,10 +34,8 @@ public class Screen extends JLabel {
 
     public Screen(int width, int height, String title) {
         logger = new Logger("Graphics");
-        Screen.width = width;
-        Screen.height = height;
+        instance = this;
         logger.info("Attempting to set JFrame settings...");
-        frame = new JFrame();
         frame.setSize(width + 17, height + 40);
         frame.setTitle(title);
         frame.setLayout(null);
@@ -102,38 +99,43 @@ public class Screen extends JLabel {
         if (GameEngine.getActiveScene().getBackground() != null) {
             if (GameEngine.getActiveScene().getBackground().texture == null && GameEngine.getActiveScene().getBackground().color != null) {
                 g.setColor(GameEngine.getActiveScene().getBackground().color);
-                g.fillRect(0, 0, width, height);
+                g.fillRect(0, 0, getWidth(), getHeight());
             }
             if (GameEngine.getActiveScene().getBackground().texture != null) {
-                if (GameEngine.getActiveScene().getBackground().texture.getWidth() != width ||
-                        GameEngine.getActiveScene().getBackground().texture.getHeight() != height) {
+                if (GameEngine.getActiveScene().getBackground().texture.getWidth() != getWidth() ||
+                        GameEngine.getActiveScene().getBackground().texture.getHeight() != getHeight()) {
                     if (GameEngine.getActiveScene().getBackground().bufferedTexture == null ||
-                            GameEngine.getActiveScene().getBackground().bufferedTexture.getWidth() != width ||
-                            GameEngine.getActiveScene().getBackground().bufferedTexture.getHeight() != height) {
-                        GameEngine.getActiveScene().getBackground().bufferedTexture = Resizer.AVERAGE.resize(GameEngine.getActiveScene().getBackground().texture, width, height);
+                            GameEngine.getActiveScene().getBackground().bufferedTexture.getWidth() != getWidth() ||
+                            GameEngine.getActiveScene().getBackground().bufferedTexture.getHeight() != getHeight()) {
+                        GameEngine.getActiveScene().getBackground().bufferedTexture = Resizer.AVERAGE.resize(GameEngine.getActiveScene().getBackground().texture, getWidth(), getHeight());
                     }
                     g.drawImage(GameEngine.getActiveScene().getBackground().bufferedTexture, 0, 0, null);
                 }
             }
         }
 
+        g2.setColor(Color.BLACK);
+        Shape self = new Rectangle(0, 0, getWidth(), getHeight());
         ArrayList<Float> layers = new ArrayList<>(GameEngine.getLayers().values());
         Collections.sort(layers);
         for (Float layer : layers) {
             for (ScreenObject object : GameEngine.getActiveScene().getRawObjects()) {
-                if (!object.visible) continue;
-                if (object.layer == layer) {
+                Area shape = object.getScreenShape();
+                shape.intersect(new Area(self));
+                if (shape.isEmpty()) continue;
+                if (object.renderBounds) g2.draw(object.getScreenShape());
+                if (shape.isEmpty()) continue;
+                if (object.layer == layer)
                     object.render(g2);
-                }
             }
         }
 
         if (showGrid) {
             g.setColor(Color.WHITE);
-            for (int x = 0; x <= width / gridSize; x++)
-                g.drawLine(x * gridSize, 0, x * gridSize, height);
-            for (int y = 0; y <= height / gridSize; y++)
-                g.drawLine(0, y * gridSize, width, y * gridSize);
+            for (int x = 0; x <= getWidth() / gridSize; x++)
+                g.drawLine(x * gridSize, 0, x * gridSize, getHeight());
+            for (int y = 0; y <= getHeight() / gridSize; y++)
+                g.drawLine(0, y * gridSize, getWidth(), y * gridSize);
         }
 
         if (showFrames) {
@@ -149,7 +151,7 @@ public class Screen extends JLabel {
     }
 
     public static Point calculateScreenPosition(Transform transform) {
-        Vector2 result = new Vector2(width / 2f, height / 2f);
+        Vector2 result = new Vector2(instance.getWidth() / 2f, instance.getHeight() / 2f);
         result.x -= GameEngine.getCamera().x;
         result.y += GameEngine.getCamera().y;
         result.x -= transform.scale.width / 2f;
@@ -161,7 +163,7 @@ public class Screen extends JLabel {
         return result.toPoint();
     }
     public static Vector2 calculateVirtualPosition(Vector2 pos) {
-        Vector2 result = new Vector2(-((float) width / 2), -((float) height / 2));
+        Vector2 result = new Vector2(-(instance.getWidth() / 2f), -(instance.getHeight() / 2f));
         result.x += GameEngine.getCamera().x + pos.x;
         result.y += -GameEngine.getCamera().y + pos.y;
         result.y *= -1;
@@ -171,9 +173,8 @@ public class Screen extends JLabel {
     public static void gridSize(int size) { gridSize = size; }
     public static void showGrid(boolean value) { showGrid = value; }
     public static void showFrames(boolean value) { showFrames = value; }
-    public static int width() { return width; }
-    public static int height() { return height; }
     public static void antialiasing(boolean value) { antialiasing = value; }
+    public static void setResizeable(boolean value) { frame.setResizable(value); }
     public static int getFPS() { return fps; }
     public static int getDeltaTime() { return deltaTime; }
 }
