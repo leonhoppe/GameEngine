@@ -31,7 +31,7 @@ public class TextureObject extends ScreenObject {
     protected void render(Graphics2D g) {
         AffineTransform original = g.getTransform();
         g.translate(transform.position.x + (transform.scale.width / 2f), transform.position.y + (transform.scale.height / 2f));
-        g.rotate(transform.rotation.getAngle(), transform.position.x, -transform.position.y);
+        g.rotate(transform.rotation.getAngle(), transform.position.x - (transform.scale.width / 2f), -transform.position.y + (transform.scale.height / 2f));
 
         if (sprite.texture == null && sprite.color != null && animation == null) {
             g.setColor(sprite.color);

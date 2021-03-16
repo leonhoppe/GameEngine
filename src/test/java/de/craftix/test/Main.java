@@ -10,7 +10,7 @@ import de.craftix.engine.var.Vector2;
 import java.awt.*;
 
 public class Main extends GameEngine {
-    private final SpriteMap blocks = new SpriteMap(4, Sprite.load("terrain.png"), 16, 16);
+    private final SpriteMap blocks = new SpriteMap(5, Sprite.load("terrain.png"), 16, 16);
     private final GameObject test = new GameObject(blocks.getSprite(3), new Vector2(0, 0), new Dimension(50, 50));
 
     public static void main(String[] args) {

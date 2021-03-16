@@ -62,27 +62,7 @@ public class ScreenObject {
         AffineTransform trans = new AffineTransform();
         trans.translate(transform.position.x + (transform.scale.width / 2f), transform.position.y + (transform.scale.height / 2f));
         trans.rotate(transform.rotation.getAngle(), transform.position.x, -transform.position.y);
-        Shape shape = null;
-        if (sprite.texture != null || animation != null)
-            shape = new Rectangle(-transform.scale.width / 2, -transform.scale.height / 2, transform.scale.width, transform.scale.height);
-        else
-            switch (sprite.shape) {
-                case CIRCLE:
-                    shape = new Ellipse2D.Float(-transform.scale.width / 2f, -transform.scale.height / 2f, transform.scale.width, transform.scale.height);
-                    break;
-                case RECTANGLE:
-                    shape = new Rectangle(-transform.scale.width / 2, -transform.scale.height / 2, transform.scale.width, transform.scale.height);
-                    break;
-                case TRIANGLE:
-                    Point top = new Point(0, -transform.scale.height / 2);
-                    Point right = new Point(-transform.scale.width / 2, transform.scale.height / 2);
-                    Point left = new Point(transform.scale.width / 2, transform.scale.height / 2);
-                    shape = new Polygon(new int[]{ top.x, right.x, left.x },
-                            new int[]{ top.y, right.y, left.y },
-                            3);
-                    break;
-            }
-        return new Area(trans.createTransformedShape(shape));
+        return new Area(trans.createTransformedShape(getRawShape()));
     }
     protected Area getRawShape() {
         Shape shape = null;
