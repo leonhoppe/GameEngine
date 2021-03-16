@@ -12,21 +12,26 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 
 public class Screen extends JLabel {
     public final JFrame frame;
-    public static int width;
-    public static int height;
-    public static boolean antialiasing;
-    public static int fps;
-    public static int deltaTime;
-    public static boolean showFrames;
 
     private static int bufferedFPS;
     private static long lastFrame;
     private static Logger logger;
+    private static boolean showGrid = false;
+    private static int gridSize = 50;
+    private static boolean showFrames = false;
+    private static int width;
+    private static int height;
+    private static boolean antialiasing;
+    private static int fps;
+    private static int deltaTime;
+    private static int fixedDeltaTime;
 
     public Screen(int width, int height, String title) {
         logger = new Logger("Graphics");
@@ -63,6 +68,7 @@ public class Screen extends JLabel {
         logger.info("JFrame settings set");
 
         new Timer(1000, (e) -> { fps = bufferedFPS; bufferedFPS = 0; }).start();
+        fixedDeltaTime = (1000 / GameEngine.getTPS()) / 1000;
         logger.info("FPS Updater initialised");
         InputManager iManager = new InputManager();
         addKeyListener(iManager);
@@ -74,7 +80,7 @@ public class Screen extends JLabel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        deltaTime = (int) (lastFrame - System.currentTimeMillis());
+        deltaTime = (int) ((lastFrame - System.currentTimeMillis()) / 1000);
         lastFrame = System.currentTimeMillis();
 
         GameEngine.getInstance().update();
@@ -122,19 +128,20 @@ public class Screen extends JLabel {
             }
         }
 
-        g.setColor(Color.WHITE);
-        int gridSize = 50;
-        for (int x = 0; x <= width / gridSize; x++)
-            g.drawLine(x * gridSize, 0, x * gridSize, height);
-        for (int y = 0; y <= height / gridSize; y++)
-            g.drawLine(0, y * gridSize, width, y * gridSize);
+        if (showGrid) {
+            g.setColor(Color.WHITE);
+            for (int x = 0; x <= width / gridSize; x++)
+                g.drawLine(x * gridSize, 0, x * gridSize, height);
+            for (int y = 0; y <= height / gridSize; y++)
+                g.drawLine(0, y * gridSize, width, y * gridSize);
+        }
 
         if (showFrames) {
             g.setColor(Color.DARK_GRAY);
-            g.fillRect(9, 2, 55, 9);
+            g.fillRect(2, 2, 55, 9);
             g.setColor(Color.WHITE);
             g.setFont(new Font("Tacoma", Font.BOLD, 10));
-            g.drawString("FPS: " + fps, 10, 10);
+            g.drawString("FPS: " + fps, 3, 10);
         }
 
         bufferedFPS++;
@@ -153,7 +160,6 @@ public class Screen extends JLabel {
                 transform.position.y * Math.cos(Math.toRadians(90) - transform.rotation.getAngle());
         return result.toPoint();
     }
-
     public static Vector2 calculateVirtualPosition(Vector2 pos) {
         Vector2 result = new Vector2(-((float) width / 2), -((float) height / 2));
         result.x += GameEngine.getCamera().x + pos.x;
@@ -161,4 +167,13 @@ public class Screen extends JLabel {
         result.y *= -1;
         return result;
     }
+
+    public static void gridSize(int size) { gridSize = size; }
+    public static void showGrid(boolean value) { showGrid = value; }
+    public static void showFrames(boolean value) { showFrames = value; }
+    public static int width() { return width; }
+    public static int height() { return height; }
+    public static void antialiasing(boolean value) { antialiasing = value; }
+    public static int getFPS() { return fps; }
+    public static int getDeltaTime() { return deltaTime; }
 }

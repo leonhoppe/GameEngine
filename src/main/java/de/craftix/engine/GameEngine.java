@@ -20,10 +20,12 @@ public class GameEngine {
     private static Scene activeScene;
     private static Logger logger;
     private static Logger globalLogger;
+    private static int TPS;
 
     private static final HashMap<String, Float> layers = new HashMap<>();
 
     protected static void setup(int width, int height, String title, GameEngine instance, int tps) {
+        TPS = tps;
         Logger.globalInfo("Initialising requirements...");
         logger = new Logger("GameEngine");
         globalLogger = new Logger(title);
@@ -112,6 +114,7 @@ public class GameEngine {
     public static HashMap<String, Float> getLayers() { return layers; }
     public static Screen getScreenInstance() { return screen; }
     public static Logger getLogger() { return globalLogger; }
+    public static int getTPS() { return TPS; }
 
     public static void setActiveScene(Scene scene) { activeScene = scene; }
     public static void addLayer(String name, float layer) { if (!layers.containsValue(layer) && !layers.containsKey(name)) layers.put(name, layer); }

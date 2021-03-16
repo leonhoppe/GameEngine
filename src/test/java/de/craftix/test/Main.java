@@ -14,8 +14,9 @@ public class Main extends GameEngine {
     private final GameObject test = new GameObject(blocks.getSprite(3), new Vector2(0, 0), new Dimension(50, 50));
 
     public static void main(String[] args) {
-        Screen.antialiasing = true;
-        Screen.showFrames = true;
+        Screen.antialiasing(true);
+        Screen.showFrames(true);
+        Screen.showGrid(true);
         setup(800, 600, "GameEngine", new Main(), 120);
     }
 
