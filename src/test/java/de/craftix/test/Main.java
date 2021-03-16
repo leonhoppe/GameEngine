@@ -21,7 +21,7 @@ public class Main extends GameEngine {
 
     @Override
     public void initialise() {
-        getActiveScene().background = blocks.getSprite(1);
+        getActiveScene().setBackground(blocks.getSprite(1));
 
         test.transform.rotation.rotate(45);
         instantiate(test);

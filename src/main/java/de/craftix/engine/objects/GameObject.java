@@ -61,7 +61,6 @@ public class GameObject extends ScreenObject {
 
     public void setLayer(String layer) { this.layer = GameEngine.getLayer(layer); }
     public void setAnimation(Animation animation) { this.animation = animation; }
+    public void setSprite(Sprite texture) { this.sprite = texture; }
     public void setVisible(boolean visible) { this.visible = visible; }
-
-    public Animation getAnimation() { return animation; }
 }

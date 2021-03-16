@@ -10,16 +10,12 @@ import de.craftix.engine.var.Vector2;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Shape;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
-import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Screen extends JLabel implements ActionListener {
+public class Screen extends JLabel {
     public final JFrame frame;
     public static int width;
     public static int height;
@@ -66,7 +62,7 @@ public class Screen extends JLabel implements ActionListener {
         frame.setVisible(true);
         logger.info("JFrame settings set");
 
-        new Timer(1000, this).start();
+        new Timer(1000, (e) -> { fps = bufferedFPS; bufferedFPS = 0; }).start();
         logger.info("FPS Updater initialised");
         InputManager iManager = new InputManager();
         addKeyListener(iManager);
@@ -82,7 +78,7 @@ public class Screen extends JLabel implements ActionListener {
         lastFrame = System.currentTimeMillis();
 
         GameEngine.getInstance().update();
-        for (ScreenObject object : GameEngine.getActiveScene().objects) {
+        for (ScreenObject object : GameEngine.getActiveScene().getGameObjects()) {
             object.update();
             if (object.animation != null) object.animation.update();
             if (object instanceof GameObject)
@@ -97,20 +93,20 @@ public class Screen extends JLabel implements ActionListener {
         else
             g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
 
-        if (GameEngine.getActiveScene().background != null) {
-            if (GameEngine.getActiveScene().background.texture == null && GameEngine.getActiveScene().background.color != null) {
-                g.setColor(GameEngine.getActiveScene().background.color);
+        if (GameEngine.getActiveScene().getBackground() != null) {
+            if (GameEngine.getActiveScene().getBackground().texture == null && GameEngine.getActiveScene().getBackground().color != null) {
+                g.setColor(GameEngine.getActiveScene().getBackground().color);
                 g.fillRect(0, 0, width, height);
             }
-            if (GameEngine.getActiveScene().background.texture != null) {
-                if (GameEngine.getActiveScene().background.texture.getWidth() != width ||
-                        GameEngine.getActiveScene().background.texture.getHeight() != height) {
-                    if (GameEngine.getActiveScene().background.bufferedTexture == null ||
-                            GameEngine.getActiveScene().background.bufferedTexture.getWidth() != width ||
-                            GameEngine.getActiveScene().background.bufferedTexture.getHeight() != height) {
-                        GameEngine.getActiveScene().background.bufferedTexture = Resizer.AVERAGE.resize(GameEngine.getActiveScene().background.texture, width, height);
+            if (GameEngine.getActiveScene().getBackground().texture != null) {
+                if (GameEngine.getActiveScene().getBackground().texture.getWidth() != width ||
+                        GameEngine.getActiveScene().getBackground().texture.getHeight() != height) {
+                    if (GameEngine.getActiveScene().getBackground().bufferedTexture == null ||
+                            GameEngine.getActiveScene().getBackground().bufferedTexture.getWidth() != width ||
+                            GameEngine.getActiveScene().getBackground().bufferedTexture.getHeight() != height) {
+                        GameEngine.getActiveScene().getBackground().bufferedTexture = Resizer.AVERAGE.resize(GameEngine.getActiveScene().getBackground().texture, width, height);
                     }
-                    g.drawImage(GameEngine.getActiveScene().background.bufferedTexture, 0, 0, null);
+                    g.drawImage(GameEngine.getActiveScene().getBackground().bufferedTexture, 0, 0, null);
                 }
             }
         }
@@ -118,7 +114,7 @@ public class Screen extends JLabel implements ActionListener {
         ArrayList<Float> layers = new ArrayList<>(GameEngine.getLayers().values());
         Collections.sort(layers);
         for (Float layer : layers) {
-            for (ScreenObject object : GameEngine.getActiveScene().objects) {
+            for (ScreenObject object : GameEngine.getActiveScene().getRawObjects()) {
                 if (!object.visible) continue;
                 if (object.layer == layer) {
                     object.render(g2);
@@ -164,11 +160,5 @@ public class Screen extends JLabel implements ActionListener {
         result.y += -GameEngine.getCamera().y + pos.y;
         result.y *= -1;
         return result;
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        fps = bufferedFPS;
-        bufferedFPS = 0;
     }
 }

@@ -50,7 +50,7 @@ public class GameEngine {
         logger.info("FixedUpdate Thread initialised");
 
         instance.start();
-        for (ScreenObject object : activeScene.objects)
+        for (ScreenObject object : activeScene.getGameObjects())
             object.start();
         logger.info("Start Method for each GameObject executed");
         logger.info("Game started successfully");
@@ -58,7 +58,7 @@ public class GameEngine {
 
     private static void handleDeltaUpdates() {
         instance.fixedUpdate();
-        for (ScreenObject object : activeScene.objects) {
+        for (ScreenObject object : activeScene.getGameObjects()) {
             object.fixedUpdate();
             if (object instanceof GameObject)
                 for (Component component : ((GameObject) object).getComponents())
@@ -69,7 +69,7 @@ public class GameEngine {
     public static void shutdown() {
         logger.info("Stopping Game...");
         GameEngine.instance.stop();
-        for (ScreenObject object : GameEngine.getActiveScene().objects)
+        for (ScreenObject object : GameEngine.getActiveScene().getGameObjects())
             object.stop();
         logger.info("Stop Methods Executed");
         logger.info("Sending Stop command");
@@ -77,12 +77,11 @@ public class GameEngine {
     }
 
     public static void instantiate(GameObject object) {
-        getActiveScene().objects.add(object);
+        getActiveScene().addObject(object);
         object.start();
     }
-
     public static void destroy(GameObject object) {
-        getActiveScene().objects.remove(object);
+        getActiveScene().removeObject(object);
         object.stop();
     }
 
