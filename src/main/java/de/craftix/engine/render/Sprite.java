@@ -44,7 +44,8 @@ public class Sprite {
         if (texture != null) {
             if (texture.getWidth() != width || texture.getHeight() != height) {
                 if (bufferedTexture == null ||
-                        bufferedOriginal != texture) {
+                        bufferedOriginal != texture ||
+                        bufferedTexture.getWidth() != width || bufferedTexture.getHeight() != height) {
                     bufferedOriginal = texture;
                     bufferedTexture = Resizer.AVERAGE.resize(texture, width, height);
                 }

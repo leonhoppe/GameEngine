@@ -17,8 +17,9 @@ public class Main extends GameEngine {
         Screen.antialiasing(true);
         Screen.showFrames(true);
         Screen.showGrid(false);
-        Screen.setResizeable(true);
-        setup(800, 600, "GameEngine", new Main(), 120);
+        Screen.setResizeable(false);
+        Screen.limitFPS(true);
+        setup(800, 600, "GameEngine", new Main(), 20);
     }
 
     @Override
@@ -30,7 +31,7 @@ public class Main extends GameEngine {
     }
 
     @Override
-    public void update() {
-        test.transform.rotation.rotate(0.01f);
+    public void fixedUpdate() {
+        test.transform.rotation.rotate(1);
     }
 }

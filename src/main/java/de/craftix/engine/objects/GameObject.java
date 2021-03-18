@@ -27,19 +27,31 @@ public class GameObject extends ScreenObject {
         this(sprite, position);
         this.transform.scale = size;
     }
-    protected GameObject() {}
+    protected GameObject() { super(); }
     private GameObject(ScreenObject object) {
         super();
         this.transform = object.transform;
         this.sprite = object.getSprite();
         this.layer = object.getLayer();
         this.visible = object.isVisible();
+        this.animation = object.getAnimation();
     }
 
-    public void addComponent(Component component) { components.add(component); component.initialise(this); component.start(); }
-    public void removeComponent(Component component) { components.remove(component); component.stop(); }
+    public void addComponent(Component component) {
+        if (hasComponent(component.getClass())) return;
+        components.add(component);
+        component.initialise(this);
+    }
     public Component[] getComponents() { return components.toArray(new Component[0]); }
 
+    public void removeComponent(Class<? extends Component> component) {
+        for (Component all : components) {
+            if (all.getClass() == component) {
+                components.remove(all);
+                return;
+            }
+        }
+    }
     public boolean hasComponent(Class<? extends Component> component) {
         for (Component all : components) {
             if (all.getClass() == component) return true;

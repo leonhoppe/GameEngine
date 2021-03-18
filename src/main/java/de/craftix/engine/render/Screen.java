@@ -30,7 +30,7 @@ public class Screen extends JLabel {
     private static boolean antialiasing;
     private static int fps;
     private static int deltaTime;
-    private static int fixedDeltaTime;
+    private static boolean limitFPS = false;
 
     public Screen(int width, int height, String title) {
         logger = new Logger("Graphics");
@@ -64,9 +64,6 @@ public class Screen extends JLabel {
         frame.setVisible(true);
         logger.info("JFrame settings set");
 
-        new Timer(1000, (e) -> { fps = bufferedFPS; bufferedFPS = 0; }).start();
-        fixedDeltaTime = (1000 / GameEngine.getTPS()) / 1000;
-        logger.info("FPS Updater initialised");
         InputManager iManager = new InputManager();
         addKeyListener(iManager);
         addMouseListener(iManager);
@@ -147,8 +144,15 @@ public class Screen extends JLabel {
         }
 
         bufferedFPS++;
+        if (limitFPS && fps > 100)
+            try {
+                Thread.sleep(5);
+            }catch (Exception e) {
+                e.printStackTrace();
+            }
         repaint();
     }
+    public static void updateFPS() { fps = bufferedFPS; bufferedFPS = 0; }
 
     public static Point calculateScreenPosition(Transform transform) {
         Vector2 result = new Vector2(instance.getWidth() / 2f, instance.getHeight() / 2f);
@@ -175,6 +179,8 @@ public class Screen extends JLabel {
     public static void showFrames(boolean value) { showFrames = value; }
     public static void antialiasing(boolean value) { antialiasing = value; }
     public static void setResizeable(boolean value) { frame.setResizable(value); }
+    public static void limitFPS(boolean value) { limitFPS = value; }
     public static int getFPS() { return fps; }
     public static int getDeltaTime() { return deltaTime; }
+    public static int getBufferedFPS() { return bufferedFPS; }
 }

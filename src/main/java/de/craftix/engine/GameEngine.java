@@ -1,6 +1,5 @@
 package de.craftix.engine;
 
-import de.craftix.engine.objects.Component;
 import de.craftix.engine.objects.GameObject;
 import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.ScreenObject;
@@ -8,10 +7,8 @@ import de.craftix.engine.var.Input;
 import de.craftix.engine.var.Scene;
 import de.craftix.engine.var.Vector2;
 
-import javax.swing.*;
 import java.io.File;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.*;
 
 public class GameEngine {
     private static GameEngine instance;
@@ -48,8 +45,21 @@ public class GameEngine {
         screen = new Screen(width, height, title);
         logger.info("Graphics initialised");
 
-        new Timer(1000 / tps, (e) -> handleDeltaUpdates()).start();
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
+                handleDeltaUpdates();
+            }
+        }, 0, 1000 / TPS);
         logger.info("FixedUpdate Thread initialised");
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                Screen.updateFPS();
+            }
+        }, 0, 1000);
+        logger.info("FPS Updater Thread initialised");
 
         instance.start();
         for (ScreenObject object : activeScene.getGameObjects())
@@ -60,12 +70,8 @@ public class GameEngine {
 
     private static void handleDeltaUpdates() {
         instance.fixedUpdate();
-        for (ScreenObject object : activeScene.getGameObjects()) {
+        for (ScreenObject object : activeScene.getGameObjects())
             object.fixedUpdate();
-            if (object instanceof GameObject)
-                for (Component component : ((GameObject) object).getComponents())
-                    component.fixedUpdate();
-        }
     }
 
     public static void shutdown() {

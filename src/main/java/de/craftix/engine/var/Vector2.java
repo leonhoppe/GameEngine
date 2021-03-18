@@ -1,8 +1,9 @@
 package de.craftix.engine.var;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class Vector2 {
+public class Vector2 implements Serializable {
 
     public float x;
     public float y;
@@ -13,4 +14,12 @@ public class Vector2 {
     public Vector2(Point point) { this(point.x, point.y); }
 
     public Point toPoint() { return new Point(Math.round(x), Math.round(y)); }
+
+    @Override
+    public String toString() {
+        return "Vector2{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
+    }
 }
