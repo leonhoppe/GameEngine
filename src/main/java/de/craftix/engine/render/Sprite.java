@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.Objects;
 
 public class Sprite {
+    private static Resizer resizingMethod = null;
 
     public static Sprite load(String path) {
         try {
@@ -54,15 +55,20 @@ public class Sprite {
                         bufferedOriginal != texture ||
                         bufferedTexture.getWidth() != width || bufferedTexture.getHeight() != height) {
                     bufferedOriginal = texture;
-                    if (Screen.antialiasingEffectTextures())
-                        bufferedTexture = Resizer.BILINEAR.resize(texture, Math.round(width), Math.round(height));
+                    if (resizingMethod != null)
+                        bufferedTexture = resizingMethod.resize(texture, Math.round(width), Math.round(height));
                     else
-                        bufferedTexture = Resizer.AVERAGE.resize(texture, Math.round(width), Math.round(height));
+                        if (Screen.antialiasingEffectTextures())
+                            bufferedTexture = Resizer.BILINEAR.resize(texture, Math.round(width), Math.round(height));
+                        else
+                            bufferedTexture = Resizer.AVERAGE.resize(texture, Math.round(width), Math.round(height));
                 }
                 return bufferedTexture;
             }
         }
         return texture;
     }
+
+    public static void setResizingMethod(Resizer resizingMethod) { Sprite.resizingMethod = resizingMethod; }
 
 }
