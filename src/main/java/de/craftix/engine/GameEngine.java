@@ -1,11 +1,12 @@
 package de.craftix.engine;
 
 import de.craftix.engine.objects.GameObject;
+import de.craftix.engine.objects.TextureObject;
+import de.craftix.engine.render.Camera;
 import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.var.Input;
 import de.craftix.engine.var.Scene;
-import de.craftix.engine.var.Vector2;
 
 import java.io.File;
 import java.util.*;
@@ -13,7 +14,7 @@ import java.util.*;
 public class GameEngine {
     private static GameEngine instance;
     private static Screen screen;
-    private static Vector2 camera;
+    private static Camera camera;
     private static Scene activeScene;
     private static Logger logger;
     private static Logger globalLogger;
@@ -27,7 +28,7 @@ public class GameEngine {
         logger = new Logger("GameEngine");
         globalLogger = new Logger(title);
         logger.info("Logger initialised");
-        camera = new Vector2();
+        camera = new Camera();
         logger.info("Camera initialised");
         activeScene = new Scene();
         logger.info("Scene initialised");
@@ -93,6 +94,15 @@ public class GameEngine {
         object.stop();
     }
 
+    public static void addTextureObject(TextureObject object) {
+        getActiveScene().addObject(object);
+        object.start();
+    }
+    public static void removeTextureObject(TextureObject object) {
+        getActiveScene().removeObject(object);
+        object.stop();
+    }
+
     public static File loadFile(String path) {
         try {
             return new File(Objects.requireNonNull(GameEngine.class.getClassLoader().getResource(path)).getPath());
@@ -114,7 +124,7 @@ public class GameEngine {
     public void initialise() {}
 
     public static GameEngine getInstance() { return instance; }
-    public static Vector2 getCamera() { return camera; }
+    public static Camera getCamera() { return camera; }
     public static Scene getActiveScene() { return activeScene; }
     public static Float getLayer(String name) { return layers.get(name); }
     public static HashMap<String, Float> getLayers() { return layers; }

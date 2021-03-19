@@ -1,5 +1,7 @@
 package de.craftix.engine.render;
 
+import de.craftix.engine.GameEngine;
+
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -41,6 +43,11 @@ public class Sprite {
     }
 
     public BufferedImage getTexture(int width, int height) {
+        width *= GameEngine.getCamera().getScale();
+        height *= GameEngine.getCamera().getScale();
+        return getTextureRaw(width, height);
+    }
+    public BufferedImage getTextureRaw(int width, int height) {
         if (texture != null) {
             if (texture.getWidth() != width || texture.getHeight() != height) {
                 if (bufferedTexture == null ||

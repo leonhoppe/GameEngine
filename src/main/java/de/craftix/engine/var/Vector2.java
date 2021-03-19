@@ -14,6 +14,7 @@ public class Vector2 implements Serializable {
     public Vector2(Point point) { this(point.x, point.y); }
 
     public Point toPoint() { return new Point(Math.round(x), Math.round(y)); }
+    public Point toPointFloored() { return new Point((int) x, (int) y); }
 
     @Override
     public String toString() {

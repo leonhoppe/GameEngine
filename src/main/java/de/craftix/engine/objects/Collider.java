@@ -92,7 +92,8 @@ public class Collider extends Component {
                 Point top = new Point(0, -transform.scale.height / 2);
                 Point right = new Point(-transform.scale.width / 2, transform.scale.height / 2);
                 Point left = new Point(transform.scale.width / 2, transform.scale.height / 2);
-                dimensions = new Polygon(new int[]{ top.x, right.x, left.x },
+                dimensions = new Polygon(
+                        new int[]{ top.x, right.x, left.x },
                         new int[]{ top.y, right.y, left.y },
                         3);
                 break;

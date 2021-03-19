@@ -1,5 +1,6 @@
 package de.craftix.engine.objects;
 
+import de.craftix.engine.GameEngine;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.var.Animation;
@@ -8,8 +9,11 @@ import de.craftix.engine.var.Vector2;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
 
 public class TextureObject extends ScreenObject {
+    private boolean scaleAffected = false;
+
     public TextureObject(Sprite texture, Point position, Dimension size) {
         super();
         this.visible = true;
@@ -27,37 +31,78 @@ public class TextureObject extends ScreenObject {
 
     public void setSprite(Sprite texture) { this.sprite = texture; }
     public void setAnimation(Animation animation) { this.animation = animation; }
+    public void setScaleAffected(boolean scaleAffected) { this.scaleAffected = scaleAffected; }
 
-    @Override
     protected void render(Graphics2D g) {
         AffineTransform original = g.getTransform();
-        g.translate(transform.position.x + (transform.scale.width / 2f), transform.position.y + (transform.scale.height / 2f));
-        g.rotate(transform.rotation.getAngle(), 0, 0);
 
         if (sprite.texture == null && sprite.color != null && animation == null) {
             g.setColor(sprite.color);
-            g.fill(getRawShape());
+            if (scaleAffected) g.fill(getScreenShape());
+            else g.fill(getShape());
+        }else {
+            g.translate(transform.position.x + (transform.scale.width / 2f), transform.position.y + (transform.scale.height / 2f));
+            g.rotate(transform.rotation.getAngle(), 0, 0);
         }
 
-        if (sprite.texture != null && (animation == null || !animation.isRunning()))
-            g.drawImage(sprite.getTexture(transform.scale.width, transform.scale.height), -transform.scale.width / 2, -transform.scale.height / 2, null);
+        if (sprite.texture != null && (animation == null || !animation.isRunning())) {
+            if (scaleAffected)
+                g.drawImage(sprite.getTexture(transform.scale.width, transform.scale.height), (int) -((transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) -(transform.scale.height * GameEngine.getCamera().getScale() / 2), null);
+            else
+                g.drawImage(sprite.getTextureRaw(transform.scale.width, transform.scale.height), -transform.scale.width / 2, -transform.scale.height / 2, null);
+        }
 
-        if (animation != null)
-            g.drawImage(animation.getImage().getTexture(transform.scale.width, transform.scale.height), -transform.scale.width / 2, -transform.scale.height / 2, null);
+        if (animation != null) {
+            if (scaleAffected)
+                g.drawImage(animation.getImage().getTexture(transform.scale.width, transform.scale.height), (int) -((transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-transform.scale.height * GameEngine.getCamera().getScale() / 2), null);
+            else
+                g.drawImage(animation.getImage().getTextureRaw(transform.scale.width, transform.scale.height), -transform.scale.width / 2, -transform.scale.height / 2, null);
+        }
 
         g.setColor(Color.BLACK);
         g.setTransform(original);
     }
 
-    @Override
     protected Area getShape() {
         AffineTransform trans = new AffineTransform();
         trans.translate(transform.position.x + (transform.scale.width / 2f), transform.position.y + (transform.scale.height / 2f));
         trans.rotate(transform.rotation.getAngle(), 0, 0);
         return new Area(trans.createTransformedShape(getRawShape()));
     }
-    @Override
     protected Area getScreenShape() {
-        return getShape();
+        if (scaleAffected) {
+            AffineTransform trans = new AffineTransform();
+            trans.translate(transform.position.x + (transform.scale.width / 2f), transform.position.y + (transform.scale.height / 2f));
+            trans.rotate(transform.rotation.getAngle(), 0, 0);
+
+            Shape shape = null;
+            if (sprite.texture != null || animation != null)
+                shape = new Rectangle((int) (-(transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-(transform.scale.height * GameEngine.getCamera().getScale()) / 2f),
+                        (int) (transform.scale.width * GameEngine.getCamera().getScale()), (int) (transform.scale.height * GameEngine.getCamera().getScale()));
+            else
+                switch (sprite.shape) {
+                    case CIRCLE:
+                        shape = new Ellipse2D.Float(-(transform.scale.width * GameEngine.getCamera().getScale()) / 2f, -(transform.scale.height * GameEngine.getCamera().getScale()) / 2f,
+                                transform.scale.width * GameEngine.getCamera().getScale(), transform.scale.height * GameEngine.getCamera().getScale());
+                        break;
+                    case RECTANGLE:
+                        shape = new Rectangle((int) (-(transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-(transform.scale.height * GameEngine.getCamera().getScale()) / 2f),
+                                (int) (transform.scale.width * GameEngine.getCamera().getScale()), (int) (transform.scale.height * GameEngine.getCamera().getScale()));
+                        break;
+                    case TRIANGLE:
+                        Point top = new Point(0, (int) (-(transform.scale.height * GameEngine.getCamera().getScale()) / 2f));
+                        Point right = new Point((int) (-(transform.scale.width * GameEngine.getCamera().getScale()) / 2f),
+                                (int) ((transform.scale.height * GameEngine.getCamera().getScale()) / 2f));
+                        Point left = new Point((int) ((transform.scale.width * GameEngine.getCamera().getScale()) / 2f),
+                                (int) ((transform.scale.height * GameEngine.getCamera().getScale()) / 2));
+                        shape = new Polygon(new int[]{top.x, right.x, left.x},
+                                new int[]{top.y, right.y, left.y},
+                                3);
+                        break;
+                }
+
+            return new Area(trans.createTransformedShape(shape));
+        }else
+            return getShape();
     }
 }

@@ -158,12 +158,12 @@ public class Screen extends JLabel {
         Vector2 result = new Vector2(instance.getWidth() / 2f, instance.getHeight() / 2f);
         result.x -= GameEngine.getCamera().x;
         result.y += GameEngine.getCamera().y;
-        result.x -= transform.scale.width / 2f;
-        result.y -= transform.scale.height / 2f;
-        result.y += transform.position.x * Math.cos(Math.toRadians(90) - transform.rotation.getAngle()) -
-                transform.position.y * Math.sin(Math.toRadians(90) - transform.rotation.getAngle());
-        result.x += transform.position.x * Math.sin(Math.toRadians(90) - transform.rotation.getAngle()) +
-                transform.position.y * Math.cos(Math.toRadians(90) - transform.rotation.getAngle());
+        result.x -= (transform.scale.width * GameEngine.getCamera().getScale()) / 2f;
+        result.y -= (transform.scale.height * GameEngine.getCamera().getScale()) / 2f;
+        result.y += (transform.position.x * GameEngine.getCamera().getScale()) * Math.cos(Math.toRadians(90) - transform.rotation.getAngle()) -
+                (transform.position.y * GameEngine.getCamera().getScale()) * Math.sin(Math.toRadians(90) - transform.rotation.getAngle());
+        result.x += (transform.position.x * GameEngine.getCamera().getScale()) * Math.sin(Math.toRadians(90) - transform.rotation.getAngle()) +
+                (transform.position.y * GameEngine.getCamera().getScale()) * Math.cos(Math.toRadians(90) - transform.rotation.getAngle());
         return result.toPoint();
     }
     public static Vector2 calculateVirtualPosition(Vector2 pos) {

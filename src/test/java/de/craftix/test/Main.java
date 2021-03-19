@@ -19,7 +19,7 @@ public class Main extends GameEngine {
         Screen.showGrid(false);
         Screen.setResizeable(false);
         Screen.limitFPS(true);
-        setup(800, 600, "GameEngine", new Main(), 20);
+        setup(800, 600, "GameEngine", new Main(), 120);
     }
 
     @Override
@@ -32,6 +32,6 @@ public class Main extends GameEngine {
 
     @Override
     public void fixedUpdate() {
-        test.transform.rotation.rotate(1);
+        test.transform.rotation.rotate(0.2f);
     }
 }
