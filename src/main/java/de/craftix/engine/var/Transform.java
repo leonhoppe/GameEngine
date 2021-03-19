@@ -15,9 +15,9 @@ public class Transform implements Serializable {
             if (s.contains("y="))
                 trans.position.y = Float.parseFloat(s.replace("y=", ""));
             if (s.contains("width="))
-                trans.scale.width = Integer.parseInt(s.replace("width=", ""));
+                trans.scale.width = Float.parseFloat(s.replace("width=", ""));
             if (s.contains("height="))
-                trans.scale.height = Integer.parseInt(s.replace("height=", ""));
+                trans.scale.height = Float.parseFloat(s.replace("height=", ""));
             if (s.contains("angle="))
                 trans.rotation = Quaternion.euler(Float.parseFloat(s.replace("angle=", "")));
         }
@@ -42,7 +42,7 @@ public class Transform implements Serializable {
     public String toString() {
         return "Transform{" +
                 "position=" + position +
-                ", scale=Dimension{width=" + scale.width + ", height=" + scale.height + "}" +
+                ", scale=" + scale +
                 ", rotation=" + rotation +
                 '}';
     }

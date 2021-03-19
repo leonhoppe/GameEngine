@@ -54,7 +54,10 @@ public class Sprite {
                         bufferedOriginal != texture ||
                         bufferedTexture.getWidth() != width || bufferedTexture.getHeight() != height) {
                     bufferedOriginal = texture;
-                    bufferedTexture = Resizer.AVERAGE.resize(texture, Math.round(width), Math.round(height));
+                    if (Screen.antialiasingEffectTextures())
+                        bufferedTexture = Resizer.BILINEAR.resize(texture, Math.round(width), Math.round(height));
+                    else
+                        bufferedTexture = Resizer.AVERAGE.resize(texture, Math.round(width), Math.round(height));
                 }
                 return bufferedTexture;
             }

@@ -42,7 +42,6 @@ public class Collider extends Component {
     }
 
     private HashMap<Collider, Boolean> lastFrame = new HashMap<>();
-    @Override
     public void update() {
         for (GameObject other : GameEngine.getActiveScene().getGameObjects()) {
             if (other == object) continue;
@@ -77,27 +76,33 @@ public class Collider extends Component {
     }
 
     public Area getArea() {
-        java.awt.Shape dimensions = null;
-        AffineTransform trans = new AffineTransform();
         Point pos = Screen.calculateScreenPosition(transform);
-        trans.translate(pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
-        trans.rotate(transform.rotation.getAngle(), transform.position.x, -transform.position.y);
+        AffineTransform trans = new AffineTransform();
+        trans.translate(pos.x + ((transform.scale.width * (GameEngine.getCamera().getScale())) / 2f), pos.y + (transform.scale.height * (GameEngine.getCamera().getScale())) / 2f);
+        trans.rotate(transform.rotation.getAngle(), transform.position.x * (GameEngine.getCamera().getScale()), -transform.position.y * (GameEngine.getCamera().getScale()));
+
+        java.awt.Shape dimensions = null;
         switch (shape) {
             case CIRCLE:
-                dimensions = new Ellipse2D.Float(-transform.scale.width / 2f, -transform.scale.height / 2f, transform.scale.width, transform.scale.height);
+                dimensions = new Ellipse2D.Float(-(transform.scale.width * GameEngine.getCamera().getScale()) / 2f, -(transform.scale.height * GameEngine.getCamera().getScale()) / 2f,
+                        transform.scale.width * GameEngine.getCamera().getScale(), transform.scale.height * GameEngine.getCamera().getScale());
                 break;
             case RECTANGLE:
-                dimensions = new Rectangle((int) -(transform.scale.width / 2f), (int) -(transform.scale.height / 2f), transform.scale.getWidth(), transform.scale.getHeight());
+                dimensions = new Rectangle((int) (-(transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-(transform.scale.height * GameEngine.getCamera().getScale()) / 2f),
+                        (int) (transform.scale.width * GameEngine.getCamera().getScale()), (int) (transform.scale.height * GameEngine.getCamera().getScale()));
                 break;
             case TRIANGLE:
-                Point top = new Point(0, (int) -(transform.scale.height / 2f));
-                Point right = new Point((int) -(transform.scale.width / 2f), (int) (transform.scale.height / 2f));
-                Point left = new Point((int) (transform.scale.width / 2f), (int) (transform.scale.height / 2f));
-                dimensions = new Polygon(new int[]{ top.x, right.x, left.x },
-                        new int[]{ top.y, right.y, left.y },
+                Point top = new Point(0, (int) (-(transform.scale.height * GameEngine.getCamera().getScale()) / 2f));
+                Point right = new Point((int) (-(transform.scale.width * GameEngine.getCamera().getScale()) / 2f),
+                        (int) ((transform.scale.height * GameEngine.getCamera().getScale()) / 2f));
+                Point left = new Point((int) ((transform.scale.width * GameEngine.getCamera().getScale()) / 2f),
+                        (int) ((transform.scale.height * GameEngine.getCamera().getScale()) / 2));
+                dimensions = new Polygon(new int[]{top.x, right.x, left.x},
+                        new int[]{top.y, right.y, left.y},
                         3);
                 break;
         }
+
         return new Area(trans.createTransformedShape(dimensions));
     }
 

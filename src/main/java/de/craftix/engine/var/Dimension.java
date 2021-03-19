@@ -12,4 +12,11 @@ public class Dimension {
     public int getWidth() { return Math.round(width); }
     public int getHeight() { return Math.round(height); }
 
+    @Override
+    public String toString() {
+        return "Dimension{" +
+                "width=" + width +
+                ", height=" + height +
+                '}';
+    }
 }

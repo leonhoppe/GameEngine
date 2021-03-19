@@ -32,6 +32,7 @@ public class Screen extends JLabel {
     private static int deltaTime;
     private static boolean limitFPS = false;
     private static Rectangle bufferedBounds;
+    private static boolean antialiasingEffectTextures = true;
 
     public Screen(int width, int height, String title) {
         logger = new Logger("Graphics");
@@ -200,8 +201,10 @@ public class Screen extends JLabel {
             instance.requestFocus();
         }
     }
+    public static void setAntialiasingEffectTextures(boolean value) { antialiasingEffectTextures = value; }
     public static int getFPS() { return fps; }
     public static int getDeltaTime() { return deltaTime; }
     public static int getBufferedFPS() { return bufferedFPS; }
     public static boolean isFullscreen() { return frame.isUndecorated(); }
+    public static boolean antialiasingEffectTextures() { return antialiasingEffectTextures; }
 }
