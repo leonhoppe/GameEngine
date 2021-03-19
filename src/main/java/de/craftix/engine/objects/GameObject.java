@@ -4,6 +4,7 @@ import de.craftix.engine.GameEngine;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.var.Animation;
+import de.craftix.engine.var.Dimension;
 import de.craftix.engine.var.Vector2;
 
 import java.awt.*;

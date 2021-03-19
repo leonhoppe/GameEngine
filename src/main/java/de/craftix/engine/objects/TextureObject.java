@@ -4,6 +4,7 @@ import de.craftix.engine.GameEngine;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.var.Animation;
+import de.craftix.engine.var.Dimension;
 import de.craftix.engine.var.Vector2;
 
 import java.awt.*;
@@ -47,16 +48,16 @@ public class TextureObject extends ScreenObject {
 
         if (sprite.texture != null && (animation == null || !animation.isRunning())) {
             if (scaleAffected)
-                g.drawImage(sprite.getTexture(transform.scale.width, transform.scale.height), (int) -((transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) -(transform.scale.height * GameEngine.getCamera().getScale() / 2), null);
+                g.drawImage(sprite.getTexture(transform.scale.getWidth(), transform.scale.getHeight()), (int) -((transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) -(transform.scale.height * GameEngine.getCamera().getScale() / 2), null);
             else
-                g.drawImage(sprite.getTextureRaw(transform.scale.width, transform.scale.height), -transform.scale.width / 2, -transform.scale.height / 2, null);
+                g.drawImage(sprite.getTextureRaw(transform.scale.getWidth(), transform.scale.getHeight()), (int) -(transform.scale.width / 2f), (int) -(transform.scale.height / 2f), null);
         }
 
         if (animation != null) {
             if (scaleAffected)
-                g.drawImage(animation.getImage().getTexture(transform.scale.width, transform.scale.height), (int) -((transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-transform.scale.height * GameEngine.getCamera().getScale() / 2), null);
+                g.drawImage(animation.getImage().getTexture(transform.scale.getWidth(), transform.scale.getHeight()), (int) -((transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-transform.scale.height * GameEngine.getCamera().getScale() / 2), null);
             else
-                g.drawImage(animation.getImage().getTextureRaw(transform.scale.width, transform.scale.height), -transform.scale.width / 2, -transform.scale.height / 2, null);
+                g.drawImage(animation.getImage().getTextureRaw(transform.scale.getWidth(), transform.scale.getHeight()), (int) -(transform.scale.width / 2f), (int) -(transform.scale.height / 2f), null);
         }
 
         g.setColor(Color.BLACK);

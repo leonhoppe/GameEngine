@@ -1,6 +1,5 @@
 package de.craftix.engine.var;
 
-import java.awt.*;
 import java.io.Serializable;
 
 public class Transform implements Serializable {

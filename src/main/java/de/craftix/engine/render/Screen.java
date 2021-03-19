@@ -31,6 +31,7 @@ public class Screen extends JLabel {
     private static int fps;
     private static int deltaTime;
     private static boolean limitFPS = false;
+    private static Rectangle bufferedBounds;
 
     public Screen(int width, int height, String title) {
         logger = new Logger("Graphics");
@@ -144,7 +145,7 @@ public class Screen extends JLabel {
         }
 
         bufferedFPS++;
-        if (limitFPS && fps > 100)
+        if (limitFPS && (fps > 100 || bufferedFPS > 100))
             try {
                 Thread.sleep(5);
             }catch (Exception e) {
@@ -180,7 +181,27 @@ public class Screen extends JLabel {
     public static void antialiasing(boolean value) { antialiasing = value; }
     public static void setResizeable(boolean value) { frame.setResizable(value); }
     public static void limitFPS(boolean value) { limitFPS = value; }
+    public static void setFullscreen(boolean value) {
+        if (value) {
+            bufferedBounds = frame.getBounds();
+            frame.setVisible(false);
+            frame.dispose();
+            frame.setUndecorated(true);
+            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+            frame.setBounds(0, 0, dim.width, dim.height);
+            frame.setVisible(true);
+            instance.requestFocus();
+        }else {
+            frame.setVisible(false);
+            frame.dispose();
+            frame.setUndecorated(false);
+            frame.setBounds(bufferedBounds);
+            frame.setVisible(true);
+            instance.requestFocus();
+        }
+    }
     public static int getFPS() { return fps; }
     public static int getDeltaTime() { return deltaTime; }
     public static int getBufferedFPS() { return bufferedFPS; }
+    public static boolean isFullscreen() { return frame.isUndecorated(); }
 }

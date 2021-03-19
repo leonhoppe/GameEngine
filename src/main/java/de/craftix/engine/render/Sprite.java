@@ -42,19 +42,19 @@ public class Sprite {
         return copy;
     }
 
-    public BufferedImage getTexture(int width, int height) {
+    public BufferedImage getTexture(float width, float height) {
         width *= GameEngine.getCamera().getScale();
         height *= GameEngine.getCamera().getScale();
         return getTextureRaw(width, height);
     }
-    public BufferedImage getTextureRaw(int width, int height) {
+    public BufferedImage getTextureRaw(float width, float height) {
         if (texture != null) {
             if (texture.getWidth() != width || texture.getHeight() != height) {
                 if (bufferedTexture == null ||
                         bufferedOriginal != texture ||
                         bufferedTexture.getWidth() != width || bufferedTexture.getHeight() != height) {
                     bufferedOriginal = texture;
-                    bufferedTexture = Resizer.AVERAGE.resize(texture, width, height);
+                    bufferedTexture = Resizer.AVERAGE.resize(texture, Math.round(width), Math.round(height));
                 }
                 return bufferedTexture;
             }

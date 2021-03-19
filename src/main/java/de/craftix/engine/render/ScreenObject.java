@@ -34,7 +34,7 @@ public class ScreenObject {
             g.drawImage(sprite.getTexture(transform.scale.width, transform.scale.height), (int) -((transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-transform.scale.height * GameEngine.getCamera().getScale() / 2), null);
 
         if (animation != null)
-            g.drawImage(animation.getImage().getTexture(transform.scale.width, transform.scale.height), (int) -((transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-transform.scale.height * GameEngine.getCamera().getScale() / 2), null);
+            g.drawImage(animation.getImage().getTexture(transform.scale.getWidth(), transform.scale.getHeight()), (int) -((transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-transform.scale.height * GameEngine.getCamera().getScale() / 2), null);
 
         g.setColor(Color.BLACK);
         g.setTransform(original);
@@ -106,19 +106,19 @@ public class ScreenObject {
     protected Area getRawShape() {
         Shape shape = null;
         if (sprite.texture != null || animation != null)
-            shape = new Rectangle(-transform.scale.width / 2, -transform.scale.height / 2, transform.scale.width, transform.scale.height);
+            shape = new Rectangle((int) -(transform.scale.width / 2f), (int) -(transform.scale.height / 2f), transform.scale.getWidth(), transform.scale.getHeight());
         else
             switch (sprite.shape) {
                 case CIRCLE:
                     shape = new Ellipse2D.Float(-transform.scale.width / 2f, -transform.scale.height / 2f, transform.scale.width, transform.scale.height);
                     break;
                 case RECTANGLE:
-                    shape = new Rectangle(-transform.scale.width / 2, -transform.scale.height / 2, transform.scale.width, transform.scale.height);
+                    shape = new Rectangle((int) -(transform.scale.width / 2f), (int) -(transform.scale.height / 2f), transform.scale.getWidth(), transform.scale.getHeight());
                     break;
                 case TRIANGLE:
-                    Point top = new Point(0, -transform.scale.height / 2);
-                    Point right = new Point(-transform.scale.width / 2, transform.scale.height / 2);
-                    Point left = new Point(transform.scale.width / 2, transform.scale.height / 2);
+                    Point top = new Point(0, (int) -(transform.scale.height / 2f));
+                    Point right = new Point((int) -(transform.scale.width / 2f), (int) (transform.scale.height / 2f));
+                    Point left = new Point((int) (transform.scale.width / 2f), (int) (transform.scale.height / 2f));
                     shape = new Polygon(new int[]{ top.x, right.x, left.x },
                             new int[]{ top.y, right.y, left.y },
                             3);

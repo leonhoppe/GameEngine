@@ -3,6 +3,7 @@ package de.craftix.engine.objects;
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.Shape;
+import de.craftix.engine.var.Dimension;
 import de.craftix.engine.var.Quaternion;
 import de.craftix.engine.var.Transform;
 import de.craftix.engine.var.Vector2;
@@ -86,14 +87,13 @@ public class Collider extends Component {
                 dimensions = new Ellipse2D.Float(-transform.scale.width / 2f, -transform.scale.height / 2f, transform.scale.width, transform.scale.height);
                 break;
             case RECTANGLE:
-                dimensions = new Rectangle(-transform.scale.width / 2, -transform.scale.height / 2, transform.scale.width, transform.scale.height);
+                dimensions = new Rectangle((int) -(transform.scale.width / 2f), (int) -(transform.scale.height / 2f), transform.scale.getWidth(), transform.scale.getHeight());
                 break;
             case TRIANGLE:
-                Point top = new Point(0, -transform.scale.height / 2);
-                Point right = new Point(-transform.scale.width / 2, transform.scale.height / 2);
-                Point left = new Point(transform.scale.width / 2, transform.scale.height / 2);
-                dimensions = new Polygon(
-                        new int[]{ top.x, right.x, left.x },
+                Point top = new Point(0, (int) -(transform.scale.height / 2f));
+                Point right = new Point((int) -(transform.scale.width / 2f), (int) (transform.scale.height / 2f));
+                Point left = new Point((int) (transform.scale.width / 2f), (int) (transform.scale.height / 2f));
+                dimensions = new Polygon(new int[]{ top.x, right.x, left.x },
                         new int[]{ top.y, right.y, left.y },
                         3);
                 break;
