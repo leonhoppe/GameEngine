@@ -8,8 +8,11 @@ import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.var.Input;
 import de.craftix.engine.var.Scene;
 
+import javax.swing.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.*;
+import java.util.Timer;
 
 public class GameEngine {
     private static GameEngine instance;
@@ -134,4 +137,8 @@ public class GameEngine {
 
     public static void setActiveScene(Scene scene) { activeScene = scene; }
     public static void addLayer(String name, float layer) { if (!layers.containsValue(layer) && !layers.containsKey(name)) layers.put(name, layer); }
+    public static void setIcon(BufferedImage image) {
+        ImageIcon icon = new ImageIcon(image);
+        Screen.getDisplay().setIconImage(icon.getImage());
+    }
 }

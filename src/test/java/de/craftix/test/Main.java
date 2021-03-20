@@ -24,6 +24,7 @@ public class Main extends GameEngine {
 
     @Override
     public void initialise() {
+        setIcon(blocks.getSprite(4).texture);
         getActiveScene().setBackground(blocks.getSprite(1));
 
         instantiate(test);

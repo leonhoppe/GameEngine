@@ -56,12 +56,14 @@ public class GameObject extends ScreenObject {
     public boolean hasComponent(Class<? extends Component> component) {
         for (Component all : components) {
             if (all.getClass() == component) return true;
+            if (component.isAssignableFrom(all.getClass())) return true;
         }
         return false;
     }
     public Component getComponent(Class<? extends Component> component) {
         for (Component all : components) {
             if (all.getClass() == component) return all;
+            if (component.isAssignableFrom(all.getClass())) return all;
         }
         return null;
     }
@@ -70,6 +72,14 @@ public class GameObject extends ScreenObject {
         GameObject copy = new GameObject(super.copy());
         for (Component component : components) copy.addComponent(component.copy(copy));
         return copy;
+    }
+
+    @Override
+    protected void render(Graphics2D g) {
+        if (hasComponent(RenderingComponent.class))
+            ((RenderingComponent) getComponent(RenderingComponent.class)).render(g);
+        else
+            super.render(g);
     }
 
     public void setLayer(String layer) { this.layer = GameEngine.getLayer(layer); }

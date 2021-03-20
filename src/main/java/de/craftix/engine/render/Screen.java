@@ -207,4 +207,5 @@ public class Screen extends JLabel {
     public static int getBufferedFPS() { return bufferedFPS; }
     public static boolean isFullscreen() { return frame.isUndecorated(); }
     public static boolean antialiasingEffectTextures() { return antialiasingEffectTextures; }
+    public static JFrame getDisplay() { return frame; }
 }
