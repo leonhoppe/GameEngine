@@ -13,6 +13,7 @@ import java.awt.*;
 import java.awt.Shape;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -208,4 +209,18 @@ public class Screen extends JLabel {
     public static boolean isFullscreen() { return frame.isUndecorated(); }
     public static boolean antialiasingEffectTextures() { return antialiasingEffectTextures; }
     public static JFrame getDisplay() { return frame; }
+
+    public static AffineTransform getTransform(Transform transform) {
+        Point pos = Screen.calculateScreenPosition(transform);
+        AffineTransform trans = new AffineTransform();
+        trans.translate(pos.x + ((transform.scale.width * (GameEngine.getCamera().getScale())) / 2f), pos.y + (transform.scale.height * (GameEngine.getCamera().getScale())) / 2f);
+        trans.rotate(transform.rotation.getAngle(), transform.position.x * (GameEngine.getCamera().getScale()), -transform.position.y * (GameEngine.getCamera().getScale()));
+        return trans;
+    }
+    public static AffineTransform getRawTransform(Transform transform) {
+        AffineTransform trans = new AffineTransform();
+        trans.translate(transform.position.x + (transform.scale.width / 2f), transform.position.y + (transform.scale.height / 2f));
+        trans.rotate(transform.rotation.getAngle(), 0, 0);
+        return trans;
+    }
 }

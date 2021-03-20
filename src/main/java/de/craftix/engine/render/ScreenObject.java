@@ -2,6 +2,7 @@ package de.craftix.engine.render;
 
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.var.Animation;
+import de.craftix.engine.var.Mesh;
 import de.craftix.engine.var.Transform;
 
 import java.awt.*;
@@ -64,44 +65,10 @@ public class ScreenObject {
     public void renderBounds(boolean value) { renderBounds = value; }
 
     protected Area getShape() {
-        AffineTransform trans = new AffineTransform();
-        trans.translate(transform.position.x + (transform.scale.width / 2f), transform.position.y + (transform.scale.height / 2f));
-        trans.rotate(transform.rotation.getAngle(), transform.position.x, -transform.position.y);
-        return new Area(trans.createTransformedShape(getRawShape()));
+        return new Area(Screen.getTransform(transform).createTransformedShape(getRawShape()));
     }
     protected Area getScreenShape() {
-        Point pos = Screen.calculateScreenPosition(transform);
-        AffineTransform trans = new AffineTransform();
-        trans.translate(pos.x + ((transform.scale.width * (GameEngine.getCamera().getScale())) / 2f), pos.y + (transform.scale.height * (GameEngine.getCamera().getScale())) / 2f);
-        trans.rotate(transform.rotation.getAngle(), transform.position.x * (GameEngine.getCamera().getScale()), -transform.position.y * (GameEngine.getCamera().getScale()));
-
-        Shape shape = null;
-        if (sprite.texture != null || animation != null)
-            shape = new Rectangle((int) (-(transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-(transform.scale.height * GameEngine.getCamera().getScale()) / 2f),
-                    (int) (transform.scale.width * GameEngine.getCamera().getScale()), (int) (transform.scale.height * GameEngine.getCamera().getScale()));
-        else
-            switch (sprite.shape) {
-                case CIRCLE:
-                    shape = new Ellipse2D.Float(-(transform.scale.width * GameEngine.getCamera().getScale()) / 2f, -(transform.scale.height * GameEngine.getCamera().getScale()) / 2f,
-                            transform.scale.width * GameEngine.getCamera().getScale(), transform.scale.height * GameEngine.getCamera().getScale());
-                    break;
-                case RECTANGLE:
-                    shape = new Rectangle((int) (-(transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-(transform.scale.height * GameEngine.getCamera().getScale()) / 2f),
-                            (int) (transform.scale.width * GameEngine.getCamera().getScale()), (int) (transform.scale.height * GameEngine.getCamera().getScale()));
-                    break;
-                case TRIANGLE:
-                    Point top = new Point(0, (int) (-(transform.scale.height * GameEngine.getCamera().getScale()) / 2f));
-                    Point right = new Point((int) (-(transform.scale.width * GameEngine.getCamera().getScale()) / 2f),
-                            (int) ((transform.scale.height * GameEngine.getCamera().getScale()) / 2f));
-                    Point left = new Point((int) ((transform.scale.width * GameEngine.getCamera().getScale()) / 2f),
-                            (int) ((transform.scale.height * GameEngine.getCamera().getScale()) / 2));
-                    shape = new Polygon(new int[]{ top.x, right.x, left.x },
-                            new int[]{ top.y, right.y, left.y },
-                            3);
-                    break;
-            }
-
-        return new Area(trans.createTransformedShape(shape));
+        return new Area(Screen.getTransform(transform).createTransformedShape(new Mesh(sprite.getShape(animation), transform).getMesh()));
     }
     protected Area getRawShape() {
         Shape shape = null;

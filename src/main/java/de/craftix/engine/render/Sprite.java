@@ -1,6 +1,7 @@
 package de.craftix.engine.render;
 
 import de.craftix.engine.GameEngine;
+import de.craftix.engine.var.Animation;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
@@ -67,6 +68,13 @@ public class Sprite {
             }
         }
         return texture;
+    }
+
+    public Shape getShape(Animation animation) {
+        if (texture != null || animation != null)
+            return Shape.RECTANGLE;
+        else
+            return shape;
     }
 
     public static void setResizingMethod(Resizer resizingMethod) { Sprite.resizingMethod = resizingMethod; }

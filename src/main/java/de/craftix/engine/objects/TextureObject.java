@@ -1,6 +1,7 @@
 package de.craftix.engine.objects;
 
 import de.craftix.engine.GameEngine;
+import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.var.Animation;
@@ -65,17 +66,10 @@ public class TextureObject extends ScreenObject {
     }
 
     protected Area getShape() {
-        AffineTransform trans = new AffineTransform();
-        trans.translate(transform.position.x + (transform.scale.width / 2f), transform.position.y + (transform.scale.height / 2f));
-        trans.rotate(transform.rotation.getAngle(), 0, 0);
-        return new Area(trans.createTransformedShape(getRawShape()));
+        return new Area(Screen.getRawTransform(transform).createTransformedShape(getRawShape()));
     }
     protected Area getScreenShape() {
         if (scaleAffected) {
-            AffineTransform trans = new AffineTransform();
-            trans.translate(transform.position.x + (transform.scale.width / 2f), transform.position.y + (transform.scale.height / 2f));
-            trans.rotate(transform.rotation.getAngle(), 0, 0);
-
             Shape shape = null;
             if (sprite.texture != null || animation != null)
                 shape = new Rectangle((int) (-(transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-(transform.scale.height * GameEngine.getCamera().getScale()) / 2f),
@@ -102,7 +96,7 @@ public class TextureObject extends ScreenObject {
                         break;
                 }
 
-            return new Area(trans.createTransformedShape(shape));
+            return new Area(Screen.getRawTransform(transform).createTransformedShape(shape));
         }else
             return getShape();
     }

@@ -1,6 +1,7 @@
 package de.craftix.engine.objects;
 
 import de.craftix.engine.GameEngine;
+import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.var.Animation;
@@ -8,6 +9,7 @@ import de.craftix.engine.var.Dimension;
 import de.craftix.engine.var.Vector2;
 
 import java.awt.*;
+import java.awt.geom.Area;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -80,6 +82,14 @@ public class GameObject extends ScreenObject {
             ((RenderingComponent) getComponent(RenderingComponent.class)).render(g);
         else
             super.render(g);
+    }
+
+    @Override
+    protected Area getScreenShape() {
+        if (hasComponent(MeshRenderer.class))
+            return new Area(Screen.getTransform(transform).createTransformedShape(((MeshRenderer) getComponent(MeshRenderer.class)).mesh.getMesh()));
+        else
+            return super.getScreenShape();
     }
 
     public void setLayer(String layer) { this.layer = GameEngine.getLayer(layer); }
