@@ -10,8 +10,8 @@ import de.craftix.engine.var.Vector2;
 
 public class Main extends GameEngine {
     private final SpriteMap blocks = new SpriteMap(5, Sprite.load("terrain.png"), 16, 16);
-    private final GameObject test = new GameObject(blocks.getSprite(3), new Vector2(0, 0), new Dimension(1, 1));
-    private final GameObject test2 = new GameObject(blocks.getSprite(2), new Vector2(0, 1.5f), new Dimension(0.5f, 0.5f));
+    private final GameObject test = new GameObject(blocks.getSprite(3), new Vector2(0, 0), new Dimension(2, 2));
+    private final GameObject test2 = new GameObject(blocks.getSprite(2), new Vector2(0, 2.5f), new Dimension(1.5f, 1.5f));
 
     public static void main(String[] args) {
         Screen.antialiasing(true);
