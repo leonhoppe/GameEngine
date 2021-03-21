@@ -30,6 +30,65 @@ public class Transform implements Serializable {
 
     public Transform() { position = new Vector2(); scale = new Dimension(); rotation = Quaternion.IDENTITY(); }
 
+    //Modify Rotation
+    public void rotate(float angle) { rotation.angle += Math.toRadians(angle); }
+    public void lookAt(Vector2 pos) {
+        pos.x -= position.x;
+        pos.y -= position.y;
+        rotation.angle = Math.atan2(pos.x, pos.y);
+    }
+    public void rotateAround(Vector2 pos, double angle) {
+        angle *= -1;
+
+        double absAngle = Math.abs(angle);
+        float s = (float) Math.sin(Math.toRadians(absAngle));
+        float c = (float) Math.cos(Math.toRadians(absAngle));
+        Vector2 pp = new Vector2(position);
+
+        pp.subSelf(pos);
+        float xNew;
+        float yNew;
+        if (angle > 0) {
+            xNew = pp.x * c - pp.y * s;
+            yNew = pp.x * s + pp.y * c;
+        }else {
+            xNew = pp.x * c + pp.y * s;
+            yNew = -pp.x * s + pp.y * c;
+        }
+
+        pp.x = xNew + pos.x;
+        pp.y = yNew + pos.y;
+        position = pp;
+
+        Vector2 rotVector = new Vector2(pos);
+        rotVector.addSelf(position);
+        rotation.angle = Math.atan2(rotVector.x, rotVector.y);
+    }
+
+    public Vector2 forward() {
+        Vector2 forward = new Vector2();
+        forward.x = (float) Math.sin(rotation.getAngle());
+        forward.y = (float) Math.cos(rotation.getAngle());
+        return forward;
+    }
+    public Vector2 backward() {
+        return forward().mul(new Vector2(-1, -1));
+    }
+    public Vector2 right() {
+        Vector2 right = new Vector2();
+        right.x = (float) Math.sin(rotation.getAngle() + Math.toRadians(90));
+        right.y = (float) Math.cos(rotation.getAngle() + Math.toRadians(90));
+        return right;
+    }
+    public Vector2 left() {
+        return right().mul(new Vector2(-1, -1));
+    }
+
+    //Modify Position
+    public void translate(Vector2 pos) {
+        position.addSelf(pos);
+    }
+
     public Transform copy() {
         Transform copy = new Transform();
         copy.position = new Vector2(position);

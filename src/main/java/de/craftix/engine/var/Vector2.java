@@ -4,12 +4,17 @@ import java.awt.*;
 import java.io.Serializable;
 
 public class Vector2 implements Serializable {
+    public static Vector2 forward() { return new Vector2(0, 1); }
+    public static Vector2 backward() { return new Vector2(0, -1); }
+    public static Vector2 right() { return new Vector2(1, 0); }
+    public static Vector2 left() { return new Vector2(-1, 0); }
 
     public float x;
     public float y;
 
     public Vector2() { this(0, 0); }
     public Vector2(float x, float y) { this.x = x; this.y = y; }
+    public Vector2(float xy) { this(xy, xy); }
     public Vector2(Vector2 vector) { this(vector.x, vector.y); }
     public Vector2(Point point) { this(point.x, point.y); }
 
@@ -23,4 +28,14 @@ public class Vector2 implements Serializable {
                 ", y=" + y +
                 '}';
     }
+
+    public Vector2 add(Vector2 vec) { return new Vector2(x + vec.x, y + vec.y); }
+    public Vector2 sub(Vector2 vec) { return new Vector2(x - vec.x, y - vec.y); }
+    public Vector2 mul(Vector2 vec) { return new Vector2(x * vec.x, y * vec.y); }
+    public Vector2 div(Vector2 vec) { return new Vector2(x / vec.x, y / vec.y); }
+
+    public void addSelf(Vector2 vec) { this.x += vec.x; this.y += vec.y; }
+    public void subSelf(Vector2 vec) { this.x -= vec.x; this.y -= vec.y; }
+    public void mulSelf(Vector2 vec) { this.x *= vec.x; this.y *= vec.y; }
+    public void divSelf(Vector2 vec) { this.x /= vec.x; this.y /= vec.y; }
 }

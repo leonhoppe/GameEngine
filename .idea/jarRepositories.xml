@@ -31,5 +31,10 @@
       <option name="name" value="JavaFX Library" />
       <option name="url" value="https://soundlibs.googlecode.com" />
     </remote-repository>
+    <remote-repository>
+      <option name="id" value="github" />
+      <option name="name" value="GitHub Repository" />
+      <option name="url" value="https://pkg.github.com" />
+    </remote-repository>
   </component>
 </project>

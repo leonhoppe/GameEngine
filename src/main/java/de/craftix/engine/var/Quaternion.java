@@ -10,10 +10,11 @@ public class Quaternion implements Serializable {
 
     public static Quaternion euler(float degrees) { return new Quaternion(Math.toRadians(degrees)); }
 
-    private double angle;
+    protected double angle;
     public Quaternion(double angle) { this.angle = angle; }
-    public void rotate(float angle) { this.angle += Math.toRadians(angle); }
     public double getAngle() { return angle; }
+
+
 
     public Quaternion copy() { return new Quaternion(angle); }
 

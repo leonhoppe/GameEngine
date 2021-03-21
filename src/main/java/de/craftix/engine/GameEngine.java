@@ -108,7 +108,7 @@ public class GameEngine {
 
     public static File loadFile(String path) {
         try {
-            return new File(Objects.requireNonNull(GameEngine.class.getClassLoader().getResource(path)).getPath());
+            return new File(GameObject.class.getClassLoader().getResource(path).toURI());
         }catch (Exception e) { e.printStackTrace(); }
         throw new NullPointerException("null");
     }

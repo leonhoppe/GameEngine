@@ -173,6 +173,8 @@ public class Screen extends JLabel {
         Vector2 result = new Vector2(-(instance.getWidth() / 2f), -(instance.getHeight() / 2f));
         result.x += GameEngine.getCamera().x + pos.x;
         result.y += -GameEngine.getCamera().y + pos.y;
+        result.x /= GameEngine.getCamera().getScale();
+        result.y /= GameEngine.getCamera().getScale();
         result.y *= -1;
         return result;
     }

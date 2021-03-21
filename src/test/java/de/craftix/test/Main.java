@@ -1,12 +1,15 @@
 package de.craftix.test;
 
 import de.craftix.engine.GameEngine;
+import de.craftix.engine.InputManager;
 import de.craftix.engine.objects.GameObject;
 import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.render.SpriteMap;
 import de.craftix.engine.var.Dimension;
 import de.craftix.engine.var.Vector2;
+
+import java.awt.event.KeyEvent;
 
 public class Main extends GameEngine {
     private final SpriteMap blocks = new SpriteMap(5, Sprite.load("terrain.png"), 16, 16);
@@ -16,11 +19,11 @@ public class Main extends GameEngine {
     public static void main(String[] args) {
         Screen.antialiasing(true);
         Screen.showFrames(true);
-        Screen.showGrid(false);
         Screen.setResizeable(false);
         Screen.limitFPS(true);
         Screen.setAntialiasingEffectTextures(false);
-        setup(800, 600, "GameEngine", new Main(), 60);
+        InputManager.setFullscreenKey(KeyEvent.VK_F11);
+        setup(800, 600, "GameEngine", new Main(), 120);
     }
 
     @Override
@@ -34,6 +37,18 @@ public class Main extends GameEngine {
 
     @Override
     public void fixedUpdate() {
-        test.transform.rotation.rotate(1);
+        test.transform.lookAt(InputManager.getMousePos());
+
+        if (InputManager.isKeyPressed(KeyEvent.VK_W))
+            test.transform.translate(test.transform.forward().mul(new Vector2(0.05f)));
+
+        if (InputManager.isKeyPressed(KeyEvent.VK_A))
+            test.transform.translate(test.transform.left().mul(new Vector2(0.05f)));
+
+        if (InputManager.isKeyPressed(KeyEvent.VK_S))
+            test.transform.translate(test.transform.backward().mul(new Vector2(0.05f)));
+
+        if (InputManager.isKeyPressed(KeyEvent.VK_D))
+            test.transform.translate(test.transform.right().mul(new Vector2(0.05f)));
     }
 }
