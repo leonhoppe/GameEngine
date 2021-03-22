@@ -29,6 +29,7 @@ public class Vector2 implements Serializable {
                 '}';
     }
 
+    //Vector Math
     public Vector2 add(Vector2 vec) { return new Vector2(x + vec.x, y + vec.y); }
     public Vector2 sub(Vector2 vec) { return new Vector2(x - vec.x, y - vec.y); }
     public Vector2 mul(Vector2 vec) { return new Vector2(x * vec.x, y * vec.y); }
@@ -38,4 +39,15 @@ public class Vector2 implements Serializable {
     public void subSelf(Vector2 vec) { this.x -= vec.x; this.y -= vec.y; }
     public void mulSelf(Vector2 vec) { this.x *= vec.x; this.y *= vec.y; }
     public void divSelf(Vector2 vec) { this.x /= vec.x; this.y /= vec.y; }
+
+    //Float Math
+    public Vector2 add(float value) { return add(new Vector2(value)); }
+    public Vector2 sub(float value) { return sub(new Vector2(value)); }
+    public Vector2 mul(float value) { return mul(new Vector2(value)); }
+    public Vector2 div(float value) { return div(new Vector2(value)); }
+
+    public void addSelf(float value) { addSelf(new Vector2(value)); }
+    public void subSelf(float value) { subSelf(new Vector2(value)); }
+    public void mulSelf(float value) { mulSelf(new Vector2(value)); }
+    public void divSelf(float value) { divSelf(new Vector2(value)); }
 }

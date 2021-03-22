@@ -37,18 +37,20 @@ public class Main extends GameEngine {
 
     @Override
     public void fixedUpdate() {
+        float speed = 5;
+
         test.transform.lookAt(InputManager.getMousePos());
 
         if (InputManager.isKeyPressed(KeyEvent.VK_W))
-            test.transform.translate(test.transform.forward().mul(new Vector2(0.05f)));
+            test.transform.translate(test.transform.forward().mul(Screen.getFixedDeltaTime() * speed));
 
         if (InputManager.isKeyPressed(KeyEvent.VK_A))
-            test.transform.translate(test.transform.left().mul(new Vector2(0.05f)));
+            test.transform.translate(test.transform.left().mul(Screen.getFixedDeltaTime() * speed));
 
         if (InputManager.isKeyPressed(KeyEvent.VK_S))
-            test.transform.translate(test.transform.backward().mul(new Vector2(0.05f)));
+            test.transform.translate(test.transform.backward().mul(Screen.getFixedDeltaTime() * speed));
 
         if (InputManager.isKeyPressed(KeyEvent.VK_D))
-            test.transform.translate(test.transform.right().mul(new Vector2(0.05f)));
+            test.transform.translate(test.transform.right().mul(Screen.getFixedDeltaTime() * speed));
     }
 }

@@ -30,14 +30,16 @@ public class Screen extends JLabel {
     private static boolean showFrames = false;
     private static boolean antialiasing;
     private static int fps;
-    private static int deltaTime;
+    private static float deltaTime;
+    private static float fixedDeltaTime;
     private static boolean limitFPS = false;
     private static Rectangle bufferedBounds;
     private static boolean antialiasingEffectTextures = true;
 
-    public Screen(int width, int height, String title) {
+    public Screen(int width, int height, String title, float fixedDeltaTime) {
         logger = new Logger("Graphics");
         instance = this;
+        Screen.fixedDeltaTime = fixedDeltaTime;
         logger.info("Attempting to set JFrame settings...");
         frame.setSize(width + 17, height + 40);
         frame.setTitle(title);
@@ -77,8 +79,8 @@ public class Screen extends JLabel {
 
     @Override
     protected void paintComponent(Graphics g) {
-        deltaTime = (int) ((lastFrame - System.currentTimeMillis()) / 1000);
-        lastFrame = System.currentTimeMillis();
+        deltaTime = (System.nanoTime() - lastFrame) / 1000000000f;
+        lastFrame = System.nanoTime();
 
         GameEngine.getInstance().update();
         for (ScreenObject object : GameEngine.getActiveScene().getGameObjects()) {
@@ -206,7 +208,8 @@ public class Screen extends JLabel {
     }
     public static void setAntialiasingEffectTextures(boolean value) { antialiasingEffectTextures = value; }
     public static int getFPS() { return fps; }
-    public static int getDeltaTime() { return deltaTime; }
+    public static float getDeltaTime() { return deltaTime; }
+    public static float getFixedDeltaTime() { return fixedDeltaTime; }
     public static int getBufferedFPS() { return bufferedFPS; }
     public static boolean isFullscreen() { return frame.isUndecorated(); }
     public static boolean antialiasingEffectTextures() { return antialiasingEffectTextures; }

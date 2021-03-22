@@ -65,7 +65,7 @@ public class ScreenObject {
     public void renderBounds(boolean value) { renderBounds = value; }
 
     protected Area getShape() {
-        return new Area(Screen.getTransform(transform).createTransformedShape(getRawShape()));
+        return new Area(Screen.getRawTransform(transform).createTransformedShape(getRawShape()));
     }
     protected Area getScreenShape() {
         return new Area(Screen.getTransform(transform).createTransformedShape(new Mesh(sprite.getShape(animation), transform).getMesh()));

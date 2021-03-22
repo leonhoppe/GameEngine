@@ -46,7 +46,7 @@ public class GameEngine {
         instance.initialise();
         logger.info("Initialising Method executed");
 
-        screen = new Screen(width, height, title);
+        screen = new Screen(width, height, title, (1000f / TPS) / 1000f);
         logger.info("Graphics initialised");
 
         new Timer().scheduleAtFixedRate(new TimerTask() {

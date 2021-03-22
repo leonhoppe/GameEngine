@@ -7,7 +7,7 @@ public class Transform implements Serializable {
         Transform trans = new Transform();
         str = str.replace("Transform", "").replaceAll("\\{", "").replaceAll("}", "").replace(" ", "");
         str = str.replace("position=Vector2", "").replace("scale=Dimension", "").replace("rotation=Quaternion", "");
-        str = str.replace("Vector2", "").replace("java.awt.Dimension", "").replace("Quaternion", "").replace("[", "").replace("]", "");
+        str = str.replace("Vector2", "").replace("Dimension", "").replace("Quaternion", "");
         String[] split = str.split(",");
         for (String s : split) {
             if (s.contains("x="))
@@ -65,6 +65,15 @@ public class Transform implements Serializable {
         rotation.angle = Math.atan2(rotVector.x, rotVector.y);
     }
 
+    //Modify Position
+    public void translate(Vector2 pos) {
+        position.addSelf(pos);
+    }
+    public void translate(float value) {
+        position.addSelf(value);
+    }
+
+    //Get Transformed Vectors
     public Vector2 forward() {
         Vector2 forward = new Vector2();
         forward.x = (float) Math.sin(rotation.getAngle());
@@ -72,7 +81,7 @@ public class Transform implements Serializable {
         return forward;
     }
     public Vector2 backward() {
-        return forward().mul(new Vector2(-1, -1));
+        return forward().mul(-1);
     }
     public Vector2 right() {
         Vector2 right = new Vector2();
@@ -81,12 +90,7 @@ public class Transform implements Serializable {
         return right;
     }
     public Vector2 left() {
-        return right().mul(new Vector2(-1, -1));
-    }
-
-    //Modify Position
-    public void translate(Vector2 pos) {
-        position.addSelf(pos);
+        return right().mul(-1);
     }
 
     public Transform copy() {
