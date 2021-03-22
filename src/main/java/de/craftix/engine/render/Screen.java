@@ -3,6 +3,7 @@ package de.craftix.engine.render;
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.InputManager;
 import de.craftix.engine.Logger;
+import de.craftix.engine.objects.Collider;
 import de.craftix.engine.objects.Component;
 import de.craftix.engine.objects.GameObject;
 import de.craftix.engine.var.Transform;
@@ -36,7 +37,7 @@ public class Screen extends JLabel {
     private static Rectangle bufferedBounds;
     private static boolean antialiasingEffectTextures = true;
 
-    public Screen(int width, int height, String title, float fixedDeltaTime) {
+    public Screen(int width, int height, String title, float fixedDeltaTime, boolean startGame) {
         logger = new Logger("Graphics");
         instance = this;
         Screen.fixedDeltaTime = fixedDeltaTime;
@@ -66,7 +67,7 @@ public class Screen extends JLabel {
             @Override
             public void windowDeactivated(WindowEvent e) {}
         });
-        frame.setVisible(true);
+        frame.setVisible(startGame);
         logger.info("JFrame settings set");
 
         InputManager iManager = new InputManager();

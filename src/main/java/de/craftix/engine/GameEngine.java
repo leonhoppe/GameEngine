@@ -25,7 +25,7 @@ public class GameEngine {
 
     private static final HashMap<String, Float> layers = new HashMap<>();
 
-    protected static void setup(int width, int height, String title, GameEngine instance, int tps) {
+    protected static void setup(int width, int height, String title, GameEngine instance, int tps, boolean startGame) {
         TPS = tps;
         Logger.globalInfo("Initialising requirements...");
         logger = new Logger("GameEngine");
@@ -46,7 +46,7 @@ public class GameEngine {
         instance.initialise();
         logger.info("Initialising Method executed");
 
-        screen = new Screen(width, height, title, (1000f / TPS) / 1000f);
+        screen = new Screen(width, height, title, (1000f / TPS) / 1000f, startGame);
         logger.info("Graphics initialised");
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
@@ -78,6 +78,7 @@ public class GameEngine {
             object.fixedUpdate();
     }
 
+    public static void startGame() { Screen.getDisplay().setVisible(true); }
     public static void shutdown() {
         logger.info("Stopping Game...");
         GameEngine.instance.stop();

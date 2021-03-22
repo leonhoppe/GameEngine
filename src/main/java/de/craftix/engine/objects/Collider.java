@@ -15,6 +15,7 @@ public class Collider extends Component {
     public Shape shape;
     public Mesh mesh;
     public Transform transform;
+    private boolean isColliding;
 
     private final boolean trigger;
     private final List<CollisionHandler> handlers = new ArrayList<>();
@@ -47,6 +48,7 @@ public class Collider extends Component {
 
     private HashMap<Collider, Boolean> lastFrame = new HashMap<>();
     public void update() {
+        isColliding = false;
         for (GameObject other : GameEngine.getActiveScene().getGameObjects()) {
             if (other == object) continue;
             if (!other.hasComponent(Collider.class)) continue;
@@ -64,6 +66,7 @@ public class Collider extends Component {
                 }
                 colliding.remove(otherCol);
                 this.colliding.put(otherCol, true);
+                isColliding = true;
             }else {
                 for (CollisionHandler handler : handlers) {
                     if (lastFrame.containsKey(otherCol) && lastFrame.get(otherCol)) {
@@ -88,6 +91,6 @@ public class Collider extends Component {
 
     public void addCollisionHandler(CollisionHandler handler) { handlers.add(handler); }
 
-    public boolean isColliding() { return colliding.size() != 0; }
+    public boolean isColliding() { return isColliding; }
     public boolean isTrigger() { return trigger; }
 }

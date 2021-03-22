@@ -23,14 +23,13 @@ public class Main extends GameEngine {
         Screen.limitFPS(true);
         Screen.setAntialiasingEffectTextures(false);
         InputManager.setFullscreenKey(KeyEvent.VK_F11);
-        setup(800, 600, "GameEngine", new Main(), 120);
+        setup(800, 600, "GameEngine", new Main(), 120, true);
     }
 
     @Override
     public void initialise() {
         setIcon(blocks.getSprite(4).texture);
         getActiveScene().setBackground(blocks.getSprite(1));
-
         instantiate(test);
         instantiate(test2);
     }
@@ -52,5 +51,13 @@ public class Main extends GameEngine {
 
         if (InputManager.isKeyPressed(KeyEvent.VK_D))
             test.transform.translate(test.transform.right().mul(Screen.getFixedDeltaTime() * speed));
+
+        if (InputManager.isKeyPressed(KeyEvent.VK_SPACE))
+            getCamera().z += Screen.getFixedDeltaTime();
+        if (InputManager.isKeyPressed(KeyEvent.VK_SHIFT))
+            getCamera().z -= Screen.getFixedDeltaTime();
+
+        if (InputManager.isKeyPressed(KeyEvent.VK_ESCAPE))
+            shutdown();
     }
 }
