@@ -5,8 +5,10 @@ import de.craftix.engine.objects.TextureObject;
 import de.craftix.engine.render.Camera;
 import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.ScreenObject;
+import de.craftix.engine.render.Sprite;
 import de.craftix.engine.var.Input;
 import de.craftix.engine.var.Scene;
+import de.craftix.engine.var.Updater;
 
 import javax.swing.*;
 import java.awt.image.BufferedImage;
@@ -24,6 +26,7 @@ public class GameEngine {
     private static int TPS;
 
     private static final HashMap<String, Float> layers = new HashMap<>();
+    private static final ArrayList<Updater> updater = new ArrayList<>();
 
     protected static void setup(int width, int height, String title, GameEngine instance, int tps, boolean startGame) {
         TPS = tps;
@@ -60,7 +63,7 @@ public class GameEngine {
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                Screen.updateFPS();
+                Screen.updateFPS(updater);
             }
         }, 0, 1000);
         logger.info("FPS Updater Thread initialised");
@@ -76,6 +79,8 @@ public class GameEngine {
         instance.fixedUpdate();
         for (ScreenObject object : activeScene.getGameObjects())
             object.fixedUpdate();
+        for (Updater u : updater)
+            u.fixedUpdate();
     }
 
     public static void startGame() { Screen.getDisplay().setVisible(true); }
@@ -138,8 +143,10 @@ public class GameEngine {
 
     public static void setActiveScene(Scene scene) { activeScene = scene; }
     public static void addLayer(String name, float layer) { if (!layers.containsValue(layer) && !layers.containsKey(name)) layers.put(name, layer); }
-    public static void setIcon(BufferedImage image) {
-        ImageIcon icon = new ImageIcon(image);
+    public static void setIcon(Sprite sprite) {
+        ImageIcon icon = new ImageIcon(sprite.texture);
         Screen.getDisplay().setIconImage(icon.getImage());
     }
+    public static void addUpdater(Updater updater) { GameEngine.updater.add(updater); }
+
 }

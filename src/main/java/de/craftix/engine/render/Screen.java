@@ -7,6 +7,7 @@ import de.craftix.engine.objects.Collider;
 import de.craftix.engine.objects.Component;
 import de.craftix.engine.objects.GameObject;
 import de.craftix.engine.var.Transform;
+import de.craftix.engine.var.Updater;
 import de.craftix.engine.var.Vector2;
 
 import javax.swing.*;
@@ -158,7 +159,12 @@ public class Screen extends JLabel {
             }
         repaint();
     }
-    public static void updateFPS() { fps = bufferedFPS; bufferedFPS = 0; }
+    public static void updateFPS(ArrayList<Updater> updaters) {
+        fps = bufferedFPS;
+        bufferedFPS = 0;
+        for (Updater updater : updaters)
+            updater.update();
+    }
 
     public static Point calculateScreenPosition(Transform transform) {
         Vector2 result = new Vector2(instance.getWidth() / 2f, instance.getHeight() / 2f);
@@ -170,6 +176,20 @@ public class Screen extends JLabel {
                 (transform.position.y * GameEngine.getCamera().getScale()) * Math.sin(Math.toRadians(90) - transform.rotation.getAngle());
         result.x += (transform.position.x * GameEngine.getCamera().getScale()) * Math.sin(Math.toRadians(90) - transform.rotation.getAngle()) +
                 (transform.position.y * GameEngine.getCamera().getScale()) * Math.cos(Math.toRadians(90) - transform.rotation.getAngle());
+        return result.toPoint();
+    }
+    public static Point calculateRawScreenPosition(Transform transform) {
+        Vector2 result = new Vector2(instance.getWidth() / 2f, instance.getHeight() / 2f);
+        result.subSelf(new Vector2(
+                transform.scale.width / 2f,
+                transform.scale.height / 2f
+        ));
+        result.addSelf(new Vector2(
+                (float) (transform.position.x * Math.sin(Math.toRadians(90) - transform.rotation.getAngle()) +
+                        transform.position.y * Math.cos(Math.toRadians(90) - transform.rotation.getAngle())),
+                (float) (transform.position.x * Math.cos(Math.toRadians(90) - transform.rotation.getAngle()) -
+                        transform.position.y * Math.sin(Math.toRadians(90) - transform.rotation.getAngle()))
+        ));
         return result.toPoint();
     }
     public static Vector2 calculateVirtualPosition(Vector2 pos) {
@@ -215,6 +235,8 @@ public class Screen extends JLabel {
     public static boolean isFullscreen() { return frame.isUndecorated(); }
     public static boolean antialiasingEffectTextures() { return antialiasingEffectTextures; }
     public static JFrame getDisplay() { return frame; }
+    public static int width() { return instance.getWidth(); }
+    public static int height() { return instance.getHeight(); }
 
     public static AffineTransform getTransform(Transform transform) {
         Point pos = Screen.calculateScreenPosition(transform);

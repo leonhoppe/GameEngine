@@ -29,6 +29,7 @@ public class Transform implements Serializable {
     public Quaternion rotation;
 
     public Transform() { position = new Vector2(); scale = new Dimension(); rotation = Quaternion.IDENTITY(); }
+    protected Transform(Vector2 pos, Dimension dim) { this(); position = pos; scale = dim; }
 
     //Modify Rotation
     public void rotate(float angle) { rotation.angle += Math.toRadians(angle); }
