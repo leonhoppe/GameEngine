@@ -3,7 +3,6 @@ package de.craftix.engine.render;
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.InputManager;
 import de.craftix.engine.Logger;
-import de.craftix.engine.objects.Collider;
 import de.craftix.engine.objects.Component;
 import de.craftix.engine.objects.GameObject;
 import de.craftix.engine.var.Transform;

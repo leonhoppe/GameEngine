@@ -12,8 +12,9 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.io.Serializable;
 
-public class TextureObject extends ScreenObject {
+public class TextureObject extends ScreenObject implements Serializable {
     private boolean scaleAffected = false;
 
     public TextureObject(Sprite texture, Point position, Dimension size) {

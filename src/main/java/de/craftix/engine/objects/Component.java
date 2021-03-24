@@ -1,6 +1,8 @@
 package de.craftix.engine.objects;
 
-public class Component {
+import java.io.Serializable;
+
+public class Component implements Serializable {
     protected GameObject object;
 
     private Component(GameObject object) {this.object = object;}

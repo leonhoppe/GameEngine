@@ -1,8 +1,8 @@
 package de.craftix.engine.render;
 
-import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public class SpriteMap {
+public class SpriteMap implements Serializable {
 
     private final int cols;
     private final int width;

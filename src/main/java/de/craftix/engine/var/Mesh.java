@@ -6,8 +6,9 @@ import de.craftix.engine.render.Shape;
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.io.Serializable;
 
-public class Mesh {
+public class Mesh implements Serializable {
     public final Vector2[] points;
     public final Shape shape;
     public final Transform transform;

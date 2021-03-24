@@ -1,6 +1,8 @@
 package de.craftix.engine.var;
 
-public class Updater {
+import java.io.Serializable;
+
+public class Updater implements Serializable {
 
     public void update() {}
     public void fixedUpdate() {}

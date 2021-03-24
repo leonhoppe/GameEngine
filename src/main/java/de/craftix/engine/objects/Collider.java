@@ -7,11 +7,12 @@ import de.craftix.engine.var.*;
 import de.craftix.engine.var.Dimension;
 
 import java.awt.geom.Area;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Collider extends Component {
+public class Collider extends Component implements Serializable {
     public Shape shape;
     public Mesh mesh;
     public Transform transform;

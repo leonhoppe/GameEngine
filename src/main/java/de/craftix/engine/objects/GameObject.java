@@ -10,10 +10,11 @@ import de.craftix.engine.var.Vector2;
 
 import java.awt.*;
 import java.awt.geom.Area;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GameObject extends ScreenObject {
+public class GameObject extends ScreenObject implements Serializable {
     private final List<Component> components = new ArrayList<>();
 
     public GameObject(Sprite sprite, Vector2 position) {

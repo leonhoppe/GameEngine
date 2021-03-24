@@ -1,8 +1,9 @@
 package de.craftix.engine.var;
 
 import java.awt.event.*;
+import java.io.Serializable;
 
-public class Input implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener {
+public class Input implements KeyListener, MouseListener, MouseMotionListener, MouseWheelListener, Serializable {
     @Override
     public void keyTyped(KeyEvent e) { }
     @Override

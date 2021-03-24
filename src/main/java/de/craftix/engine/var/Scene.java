@@ -4,10 +4,11 @@ import de.craftix.engine.objects.GameObject;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Scene {
+public class Scene implements Serializable {
 
     private final List<ScreenObject> objects = new ArrayList<>();
     private Sprite background;

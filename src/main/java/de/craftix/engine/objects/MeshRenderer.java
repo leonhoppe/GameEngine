@@ -4,8 +4,9 @@ import de.craftix.engine.render.Screen;
 import de.craftix.engine.var.Mesh;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public class MeshRenderer extends RenderingComponent {
+public class MeshRenderer extends RenderingComponent implements Serializable {
     public Mesh mesh;
     public Color color;
 

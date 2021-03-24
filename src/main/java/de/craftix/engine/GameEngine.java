@@ -11,7 +11,6 @@ import de.craftix.engine.var.Scene;
 import de.craftix.engine.var.Updater;
 
 import javax.swing.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.*;
 import java.util.Timer;

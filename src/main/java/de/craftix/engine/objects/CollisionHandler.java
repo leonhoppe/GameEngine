@@ -1,6 +1,8 @@
 package de.craftix.engine.objects;
 
-public interface CollisionHandler {
+import java.io.Serializable;
+
+public interface CollisionHandler extends Serializable {
 
     void onCollisionEnter(Collider other);
     void onCollision(Collider other);

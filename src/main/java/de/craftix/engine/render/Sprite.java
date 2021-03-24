@@ -7,9 +7,10 @@ import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Sprite {
+public class Sprite implements Serializable {
     private static Resizer resizingMethod = null;
 
     public static Sprite load(String path) {

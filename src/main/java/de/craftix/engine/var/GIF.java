@@ -6,11 +6,12 @@ import de.craftix.engine.render.Screen;
 import javax.swing.*;
 import java.awt.*;
 import java.io.File;
+import java.io.Serializable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Arrays;
 
-public class GIF extends Updater {
+public class GIF extends Updater implements Serializable {
     private URL url;
     private JLabel canvas;
     private Transform transform;

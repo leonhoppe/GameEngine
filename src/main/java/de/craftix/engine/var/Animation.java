@@ -3,7 +3,9 @@ package de.craftix.engine.var;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.render.SpriteMap;
 
-public class Animation {
+import java.io.Serializable;
+
+public class Animation implements Serializable {
 
     private int state;
     private int frame = 0;

@@ -2,8 +2,9 @@ package de.craftix.engine.render;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
-public enum Resizer {
+public enum Resizer implements Serializable {
 
     NEAREST_NEIGHBOR {
         @Override

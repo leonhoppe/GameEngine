@@ -1,6 +1,8 @@
 package de.craftix.engine.render;
 
-public class Camera {
+import java.io.Serializable;
+
+public class Camera implements Serializable {
 
     public float x;
     public float y;

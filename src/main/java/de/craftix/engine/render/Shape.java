@@ -1,6 +1,8 @@
 package de.craftix.engine.render;
 
-public enum Shape {
+import java.io.Serializable;
+
+public enum Shape implements Serializable {
     TRIANGLE,
     RECTANGLE,
     CIRCLE

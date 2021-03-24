@@ -10,8 +10,9 @@ import java.awt.Shape;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.io.Serializable;
 
-public class ScreenObject {
+public class ScreenObject implements Serializable {
     public Transform transform;
     protected Sprite sprite;
     protected Animation animation;

@@ -1,10 +1,11 @@
 package de.craftix.engine.var;
 
+import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 
-public class MySQL {
+public class MySQL implements Serializable {
 
     protected String server;
     protected int port;

@@ -1,6 +1,8 @@
 package de.craftix.engine.var;
 
-public class Dimension {
+import java.io.Serializable;
+
+public class Dimension implements Serializable {
 
     public float width;
     public float height;
