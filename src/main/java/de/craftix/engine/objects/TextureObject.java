@@ -66,10 +66,10 @@ public class TextureObject extends ScreenObject implements Serializable {
         g.setTransform(original);
     }
 
-    protected Area getShape() {
+    public Area getShape() {
         return new Area(Screen.getRawTransform(transform).createTransformedShape(getRawShape()));
     }
-    protected Area getScreenShape() {
+    public Area getScreenShape() {
         if (scaleAffected) {
             Shape shape = null;
             if (sprite.texture != null || animation != null)

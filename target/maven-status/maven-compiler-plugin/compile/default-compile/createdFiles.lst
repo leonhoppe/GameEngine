@@ -1,7 +1,9 @@
+de\craftix\engine\var\Image.class
 de\craftix\engine\render\Resizer$5.class
 de\craftix\engine\var\Animation.class
+de\craftix\engine\objects\InteractionComponent$Inputs.class
+de\craftix\engine\objects\InteractionComponent.class
 de\craftix\engine\render\Screen$1.class
-de\craftix\engine\objects\Collider$1.class
 de\craftix\engine\render\Resizer$2.class
 de\craftix\engine\var\Quaternion.class
 de\craftix\engine\objects\Collider.class
@@ -11,6 +13,7 @@ de\craftix\engine\render\SpriteMap.class
 de\craftix\engine\render\Sprite.class
 de\craftix\engine\var\Vector2.class
 de\craftix\engine\render\Shape.class
+de\craftix\engine\objects\TextComponent.class
 de\craftix\engine\render\Resizer.class
 de\craftix\engine\render\Resizer$4.class
 de\craftix\engine\render\Screen.class

@@ -65,13 +65,13 @@ public class ScreenObject implements Serializable {
 
     public void renderBounds(boolean value) { renderBounds = value; }
 
-    protected Area getShape() {
+    public Area getShape() {
         return new Area(Screen.getRawTransform(transform).createTransformedShape(getRawShape()));
     }
-    protected Area getScreenShape() {
+    public Area getScreenShape() {
         return new Area(Screen.getTransform(transform).createTransformedShape(new Mesh(sprite.getShape(animation), transform).getMesh()));
     }
-    protected Area getRawShape() {
+    public Area getRawShape() {
         Shape shape = null;
         if (sprite.texture != null || animation != null)
             shape = new Rectangle((int) -(transform.scale.width / 2f), (int) -(transform.scale.height / 2f), transform.scale.getWidth(), transform.scale.getHeight());

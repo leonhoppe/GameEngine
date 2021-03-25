@@ -42,7 +42,8 @@ public class GameObject extends ScreenObject implements Serializable {
     }
 
     public void addComponent(Component component) {
-        if (hasComponent(component.getClass())) return;
+        if (hasComponent(component.getClass()))
+            throw new IllegalArgumentException("This Object already has a Rendering Component");
         components.add(component);
         component.initialise(this);
     }
@@ -78,15 +79,12 @@ public class GameObject extends ScreenObject implements Serializable {
     }
 
     @Override
-    protected void render(Graphics2D g) {
-        if (hasComponent(RenderingComponent.class))
-            ((RenderingComponent) getComponent(RenderingComponent.class)).render(g);
-        else
-            super.render(g);
+    public void render(Graphics2D g) {
+        super.render(g);
     }
 
     @Override
-    protected Area getScreenShape() {
+    public Area getScreenShape() {
         if (hasComponent(MeshRenderer.class))
             return new Area(Screen.getTransform(transform).createTransformedShape(((MeshRenderer) getComponent(MeshRenderer.class)).mesh.getMesh()));
         else

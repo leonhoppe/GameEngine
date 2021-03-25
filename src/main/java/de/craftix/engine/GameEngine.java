@@ -62,7 +62,7 @@ public class GameEngine {
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                Screen.updateFPS(updater);
+                Screen.updateFPS();
             }
         }, 0, 1000);
         logger.info("FPS Updater Thread initialised");
@@ -75,6 +75,7 @@ public class GameEngine {
     }
 
     private static void handleDeltaUpdates() {
+        Screen.updateFixedDeltaTime();
         instance.fixedUpdate();
         for (ScreenObject object : activeScene.getGameObjects())
             object.fixedUpdate();
@@ -85,12 +86,14 @@ public class GameEngine {
     public static void startGame() { Screen.getDisplay().setVisible(true); }
     public static void shutdown() {
         logger.info("Stopping Game...");
+        try { Thread.sleep(200); }
+        catch (Exception e) { e.printStackTrace(); }
         GameEngine.instance.stop();
         for (ScreenObject object : GameEngine.getActiveScene().getGameObjects())
             object.stop();
         logger.info("Stop Methods Executed");
         logger.info("Sending Stop command");
-        System.exit(-1);
+        System.exit(0);
     }
 
     public static void instantiate(GameObject object) {
@@ -139,6 +142,7 @@ public class GameEngine {
     public static Screen getScreenInstance() { return screen; }
     public static Logger getLogger() { return globalLogger; }
     public static int getTPS() { return TPS; }
+    public static Updater[] getUpdaters() { return updater.toArray(new Updater[0]); }
 
     public static void setActiveScene(Scene scene) { activeScene = scene; }
     public static void addLayer(String name, float layer) { if (!layers.containsValue(layer) && !layers.containsKey(name)) layers.put(name, layer); }

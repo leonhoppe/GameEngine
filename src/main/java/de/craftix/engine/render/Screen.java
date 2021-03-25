@@ -5,6 +5,7 @@ import de.craftix.engine.InputManager;
 import de.craftix.engine.Logger;
 import de.craftix.engine.objects.Component;
 import de.craftix.engine.objects.GameObject;
+import de.craftix.engine.objects.RenderingComponent;
 import de.craftix.engine.var.Transform;
 import de.craftix.engine.var.Updater;
 import de.craftix.engine.var.Vector2;
@@ -23,7 +24,6 @@ public class Screen extends JLabel {
     protected static Screen instance;
 
     private static int bufferedFPS;
-    private static long lastFrame;
     private static Logger logger;
     private static JFrame frame = new JFrame();
     private static boolean showGrid = false;
@@ -78,7 +78,7 @@ public class Screen extends JLabel {
         logger.info("Graphics loaded successfully");
     }
 
-    @Override
+    private static long lastFrame = System.nanoTime();
     protected void paintComponent(Graphics g) {
         deltaTime = (System.nanoTime() - lastFrame) / 1000000000f;
         lastFrame = System.nanoTime();
@@ -90,7 +90,9 @@ public class Screen extends JLabel {
             if (object instanceof GameObject)
                 for (Component component : ((GameObject) object).getComponents())
                     component.update();
-        };
+        }
+        for (Updater updater : GameEngine.getUpdaters())
+            updater.update();
 
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D) g;
@@ -129,7 +131,14 @@ public class Screen extends JLabel {
                 if (object.renderBounds) g2.draw(object.getScreenShape());
                 if (shape.isEmpty()) continue;
                 if (object.layer == layer)
-                    object.render(g2);
+                    if (object instanceof GameObject) {
+                        GameObject go = (GameObject) object;
+                        if (go.hasComponent(RenderingComponent.class))
+                            ((RenderingComponent) go.getComponent(RenderingComponent.class)).render(g2);
+                        else
+                            go.render(g2);
+                    }else
+                        object.render(g2);
             }
         }
 
@@ -158,11 +167,15 @@ public class Screen extends JLabel {
             }
         repaint();
     }
-    public static void updateFPS(ArrayList<Updater> updaters) {
+    public static void updateFPS() {
         fps = bufferedFPS;
         bufferedFPS = 0;
-        for (Updater updater : updaters)
-            updater.update();
+    }
+
+    private static long lastFixedUpdate = System.currentTimeMillis();
+    public static void updateFixedDeltaTime() {
+        fixedDeltaTime = (System.currentTimeMillis() - lastFixedUpdate) / 1000f;
+        lastFixedUpdate = System.currentTimeMillis();
     }
 
     public static Point calculateScreenPosition(Transform transform) {
@@ -234,6 +247,7 @@ public class Screen extends JLabel {
     public static boolean isFullscreen() { return frame.isUndecorated(); }
     public static boolean antialiasingEffectTextures() { return antialiasingEffectTextures; }
     public static JFrame getDisplay() { return frame; }
+    public static JLabel getCanvas() { return instance; }
     public static int width() { return instance.getWidth(); }
     public static int height() { return instance.getHeight(); }
 

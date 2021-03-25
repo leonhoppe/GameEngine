@@ -16,6 +16,9 @@ public class InputManager extends Input {
     private static int fullscreenKey;
     private static boolean useFullscreenKey = false;
 
+    private static int closingKey;
+    private static boolean useClosingKey = false;
+
     @Override
     public void mousePressed(MouseEvent e) { mouseButtons[e.getButton() - 1] = true; }
     @Override
@@ -25,6 +28,8 @@ public class InputManager extends Input {
         keys[e.getKeyCode()] = true;
         if (useFullscreenKey && e.getKeyCode() == fullscreenKey)
             Screen.setFullscreen(!Screen.isFullscreen());
+        if (useClosingKey && e.getKeyCode() == closingKey)
+            GameEngine.shutdown();
     }
     @Override
     public void keyReleased(KeyEvent e) { keys[e.getKeyCode()] = false; }
@@ -41,5 +46,9 @@ public class InputManager extends Input {
     public static void setFullscreenKey(int key) {
         fullscreenKey = key;
         useFullscreenKey = true;
+    }
+    public static void setClosingKey(int key) {
+        closingKey = key;
+        useClosingKey = true;
     }
 }

@@ -2,7 +2,6 @@ package de.craftix.engine.objects;
 
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.render.Screen;
-import de.craftix.engine.render.Shape;
 import de.craftix.engine.var.*;
 import de.craftix.engine.var.Dimension;
 
@@ -13,7 +12,22 @@ import java.util.HashMap;
 import java.util.List;
 
 public class Collider extends Component implements Serializable {
-    public Shape shape;
+    public static Collider[] calculateCollisions(Transform transform, Area area) {
+        ArrayList<Collider> collisions = new ArrayList<>();
+        for (GameObject other : GameEngine.getActiveScene().getGameObjects()) {
+            if (!other.hasComponent(Collider.class)) continue;
+            Collider otherCol = (Collider) other.getComponent(Collider.class);
+            area.intersect(getArea(otherCol.transform, otherCol.mesh));
+            if (!area.isEmpty())
+                collisions.add(otherCol);
+        }
+        return collisions.toArray(new Collider[0]);
+    }
+
+    private static Area getArea(Transform transform, Mesh mesh) {
+        return new Area(Screen.getTransform(transform).createTransformedShape(mesh.getMesh()));
+    }
+
     public Mesh mesh;
     public Transform transform;
     private boolean isColliding;
@@ -21,15 +35,6 @@ public class Collider extends Component implements Serializable {
     private final boolean trigger;
     private final List<CollisionHandler> handlers = new ArrayList<>();
     private final HashMap<Collider, Boolean> colliding = new HashMap<>();
-
-    public Collider(Shape shape, boolean isTrigger) { this.shape = shape; trigger = isTrigger; }
-    public Collider(Shape shape, boolean isTrigger, Vector2 pos, Dimension size) {
-        this(shape, isTrigger);
-        transform = new Transform();
-        transform.position = pos;
-        transform.scale = size;
-        transform.rotation = Quaternion.IDENTITY();
-    }
 
     public Collider(Mesh mesh, boolean isTrigger) { this.mesh = mesh; trigger = isTrigger; }
     public Collider(Mesh mesh, boolean isTrigger, Vector2 pos, Dimension size) {
@@ -54,8 +59,8 @@ public class Collider extends Component implements Serializable {
             if (other == object) continue;
             if (!other.hasComponent(Collider.class)) continue;
             Collider otherCol = (Collider) other.getComponent(Collider.class);
-            Area collision = getArea();
-            collision.intersect(otherCol.getArea());
+            Area collision = getArea(transform, mesh);
+            collision.intersect(getArea(otherCol.transform, otherCol.mesh));
             if (!collision.isEmpty()) {
                 for (CollisionHandler handler : handlers) {
                     if (colliding.containsKey(otherCol) && !colliding.get(otherCol)) {
@@ -83,15 +88,9 @@ public class Collider extends Component implements Serializable {
         lastFrame = (HashMap<Collider, Boolean>) colliding.clone();
     }
 
-    public Area getArea() {
-        if (mesh != null)
-            return new Area(Screen.getTransform(transform).createTransformedShape(mesh.getMesh()));
-
-        return new Area(Screen.getTransform(transform).createTransformedShape(new Mesh(shape, transform).getMesh()));
-    }
-
     public void addCollisionHandler(CollisionHandler handler) { handlers.add(handler); }
 
     public boolean isColliding() { return isColliding; }
     public boolean isTrigger() { return trigger; }
+    public GameObject getGameObject() { return object; }
 }
