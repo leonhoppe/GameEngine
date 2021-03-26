@@ -8,6 +8,7 @@ import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.render.SpriteMap;
 import de.craftix.engine.var.Dimension;
+import de.craftix.engine.var.Image;
 import de.craftix.engine.var.Vector2;
 
 import java.awt.event.KeyEvent;
@@ -27,6 +28,8 @@ public class Main extends GameEngine {
         InputManager.setClosingKey(KeyEvent.VK_ESCAPE);
         setup(800, 600, "GameEngine", new Main(), 120, true);
         test2.addComponent(new InteractionComponent((e) -> {}, (e) -> System.out.println(true)));
+        Image img = new Image(loadFile("/loading.gif"));
+        img.show(new Vector2(), new Dimension(100, 100));
     }
 
     @Override

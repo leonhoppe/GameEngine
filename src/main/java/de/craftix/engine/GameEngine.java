@@ -12,6 +12,9 @@ import de.craftix.engine.var.Updater;
 
 import javax.swing.*;
 import java.io.File;
+import java.io.InputStream;
+import java.net.URI;
+import java.net.URL;
 import java.util.*;
 import java.util.Timer;
 
@@ -114,11 +117,12 @@ public class GameEngine {
         object.stop();
     }
 
-    public static File loadFile(String path) {
+    public static URI loadFile(String path) {
         try {
-            return new File(GameObject.class.getClassLoader().getResource(path).toURI());
+            URL url = GameEngine.class.getResource(path);
+            return new URI(url.toString().replace(" ","%20"));
         }catch (Exception e) { e.printStackTrace(); }
-        throw new NullPointerException("null");
+        return null;
     }
 
     public static void addInputs(Input input) {

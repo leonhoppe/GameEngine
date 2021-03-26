@@ -10,7 +10,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class InputManager extends Input {
-    private static final boolean[] keys = new boolean[256];
+    private static final boolean[] keys = new boolean[1024];
     private static final boolean[] mouseButtons = new boolean[MouseInfo.getNumberOfButtons()];
 
     private static int fullscreenKey;

@@ -9,6 +9,7 @@ de\craftix\engine\var\Quaternion.class
 de\craftix\engine\objects\Collider.class
 de\craftix\engine\GameEngine.class
 de\craftix\engine\render\ScreenObject.class
+de\craftix\engine\var\YamlConfiguration.class
 de\craftix\engine\render\SpriteMap.class
 de\craftix\engine\render\Sprite.class
 de\craftix\engine\var\Vector2.class

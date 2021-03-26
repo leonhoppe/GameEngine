@@ -8,6 +8,7 @@ import java.awt.*;
 import java.io.File;
 import java.io.Serializable;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 
@@ -16,10 +17,10 @@ public class Image extends Updater implements Serializable {
     private JLabel canvas;
     private Transform transform;
 
-    public Image(File file) {
+    public Image(URI URL) {
         try {
-            this.url = file.toURI().toURL();
-        } catch (MalformedURLException e) {
+            this.url = URL.toURL();
+        } catch (Exception e) {
             e.printStackTrace();
         }
         GameEngine.addUpdater(this);
