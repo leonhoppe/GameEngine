@@ -7,9 +7,9 @@ import de.craftix.engine.objects.InteractionComponent;
 import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.render.SpriteMap;
+import de.craftix.engine.var.*;
 import de.craftix.engine.var.Dimension;
 import de.craftix.engine.var.Image;
-import de.craftix.engine.var.Vector2;
 
 import java.awt.event.KeyEvent;
 

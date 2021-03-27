@@ -29,6 +29,11 @@ public class Transform implements Serializable {
     public Quaternion rotation;
 
     public Transform() { position = new Vector2(); scale = new Dimension(); rotation = Quaternion.IDENTITY(); }
+    public Transform(Vector2 position, Dimension scale, Quaternion rotation) {
+        this.position = position;
+        this.scale = scale;
+        this.rotation = rotation;
+    }
     protected Transform(Vector2 pos, Dimension dim) { this(); position = pos; scale = dim; }
 
     //Modify Rotation

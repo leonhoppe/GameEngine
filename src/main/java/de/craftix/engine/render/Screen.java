@@ -142,6 +142,8 @@ public class Screen extends JLabel {
             }
         }
 
+        GameEngine.getActiveScene().getUIManager().renderComponents(g2);
+
         if (showGrid) {
             g.setColor(Color.WHITE);
             for (int x = 0; x <= getWidth() / gridSize; x++)
