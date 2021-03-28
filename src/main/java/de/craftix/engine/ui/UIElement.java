@@ -1,6 +1,5 @@
 package de.craftix.engine.ui;
 
-import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.var.Animation;
 import de.craftix.engine.var.Mesh;
@@ -14,17 +13,17 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class UIElement implements Serializable {
-
-    public ElementAlignment alignment;
-    public Sprite sprite;
-    public Animation animation;
     public Transform transform;
-    public float layer;
-    public boolean renderObject = true;
+
+    private UIAlignment alignment;
+    private Sprite sprite;
+    private Animation animation;
+    private float layer;
+    private boolean renderObject = true;
 
     private final ArrayList<UIComponent> components = new ArrayList<>();
 
-    public UIElement(Transform transform, Sprite sprite, ElementAlignment alignment) {
+    public UIElement(Transform transform, Sprite sprite, UIAlignment alignment) {
         this.transform = transform;
         this.sprite = sprite;
         this.alignment = alignment;
@@ -82,4 +81,16 @@ public class UIElement implements Serializable {
         at.translate(pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
         return new Area(at.createTransformedShape(new Mesh(sprite.getShape(animation), transform).getRawMesh()));
     }
+
+    public UIAlignment getAlignment() { return alignment; }
+    public Sprite getSprite() { return sprite; }
+    public Animation getAnimation() { return animation; }
+    public float getLayer() { return layer; }
+    public boolean renderObject() { return renderObject; }
+
+    public void setAlignment(UIAlignment alignment) { this.alignment = alignment; }
+    public void  setSprite(Sprite sprite) { this.sprite = sprite; }
+    public void setAnimation(Animation animation) { this.animation = animation; }
+    public void setLayer(float layer) { this.layer = layer; }
+    public void renderObject(boolean renderObject) { this.renderObject = renderObject; }
 }

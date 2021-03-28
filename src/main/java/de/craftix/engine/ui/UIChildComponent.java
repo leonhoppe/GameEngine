@@ -14,7 +14,7 @@ public class UIChildComponent extends UIComponent {
     @Override
     public void render(Graphics2D g) {
         AffineTransform orig = g.getTransform();
-        Vector2 pos = element.alignment.getScreenPosition(element.transform);
+        Vector2 pos = element.getAlignment().getScreenPosition(element.transform);
         g.rotate(element.transform.rotation.getAngle(), pos.x + (element.transform.scale.width / 2f), pos.y + (element.transform.scale.height / 2f));
         for (UIElement child : children) {
             Transform original = child.transform.copy();

@@ -4,12 +4,12 @@ import de.craftix.engine.render.Screen;
 import de.craftix.engine.var.Transform;
 import de.craftix.engine.var.Vector2;
 
-public enum ElementAlignment {
+public enum UIAlignment {
     TOP {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(Screen.width() / 2f, 0);
-            result.addSelf(ElementAlignment.calculateOffset(trans));
+            result.addSelf(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -17,7 +17,7 @@ public enum ElementAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(Screen.width() / 2f, Screen.height());
-            result.addSelf(ElementAlignment.calculateOffset(trans));
+            result.addSelf(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -25,7 +25,7 @@ public enum ElementAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(Screen.width() / 2f, Screen.height() / 2f);
-            result.addSelf(ElementAlignment.calculateOffset(trans));
+            result.addSelf(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -33,7 +33,7 @@ public enum ElementAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(0, Screen.height() / 2f);
-            result.addSelf(ElementAlignment.calculateOffset(trans));
+            result.addSelf(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -41,7 +41,7 @@ public enum ElementAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(Screen.width(), Screen.height() / 2f);
-            result.addSelf(ElementAlignment.calculateOffset(trans));
+            result.addSelf(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -50,7 +50,7 @@ public enum ElementAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(0);
-            result.addSelf(ElementAlignment.calculateOffset(trans));
+            result.addSelf(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -58,7 +58,7 @@ public enum ElementAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(Screen.width(), 0);
-            result.addSelf(ElementAlignment.calculateOffset(trans));
+            result.addSelf(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -66,7 +66,7 @@ public enum ElementAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(0, Screen.height());
-            result.addSelf(ElementAlignment.calculateOffset(trans));
+            result.addSelf(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -74,7 +74,7 @@ public enum ElementAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(Screen.width(), Screen.height());
-            result.addSelf(ElementAlignment.calculateOffset(trans));
+            result.addSelf(UIAlignment.calculateOffset(trans));
             return result;
         }
     };

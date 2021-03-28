@@ -21,7 +21,7 @@ public class UITextComponent extends UIComponent {
     public void render(Graphics2D g) {
         AffineTransform original = g.getTransform();
         g.setTransform(Screen.getRawTransform(element.transform));
-        Vector2 pos = element.alignment.getScreenPosition(element.transform);
+        Vector2 pos = element.getAlignment().getScreenPosition(element.transform);
         g.translate(pos.getX(), pos.getY());
         Font ram = g.getFont();
         g.setColor(color);

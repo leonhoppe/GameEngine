@@ -33,7 +33,7 @@ public class UIManager implements Serializable {
         Area screen = new Area(new Rectangle(0, 0, Screen.width(), Screen.height()));
         for (Float layer : sortedLayers) {
             for (UIElement element : elements) {
-                if (!layer.equals(element.layer)) continue;
+                if (!layer.equals(element.getLayer())) continue;
                 Area area = element.getShape();
                 area.intersect(screen);
                 if (area.isEmpty()) continue;
