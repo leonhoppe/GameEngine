@@ -15,13 +15,12 @@ import java.util.ArrayList;
 public class UIElement implements Serializable {
     public Transform transform;
 
-    private UIAlignment alignment;
-    private Sprite sprite;
-    private Animation animation;
-    private float layer;
-    private boolean renderObject = true;
-
-    private final ArrayList<UIComponent> components = new ArrayList<>();
+    protected UIAlignment alignment;
+    protected Sprite sprite;
+    protected Animation animation;
+    protected float layer;
+    protected boolean renderObject = true;
+    protected final ArrayList<UIComponent> components = new ArrayList<>();
 
     public UIElement(Transform transform, Sprite sprite, UIAlignment alignment) {
         this.transform = transform;

@@ -80,7 +80,6 @@ public enum UIAlignment {
     };
 
     public abstract Vector2 getScreenPosition(Transform trans);
-
     private static Vector2 calculateOffset(Transform transform) {
         Vector2 result = new Vector2();
         result.subSelf(new Vector2(
