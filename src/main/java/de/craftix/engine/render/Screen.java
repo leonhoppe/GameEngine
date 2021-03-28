@@ -220,6 +220,7 @@ public class Screen extends JLabel {
     public static void showGrid(boolean value) { showGrid = value; }
     public static void showFrames(boolean value) { showFrames = value; }
     public static void antialiasing(boolean value) { antialiasing = value; }
+    public static boolean antialiasing() { return antialiasing; }
     public static void setResizeable(boolean value) { frame.setResizable(value); }
     public static void limitFPS(boolean value) { limitFPS = value; }
     public static void setFullscreen(boolean value) {

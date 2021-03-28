@@ -87,12 +87,7 @@ public enum ElementAlignment {
                 transform.scale.width / 2f,
                 transform.scale.height / 2f
         ));
-        result.addSelf(new Vector2(
-                (float) (transform.position.x * Math.sin(Math.toRadians(90) - transform.rotation.getAngle()) +
-                        transform.position.y * Math.cos(Math.toRadians(90) - transform.rotation.getAngle())),
-                (float) (transform.position.x * Math.cos(Math.toRadians(90) - transform.rotation.getAngle()) -
-                        transform.position.y * Math.sin(Math.toRadians(90) - transform.rotation.getAngle()))
-        ));
+        result.addSelf(new Vector2(transform.position.x, -transform.position.y));
         return result;
     }
 }

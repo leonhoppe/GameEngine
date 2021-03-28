@@ -36,6 +36,13 @@ public class Transform implements Serializable {
     }
     protected Transform(Vector2 pos, Dimension dim) { this(); position = pos; scale = dim; }
 
+    public void add(Transform transform) {
+        position.addSelf(transform.position);
+        scale.width += transform.scale.width;
+        scale.height += transform.scale.height;
+        rotation.angle += transform.rotation.angle;
+    }
+
     //Modify Rotation
     public void rotate(float angle) { rotation.angle += Math.toRadians(angle); }
     public void lookAt(Vector2 pos) {

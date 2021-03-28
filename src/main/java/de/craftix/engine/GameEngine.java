@@ -1,7 +1,6 @@
 package de.craftix.engine;
 
 import de.craftix.engine.objects.GameObject;
-import de.craftix.engine.objects.TextureObject;
 import de.craftix.engine.render.Camera;
 import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.ScreenObject;
@@ -11,8 +10,6 @@ import de.craftix.engine.var.Scene;
 import de.craftix.engine.var.Updater;
 
 import javax.swing.*;
-import java.io.File;
-import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
@@ -104,15 +101,6 @@ public class GameEngine {
         object.start();
     }
     public static void destroy(GameObject object) {
-        getActiveScene().removeObject(object);
-        object.stop();
-    }
-
-    public static void addTextureObject(TextureObject object) {
-        getActiveScene().addObject(object);
-        object.start();
-    }
-    public static void removeTextureObject(TextureObject object) {
         getActiveScene().removeObject(object);
         object.stop();
     }

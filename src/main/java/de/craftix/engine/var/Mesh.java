@@ -6,6 +6,7 @@ import de.craftix.engine.render.Shape;
 import java.awt.*;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 
 public class Mesh implements Serializable {
@@ -67,6 +68,34 @@ public class Mesh implements Serializable {
             mesh.add(new Area(polygon));
         }
         return mesh;
+    }
+    public Area getRawMesh() {
+        if (shape != null) {
+            assert transform != null;
+            java.awt.Shape dimensions = null;
+            switch (shape) {
+                case CIRCLE:
+                    dimensions = new Ellipse2D.Float(-transform.scale.width / 2f, -transform.scale.height / 2f,
+                            transform.scale.width, transform.scale.height);
+                    break;
+                case RECTANGLE:
+                    dimensions = new Rectangle2D.Float(-transform.scale.width / 2f, -transform.scale.height / 2f,
+                            transform.scale.width, transform.scale.height);
+                    break;
+                case TRIANGLE:
+                    Point top = new Point(0, (int) (-transform.scale.height / 2f));
+                    Point right = new Point((int) (-transform.scale.width / 2f),
+                            (int) (transform.scale.height / 2f));
+                    Point left = new Point((int) (transform.scale.width / 2f),
+                            (int) (transform.scale.height / 2));
+                    dimensions = new Polygon(new int[]{top.x, right.x, left.x},
+                            new int[]{top.y, right.y, left.y},
+                            3);
+                    break;
+            }
+            return new Area(dimensions);
+        }
+        return getMesh();
     }
     public Vector2[][] getTriangles() {
         assert points != null;

@@ -1,4 +1,4 @@
-package de.craftix.engine.objects;
+package de.craftix.engine.ui;
 
 import de.craftix.engine.render.Screen;
 import de.craftix.engine.var.Vector2;
@@ -9,26 +9,25 @@ import java.awt.font.TextLayout;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Rectangle2D;
 
-public class TextComponent extends RenderingComponent {
+public class UITextComponent extends UIComponent {
     private String text;
     private Font font;
     private Color color;
-    private boolean onlyText;
 
-    public TextComponent(String text, Font font, Color color, boolean onlyText)
-    { this.text = text; this.font = font; this.onlyText = onlyText; this.color = color; }
+    public UITextComponent(String text, Font font, Color color)
+    { this.text = text; this.font = font; this.color = color; }
 
     @Override
     public void render(Graphics2D g) {
-        if (!onlyText)
-            object.render(g);
-        Font ram = g.getFont();
         AffineTransform original = g.getTransform();
-        AffineTransform trans = Screen.getTransform(object.transform);
-        g.setTransform(trans);
+        g.setTransform(Screen.getRawTransform(element.transform));
+        Vector2 pos = element.alignment.getScreenPosition(element.transform);
+        g.translate(pos.getX(), pos.getY());
+        Font ram = g.getFont();
         g.setColor(color);
         g.setFont(font);
 
+        //Render Text
         if (text.contains("\n")) {
             FontRenderContext context = g.getFontRenderContext();
             TextLayout layout = new TextLayout(text, font, context);
@@ -55,12 +54,11 @@ public class TextComponent extends RenderingComponent {
             g.drawString(text, middle.x, middle.y);
         }
 
-        g.setFont(ram);
         g.setTransform(original);
+        g.setFont(ram);
     }
 
     public void setText(String text) { this.text = text; }
-    public void setOnlyText(boolean onlyText) { this.onlyText = onlyText; }
     public void setFont(Font font) { this.font = font; }
     public void setColor(Color color) { this.color = color; }
 }
