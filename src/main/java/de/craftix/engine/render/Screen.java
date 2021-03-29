@@ -5,6 +5,7 @@ import de.craftix.engine.InputManager;
 import de.craftix.engine.Logger;
 import de.craftix.engine.objects.components.Component;
 import de.craftix.engine.objects.GameObject;
+import de.craftix.engine.var.Quaternion;
 import de.craftix.engine.var.Transform;
 import de.craftix.engine.var.Updater;
 import de.craftix.engine.var.Vector2;
@@ -118,6 +119,12 @@ public class Screen extends JLabel {
             }
         }
 
+        //Apply Camera Transform
+        AffineTransform orig = g2.getTransform();
+        g2.translate(width() / 2f + GameEngine.getCamera().transform.position.x, height() / 2f + GameEngine.getCamera().transform.position.y);
+        g2.rotate(GameEngine.getCamera().transform.rotation.getAngle(), 0, 0);
+        g2.translate(-g2.getTransform().getTranslateX(), -g2.getTransform().getTranslateY());
+
         g2.setColor(Color.BLACK);
         Shape self = new Rectangle(0, 0, getWidth(), getHeight());
         ArrayList<Float> layers = new ArrayList<>(GameEngine.getLayers().values());
@@ -133,6 +140,7 @@ public class Screen extends JLabel {
                     object.render(g2);
             }
         }
+        g2.setTransform(orig);
 
         GameEngine.getActiveScene().getUIManager().renderComponents(g2);
 
@@ -174,8 +182,8 @@ public class Screen extends JLabel {
 
     public static Point calculateScreenPosition(Transform transform) {
         Vector2 result = new Vector2(instance.getWidth() / 2f, instance.getHeight() / 2f);
-        result.x -= GameEngine.getCamera().x;
-        result.y += GameEngine.getCamera().y;
+        result.x -= GameEngine.getCamera().transform.position.x;
+        result.y += GameEngine.getCamera().transform.position.y;
         result.x -= (transform.scale.width * GameEngine.getCamera().getScale()) / 2f;
         result.y -= (transform.scale.height * GameEngine.getCamera().getScale()) / 2f;
         result.y += (transform.position.x * GameEngine.getCamera().getScale()) * Math.cos(Math.toRadians(90) - transform.rotation.getAngle()) -
@@ -200,11 +208,12 @@ public class Screen extends JLabel {
     }
     public static Vector2 calculateVirtualPosition(Vector2 pos) {
         Vector2 result = new Vector2(-(instance.getWidth() / 2f), -(instance.getHeight() / 2f));
-        result.x += GameEngine.getCamera().x + pos.x;
-        result.y += -GameEngine.getCamera().y + pos.y;
+        result.x += GameEngine.getCamera().transform.position.x + pos.x;
+        result.y += -GameEngine.getCamera().transform.position.y + pos.y;
         result.x /= GameEngine.getCamera().getScale();
         result.y /= GameEngine.getCamera().getScale();
         result.y *= -1;
+
         return result;
     }
 

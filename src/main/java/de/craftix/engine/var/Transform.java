@@ -75,8 +75,8 @@ public class Transform implements Serializable {
         position = pp;
 
         Vector2 rotVector = new Vector2(pos);
-        rotVector.addSelf(position);
-        rotation.angle = Math.atan2(rotVector.x, rotVector.y);
+        rotVector.subSelf(position);
+        rotation.angle = Math.atan2(rotVector.x, rotVector.y) + Math.toRadians(180);
     }
 
     //Modify Position
