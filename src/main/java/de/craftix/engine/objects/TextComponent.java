@@ -20,8 +20,7 @@ public class TextComponent extends RenderingComponent {
 
     @Override
     public void render(Graphics2D g) {
-        if (!onlyText)
-            object.render(g);
+        object.renderObject(!onlyText);
         Font ram = g.getFont();
         AffineTransform original = g.getTransform();
         AffineTransform trans = Screen.getTransform(object.transform);

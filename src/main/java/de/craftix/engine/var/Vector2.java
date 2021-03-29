@@ -2,6 +2,7 @@ package de.craftix.engine.var;
 
 import java.awt.*;
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Vector2 implements Serializable {
     public static Vector2 forward() { return new Vector2(0, 1); }
@@ -24,12 +25,21 @@ public class Vector2 implements Serializable {
     public int getX() { return Math.round(x); }
     public int getY() { return Math.round(y); }
 
-    @Override
+    public Vector2 copy() { return new Vector2(x, y); }
     public String toString() {
         return "Vector2{" +
                 "x=" + x +
                 ", y=" + y +
                 '}';
+    }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vector2 vector2 = (Vector2) o;
+        return Float.compare(vector2.x, x) == 0 && Float.compare(vector2.y, y) == 0;
+    }
+    public int hashCode() {
+        return Objects.hash(x, y);
     }
 
     //Vector Math

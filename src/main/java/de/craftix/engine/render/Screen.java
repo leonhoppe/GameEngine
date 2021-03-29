@@ -131,14 +131,7 @@ public class Screen extends JLabel {
                 if (object.renderBounds) g2.draw(object.getScreenShape());
                 if (shape.isEmpty()) continue;
                 if (object.layer == layer)
-                    if (object instanceof GameObject) {
-                        GameObject go = (GameObject) object;
-                        if (go.hasComponent(RenderingComponent.class))
-                            ((RenderingComponent) go.getComponent(RenderingComponent.class)).render(g2);
-                        else
-                            go.render(g2);
-                    }else
-                        object.render(g2);
+                    object.render(g2);
             }
         }
 

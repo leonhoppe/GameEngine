@@ -13,12 +13,14 @@ public class UITextComponent extends UIComponent {
     private String text;
     private Font font;
     private Color color;
+    private boolean onlyText;
 
-    public UITextComponent(String text, Font font, Color color)
-    { this.text = text; this.font = font; this.color = color; }
+    public UITextComponent(String text, Font font, Color color, boolean onlyText)
+    { this.text = text; this.font = font; this.color = color; this.onlyText = onlyText; }
 
     @Override
     public void render(Graphics2D g) {
+        element.renderObject(!onlyText);
         AffineTransform original = g.getTransform();
         g.setTransform(Screen.getRawTransform(element.transform));
         Vector2 pos = element.getAlignment().getScreenPosition(element.transform);
@@ -61,4 +63,5 @@ public class UITextComponent extends UIComponent {
     public void setText(String text) { this.text = text; }
     public void setFont(Font font) { this.font = font; }
     public void setColor(Color color) { this.color = color; }
+    public void setOnlyText(boolean onlyText) { this.onlyText = onlyText; }
 }

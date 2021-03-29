@@ -16,6 +16,7 @@ import java.util.List;
 
 public class GameObject extends ScreenObject implements Serializable {
     private final List<Component> components = new ArrayList<>();
+    private boolean renderObject = true;
 
     public GameObject(Sprite sprite, Vector2 position) {
         super();
@@ -42,8 +43,6 @@ public class GameObject extends ScreenObject implements Serializable {
     }
 
     public void addComponent(Component component) {
-        if (hasComponent(component.getClass()))
-            throw new IllegalArgumentException("This Object already has a Rendering Component");
         components.add(component);
         component.initialise(this);
     }
@@ -60,14 +59,12 @@ public class GameObject extends ScreenObject implements Serializable {
     public boolean hasComponent(Class<? extends Component> component) {
         for (Component all : components) {
             if (all.getClass() == component) return true;
-            if (component.isAssignableFrom(all.getClass())) return true;
         }
         return false;
     }
     public Component getComponent(Class<? extends Component> component) {
         for (Component all : components) {
             if (all.getClass() == component) return all;
-            if (component.isAssignableFrom(all.getClass())) return all;
         }
         return null;
     }
@@ -80,7 +77,13 @@ public class GameObject extends ScreenObject implements Serializable {
 
     @Override
     public void render(Graphics2D g) {
-        super.render(g);
+        if (renderObject)
+            super.render(g);
+
+        for (Component c : getComponents()) {
+            if (!(c instanceof RenderingComponent)) continue;
+            ((RenderingComponent) c).render(g);
+        }
     }
 
     @Override
@@ -95,4 +98,5 @@ public class GameObject extends ScreenObject implements Serializable {
     public void setAnimation(Animation animation) { this.animation = animation; }
     public void setSprite(Sprite texture) { this.sprite = texture; }
     public void setVisible(boolean visible) { this.visible = visible; }
+    public void renderObject(boolean renderObject) { this.renderObject = renderObject; }
 }

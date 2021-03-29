@@ -1,6 +1,7 @@
 package de.craftix.engine.var;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Quaternion implements Serializable {
     public static Quaternion IDENTITY() { return new Quaternion(Math.toRadians(0)); }
@@ -17,11 +18,18 @@ public class Quaternion implements Serializable {
 
 
     public Quaternion copy() { return new Quaternion(angle); }
-
-    @Override
     public String toString() {
         return "Quaternion{" +
                 "angle=" + Math.toDegrees(angle) +
                 '}';
+    }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Quaternion that = (Quaternion) o;
+        return Double.compare(that.angle, angle) == 0;
+    }
+    public int hashCode() {
+        return Objects.hash(angle);
     }
 }

@@ -1,6 +1,7 @@
 package de.craftix.engine.var;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Transform implements Serializable {
     public static Transform parse(String str) {
@@ -113,13 +114,20 @@ public class Transform implements Serializable {
         copy.rotation = new Quaternion(rotation.getAngle());
         return copy;
     }
-
-    @Override
     public String toString() {
         return "Transform{" +
                 "position=" + position +
                 ", scale=" + scale +
                 ", rotation=" + rotation +
                 '}';
+    }
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transform transform = (Transform) o;
+        return Objects.equals(position, transform.position) && Objects.equals(scale, transform.scale) && Objects.equals(rotation, transform.rotation);
+    }
+    public int hashCode() {
+        return Objects.hash(position, scale, rotation);
     }
 }
