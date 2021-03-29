@@ -1,6 +1,9 @@
 package de.craftix.engine.objects;
 
 import de.craftix.engine.GameEngine;
+import de.craftix.engine.objects.components.Component;
+import de.craftix.engine.objects.components.MeshRenderer;
+import de.craftix.engine.objects.components.RenderingComponent;
 import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
@@ -15,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameObject extends ScreenObject implements Serializable {
-    private final List<Component> components = new ArrayList<>();
+    private final List<de.craftix.engine.objects.components.Component> components = new ArrayList<>();
     private boolean renderObject = true;
 
     public GameObject(Sprite sprite, Vector2 position) {
@@ -42,28 +45,28 @@ public class GameObject extends ScreenObject implements Serializable {
         this.animation = object.getAnimation();
     }
 
-    public void addComponent(Component component) {
+    public void addComponent(de.craftix.engine.objects.components.Component component) {
         components.add(component);
         component.initialise(this);
     }
-    public Component[] getComponents() { return components.toArray(new Component[0]); }
+    public de.craftix.engine.objects.components.Component[] getComponents() { return components.toArray(new de.craftix.engine.objects.components.Component[0]); }
 
-    public void removeComponent(Class<? extends Component> component) {
-        for (Component all : components) {
+    public void removeComponent(Class<? extends de.craftix.engine.objects.components.Component> component) {
+        for (de.craftix.engine.objects.components.Component all : components) {
             if (all.getClass() == component) {
                 components.remove(all);
                 return;
             }
         }
     }
-    public boolean hasComponent(Class<? extends Component> component) {
-        for (Component all : components) {
+    public boolean hasComponent(Class<? extends de.craftix.engine.objects.components.Component> component) {
+        for (de.craftix.engine.objects.components.Component all : components) {
             if (all.getClass() == component) return true;
         }
         return false;
     }
-    public Component getComponent(Class<? extends Component> component) {
-        for (Component all : components) {
+    public de.craftix.engine.objects.components.Component getComponent(Class<? extends de.craftix.engine.objects.components.Component> component) {
+        for (de.craftix.engine.objects.components.Component all : components) {
             if (all.getClass() == component) return all;
         }
         return null;
@@ -71,7 +74,7 @@ public class GameObject extends ScreenObject implements Serializable {
 
     public GameObject copy() {
         GameObject copy = new GameObject(super.copy());
-        for (Component component : components) copy.addComponent(component.copy(copy));
+        for (de.craftix.engine.objects.components.Component component : components) copy.addComponent(component.copy(copy));
         return copy;
     }
 

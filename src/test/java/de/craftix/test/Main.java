@@ -3,14 +3,12 @@ package de.craftix.test;
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.InputManager;
 import de.craftix.engine.objects.GameObject;
-import de.craftix.engine.objects.TextComponent;
 import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.render.SpriteMap;
 import de.craftix.engine.var.*;
 import de.craftix.engine.var.Dimension;
 
-import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Main extends GameEngine {
