@@ -24,7 +24,7 @@ public class Main extends GameEngine {
         Screen.setAntialiasingEffectTextures(false);
         InputManager.setFullscreenKey(KeyEvent.VK_F11);
         InputManager.setClosingKey(KeyEvent.VK_ESCAPE);
-        setup(800, 600, "GameEngine", new Main(), 60, true);
+        setup(800, 600, "GameEngine", new Main(), 120, true);
     }
 
     @Override

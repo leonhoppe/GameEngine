@@ -63,4 +63,10 @@ public class Vector2 implements Serializable {
     public void subSelf(float value) { subSelf(new Vector2(value)); }
     public void mulSelf(float value) { mulSelf(new Vector2(value)); }
     public void divSelf(float value) { divSelf(new Vector2(value)); }
+
+    public float dist(Vector2 vector) {
+        float px = vector.x - x;
+        float py = vector.y - y;
+        return (float) Math.sqrt(px * px + py * py);
+    }
 }

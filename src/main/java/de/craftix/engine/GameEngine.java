@@ -18,7 +18,6 @@ import java.util.Timer;
 public class GameEngine {
     private static GameEngine instance;
     private static Screen screen;
-    private static Camera camera;
     private static Scene activeScene;
     private static Logger logger;
     private static Logger globalLogger;
@@ -33,8 +32,6 @@ public class GameEngine {
         logger = new Logger("GameEngine");
         globalLogger = new Logger(title);
         logger.info("Logger initialised");
-        camera = new Camera();
-        logger.info("Camera initialised");
         activeScene = new Scene();
         logger.info("Scene initialised");
         GameEngine.instance = instance;
@@ -127,7 +124,7 @@ public class GameEngine {
     public void initialise() {}
 
     public static GameEngine getInstance() { return instance; }
-    public static Camera getCamera() { return camera; }
+    public static Camera getCamera() { return getActiveScene().getCamera(); }
     public static Scene getActiveScene() { return activeScene; }
     public static Float getLayer(String name) { return layers.get(name); }
     public static HashMap<String, Float> getLayers() { return layers; }
