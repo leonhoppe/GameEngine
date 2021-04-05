@@ -42,13 +42,11 @@ public class MySQL implements Serializable {
 
     public boolean isConnected() { return con != null; }
 
-    public boolean insert(String qry) {
+    public void insert(String qry) {
         if (!isConnected()) throw new NullPointerException("MySQL not connected");
         try {
             con.prepareStatement(qry).executeUpdate();
-            return true;
         }catch (Exception e) { e.printStackTrace(); }
-        return false;
     }
 
     public ResultSet getData(String qry) {

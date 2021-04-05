@@ -23,7 +23,7 @@ public class SpriteMap implements Serializable {
     }
 
     public Sprite getSprite(int col, int row){
-        return new Sprite(sprite.texture.getSubimage(col * width, row * height, width, height));
+        return new Sprite(sprite.texture.getSubimage(col * width, row * height, width, height), false);
     }
 
     public int getCols() { return cols; }

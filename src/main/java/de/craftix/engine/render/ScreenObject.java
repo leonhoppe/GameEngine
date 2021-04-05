@@ -33,10 +33,10 @@ public class ScreenObject implements Serializable {
         }
 
         if (sprite.texture != null && (animation == null || !animation.isRunning()))
-            g.drawImage(sprite.getTexture(transform.scale.width, transform.scale.height), (int) -((transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-transform.scale.height * GameEngine.getCamera().getScale() / 2), null);
+            sprite.render(g, transform);
 
         if (animation != null)
-            g.drawImage(animation.getImage().getTexture(transform.scale.getWidth(), transform.scale.getHeight()), (int) -((transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-transform.scale.height * GameEngine.getCamera().getScale() / 2), null);
+            animation.getImage().render(g, transform);
 
         g.setColor(Color.BLACK);
         g.setTransform(original);

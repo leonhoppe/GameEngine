@@ -7,6 +7,7 @@ import de.craftix.engine.objects.components.Component;
 import de.craftix.engine.objects.GameObject;
 import de.craftix.engine.var.Quaternion;
 import de.craftix.engine.var.Transform;
+import de.craftix.engine.var.Dimension;
 import de.craftix.engine.var.Updater;
 import de.craftix.engine.var.Vector2;
 
@@ -230,7 +231,7 @@ public class Screen extends JLabel {
             frame.setVisible(false);
             frame.dispose();
             frame.setUndecorated(true);
-            Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+            java.awt.Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             frame.setBounds(0, 0, dim.width, dim.height);
             frame.setVisible(true);
             instance.requestFocus();
