@@ -14,7 +14,7 @@ import java.awt.event.KeyEvent;
 public class Main extends GameEngine {
     private static final SpriteMap blocks = new SpriteMap(5, Sprite.load("terrain.png"), 16, 16);
     private static final GameObject test = new GameObject(blocks.getSprite(3), new Vector2(0, 0), new Dimension(2, 2));
-    private static final GameObject test2 = new GameObject(blocks.getSprite(2), new Vector2(0, 2.5f), new Dimension(1.5f, 1.5f));
+    private static final GameObject test2 = new GameObject(blocks.getSprite(2), new Vector2(0, 0), new Dimension(1.5f, 1.5f));
 
     public static void main(String[] args) {
         Screen.antialiasing(true);
@@ -31,8 +31,9 @@ public class Main extends GameEngine {
     public void initialise() {
         setIcon(blocks.getSprite(4));
         getActiveScene().setBackground(blocks.getSprite(1));
-        instantiate(test);
+        //instantiate(test);
         instantiate(test2);
+        test2.getSprite().repeat = true;
     }
 
     @Override
@@ -57,5 +58,7 @@ public class Main extends GameEngine {
             getCamera().z += Screen.getFixedDeltaTime();
         if (InputManager.isKeyPressed(KeyEvent.VK_SHIFT))
             getCamera().z -= Screen.getFixedDeltaTime();
+
+        test2.transform.rotate(1);
     }
 }

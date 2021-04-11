@@ -12,10 +12,9 @@ import java.awt.geom.Area;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.Serializable;
 import java.util.Objects;
 
-public class Sprite implements Serializable {
+public class Sprite {
     private static Resizer resizingMethod = null;
 
     public static Sprite load(String path) {
@@ -34,9 +33,9 @@ public class Sprite implements Serializable {
     public Color color;
     public Shape shape;
 
-    public BufferedImage texture;
-    public BufferedImage bufferedTexture;
-    public BufferedImage bufferedOriginal;
+    public transient BufferedImage texture;
+    public transient BufferedImage bufferedTexture;
+    public transient BufferedImage bufferedOriginal;
     public boolean repeat = false;
 
     public Sprite(Color color, Shape shape) { this.color = color; this.shape = shape; }
