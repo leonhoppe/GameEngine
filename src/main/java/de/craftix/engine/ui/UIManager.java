@@ -1,6 +1,7 @@
 package de.craftix.engine.ui;
 
 import de.craftix.engine.render.Screen;
+import de.craftix.engine.ui.UIElement;
 
 import java.awt.*;
 import java.awt.geom.Area;

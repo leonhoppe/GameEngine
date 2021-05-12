@@ -1,4 +1,4 @@
-package de.craftix.engine.ui;
+package de.craftix.engine.ui.components;
 
 import de.craftix.engine.render.Screen;
 import de.craftix.engine.var.Vector2;

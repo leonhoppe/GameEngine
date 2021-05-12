@@ -119,7 +119,7 @@ public class Sprite {
     }
     public void renderRaw(Graphics2D g, Transform transform) {
         if (!repeat)
-            g.drawImage(getTexture(transform.scale.width, transform.scale.height), (int) -(transform.scale.width / 2f), (int) -(transform.scale.height / 2), null);
+            g.drawImage(getTextureRaw(transform.scale.width, transform.scale.height), (int) -(transform.scale.width / 2f), (int) -(transform.scale.height / 2), null);
         else {
             //Repeat
             AffineTransform orig = g.getTransform();

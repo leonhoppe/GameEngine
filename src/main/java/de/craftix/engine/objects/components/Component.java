@@ -11,6 +11,7 @@ public class Component implements Serializable {
     public Component() {}
 
     public void update() {}
+    public void fixedUpdate() {}
 
     public void initialise(GameObject object) { this.object = object; }
 

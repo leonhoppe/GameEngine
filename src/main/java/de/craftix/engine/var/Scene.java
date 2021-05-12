@@ -15,6 +15,7 @@ public class Scene implements Serializable {
     private final UIManager uiManager = new UIManager();
     private final Camera camera = new Camera();
     private Sprite background;
+    private boolean bg_autoscale;
 
     public GameObject[] getGameObjects() {
         ArrayList<GameObject> gameObjects = new ArrayList<>();
@@ -32,8 +33,9 @@ public class Scene implements Serializable {
         objects.remove(object);
     }
 
-    public void setBackground(Sprite bg) { background = bg; }
+    public void setBackground(Sprite bg, boolean autoscale) { background = bg; bg_autoscale = autoscale; }
     public Sprite getBackground() { return background; }
+    public boolean getBGAutoScale() { return bg_autoscale; }
 
     public UIManager getUIManager() { return uiManager; }
     public Camera getCamera() { return camera; }

@@ -45,7 +45,7 @@ public class Transform implements Serializable {
     }
 
     //Modify Rotation
-    public void rotate(float angle) { rotation.angle += Math.toRadians(angle); }
+    public void rotate(double angle) { rotation.angle += Math.toRadians(angle); }
     public void lookAt(Vector2 pos) {
         pos.x -= position.x;
         pos.y -= position.y;

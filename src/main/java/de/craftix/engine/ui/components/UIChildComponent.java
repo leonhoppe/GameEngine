@@ -1,6 +1,7 @@
-package de.craftix.engine.ui;
+package de.craftix.engine.ui.components;
 
 import de.craftix.engine.GameEngine;
+import de.craftix.engine.ui.UIElement;
 import de.craftix.engine.var.Dimension;
 import de.craftix.engine.var.Transform;
 import de.craftix.engine.var.Vector2;
@@ -24,7 +25,7 @@ public class UIChildComponent extends UIComponent {
 
         for (float layer : sortedLayers) {
             for (UIElement child : children) {
-                if (child.layer != layer) continue;
+                if (child.getLayer() != layer) continue;
                 Transform original = child.transform.copy();
                 Transform self = element.transform.copy();
                 self.scale = new Dimension();

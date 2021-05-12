@@ -3,12 +3,15 @@ package de.craftix.test;
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.InputManager;
 import de.craftix.engine.objects.GameObject;
+import de.craftix.engine.objects.components.AnimationComponent;
 import de.craftix.engine.render.Screen;
+import de.craftix.engine.render.Shape;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.render.SpriteMap;
 import de.craftix.engine.var.*;
 import de.craftix.engine.var.Dimension;
 
+import java.awt.*;
 import java.awt.event.KeyEvent;
 
 public class Main extends GameEngine {
@@ -20,7 +23,7 @@ public class Main extends GameEngine {
         Screen.antialiasing(true);
         Screen.showFrames(true);
         Screen.setResizeable(false);
-        Screen.limitFPS(true);
+        Screen.setFramesPerSecond(120);
         Screen.setAntialiasingEffectTextures(false);
         InputManager.setFullscreenKey(KeyEvent.VK_F11);
         InputManager.setClosingKey(KeyEvent.VK_ESCAPE);
@@ -30,9 +33,9 @@ public class Main extends GameEngine {
     @Override
     public void initialise() {
         setIcon(blocks.getSprite(4));
-        getActiveScene().setBackground(blocks.getSprite(1));
-        //instantiate(test);
-        instantiate(test2);
+        getActiveScene().setBackground(blocks.getSprite(1), true);
+        instantiate(test);
+        //instantiate(test2);
         test2.getSprite().repeat = true;
     }
 

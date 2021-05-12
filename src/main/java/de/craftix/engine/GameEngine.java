@@ -1,10 +1,12 @@
 package de.craftix.engine;
 
 import de.craftix.engine.objects.GameObject;
+import de.craftix.engine.objects.components.Component;
 import de.craftix.engine.render.Camera;
 import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
+import de.craftix.engine.ui.UIManager;
 import de.craftix.engine.var.Input;
 import de.craftix.engine.var.Scene;
 import de.craftix.engine.var.Updater;
@@ -74,8 +76,12 @@ public class GameEngine {
     private static void handleDeltaUpdates() {
         Screen.updateFixedDeltaTime();
         instance.fixedUpdate();
-        for (ScreenObject object : activeScene.getGameObjects())
+        for (ScreenObject object : activeScene.getRawObjects()) {
             object.fixedUpdate();
+            if (object instanceof GameObject)
+                for (Component component : ((GameObject) object).getComponents())
+                    component.fixedUpdate();
+        }
         for (Updater u : updater)
             u.fixedUpdate();
     }
@@ -126,6 +132,7 @@ public class GameEngine {
     public static GameEngine getInstance() { return instance; }
     public static Camera getCamera() { return getActiveScene().getCamera(); }
     public static Scene getActiveScene() { return activeScene; }
+    public static UIManager getUIManager() { return activeScene.getUIManager(); }
     public static Float getLayer(String name) { return layers.get(name); }
     public static HashMap<String, Float> getLayers() { return layers; }
     public static Screen getScreenInstance() { return screen; }

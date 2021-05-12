@@ -1,4 +1,6 @@
-package de.craftix.engine.ui;
+package de.craftix.engine.ui.components;
+
+import de.craftix.engine.ui.UIElement;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -8,7 +10,7 @@ public abstract class UIComponent implements Serializable {
 
     public abstract void render(Graphics2D g);
 
-    protected void initialise(UIElement element) { this.element = element; }
+    public void initialise(UIElement element) { this.element = element; }
 
     public UIElement getElement() { return element; }
 }

@@ -1,6 +1,7 @@
 package de.craftix.engine.ui;
 
 import de.craftix.engine.render.Sprite;
+import de.craftix.engine.ui.components.UIComponent;
 import de.craftix.engine.var.Animation;
 import de.craftix.engine.var.Mesh;
 import de.craftix.engine.var.Transform;

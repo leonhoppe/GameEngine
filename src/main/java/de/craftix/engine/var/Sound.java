@@ -6,14 +6,15 @@ import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
 import java.io.File;
 import java.io.Serializable;
+import java.net.URI;
 
 public class Sound implements Serializable {
     private AudioInputStream stream;
     private Clip clip;
 
-    public Sound(File audioFile) {
+    public Sound(URI audioFile) {
         try {
-            stream = AudioSystem.getAudioInputStream(audioFile);
+            stream = AudioSystem.getAudioInputStream(new File(audioFile));
             clip = AudioSystem.getClip();
             clip.open(stream);
         }catch (Exception e) { e.printStackTrace(); }
