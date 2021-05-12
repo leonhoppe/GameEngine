@@ -3,7 +3,7 @@ package de.craftix.engine.var;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Transform implements Serializable {
+public class Transform implements Serializable, Transformation {
     public static Transform parse(String str) {
         Transform trans = new Transform();
         str = str.replace("Transform", "").replaceAll("\\{", "").replaceAll("}", "").replace(" ", "");

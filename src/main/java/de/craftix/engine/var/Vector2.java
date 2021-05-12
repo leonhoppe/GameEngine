@@ -4,7 +4,7 @@ import java.awt.*;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Vector2 implements Serializable {
+public class Vector2 implements Serializable, Transformation {
     public static Vector2 forward() { return new Vector2(0, 1); }
     public static Vector2 backward() { return new Vector2(0, -1); }
     public static Vector2 right() { return new Vector2(1, 0); }

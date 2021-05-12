@@ -1,17 +1,24 @@
-package de.craftix.engine.objects.components;
+package de.craftix.engine.ui.components;
 
-import de.craftix.engine.objects.GameObject;
+import de.craftix.engine.ui.UIElement;
 import de.craftix.engine.var.*;
+import de.craftix.engine.var.Dimension;
 
+import java.awt.*;
 import java.util.ArrayList;
 
-public class AnimationComponent extends Component {
+public class UIAnimationComponent extends UIComponent {
+    @Override
+    public void render(Graphics2D g) {
+
+    }
+
     private final Keyframe<Vector2>[] posKeyframes;
     private final Keyframe<Dimension>[] scaleKeyframes;
     private final Keyframe<Quaternion>[] rotKeyframes;
 
     @SafeVarargs
-    public AnimationComponent(Keyframe<? extends Transformation>... keyframes) {
+    public UIAnimationComponent(Keyframe<? extends Transformation>... keyframes) {
         ArrayList<Keyframe<Vector2>> vectors = new ArrayList<>();
         ArrayList<Keyframe<Dimension>> dimensions = new ArrayList<>();
         ArrayList<Keyframe<Quaternion>> quaternions = new ArrayList<>();
@@ -34,11 +41,11 @@ public class AnimationComponent extends Component {
     }
 
     @Override
-    public void initialise(GameObject object) {
-        super.initialise(object);
-        rot_Original = object.transform.rotation.copy();
-        pos_Original = object.transform.position.copy();
-        scale_Original = object.transform.scale.copy();
+    public void initialise(UIElement element) {
+        super.initialise(element);
+        rot_Original = element.transform.rotation.copy();
+        pos_Original = element.transform.position.copy();
+        scale_Original = element.transform.scale.copy();
 
         if (rotKeyframes.length == 0)
             rot_running = false;
@@ -63,9 +70,9 @@ public class AnimationComponent extends Component {
         if (!rot_running) return;
         Keyframe<Quaternion> frame = rotKeyframes[rot_currentKeyframe];
         if (rot_passedTPS == frame.startPoint + frame.timeInTPS) {
-            object.transform.rotation = frame.value.copy();
+            element.transform.rotation = frame.value.copy();
             rot_currentKeyframe++;
-            rot_Original = object.transform.rotation.copy();
+            rot_Original = element.transform.rotation.copy();
             if (rot_currentKeyframe >= rotKeyframes.length)
                 rot_running = false;
             return;
@@ -75,7 +82,7 @@ public class AnimationComponent extends Component {
 
         double difference = frame.value.getAngle() - rot_Original.getAngle();
         difference /= frame.timeInTPS;
-        object.transform.rotate(Math.toDegrees(difference));
+        element.transform.rotate(Math.toDegrees(difference));
     }
 
     private boolean pos_running = true;
@@ -86,9 +93,9 @@ public class AnimationComponent extends Component {
         if (!pos_running) return;
         Keyframe<Vector2> frame = posKeyframes[pos_currentKeyframe];
         if (pos_passedTPS == frame.startPoint + frame.timeInTPS) {
-            object.transform.position = frame.value.copy();
+            element.transform.position = frame.value.copy();
             pos_currentKeyframe++;
-            pos_Original = object.transform.position.copy();
+            pos_Original = element.transform.position.copy();
             if (pos_currentKeyframe >= posKeyframes.length)
                 pos_running = false;
             return;
@@ -101,7 +108,7 @@ public class AnimationComponent extends Component {
                 frame.value.y - pos_Original.y
         );
         motion.divSelf(frame.timeInTPS);
-        object.transform.position.addSelf(motion);
+        element.transform.position.addSelf(motion);
     }
 
     private boolean scale_running = true;
@@ -112,9 +119,9 @@ public class AnimationComponent extends Component {
         if (!scale_running) return;
         Keyframe<Dimension> frame = scaleKeyframes[scale_currentKeyframe];
         if (scale_passedTPS == frame.startPoint + frame.timeInTPS) {
-            object.transform.scale = frame.value.copy();
+            element.transform.scale = frame.value.copy();
             scale_currentKeyframe++;
-            scale_Original = object.transform.scale.copy();
+            scale_Original = element.transform.scale.copy();
             if (scale_currentKeyframe >= scaleKeyframes.length)
                 scale_running = false;
             return;
@@ -128,7 +135,7 @@ public class AnimationComponent extends Component {
         );
         scale.width /= frame.timeInTPS;
         scale.height /= frame.timeInTPS;
-        object.transform.scale.width += scale.width;
-        object.transform.scale.height += scale.height;
+        element.transform.scale.width += scale.width;
+        element.transform.scale.height += scale.height;
     }
 }

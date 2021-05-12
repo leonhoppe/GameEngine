@@ -8,6 +8,9 @@ import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.Shape;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.render.SpriteMap;
+import de.craftix.engine.ui.UIAlignment;
+import de.craftix.engine.ui.UIElement;
+import de.craftix.engine.ui.components.UIAnimationComponent;
 import de.craftix.engine.var.*;
 import de.craftix.engine.var.Dimension;
 
@@ -23,7 +26,7 @@ public class Main extends GameEngine {
         Screen.antialiasing(true);
         Screen.showFrames(true);
         Screen.setResizeable(false);
-        Screen.setFramesPerSecond(120);
+        Screen.setFramesPerSecond(60);
         Screen.setAntialiasingEffectTextures(false);
         InputManager.setFullscreenKey(KeyEvent.VK_F11);
         InputManager.setClosingKey(KeyEvent.VK_ESCAPE);
@@ -34,9 +37,25 @@ public class Main extends GameEngine {
     public void initialise() {
         setIcon(blocks.getSprite(4));
         getActiveScene().setBackground(blocks.getSprite(1), true);
-        instantiate(test);
+        //instantiate(test);
         //instantiate(test2);
-        test2.getSprite().repeat = true;
+        //test2.getSprite().repeat = true;
+
+        UIElement e1 = new UIElement(new Transform(new Vector2(), new Dimension(50), Quaternion.IDENTITY()), blocks.getSprite(2), UIAlignment.CENTER);
+        UIElement t1 = new UIElement(new Transform(new Vector2(0, 200), new Dimension(50), Quaternion.IDENTITY()), new Sprite(Color.BLACK, Shape.RECTANGLE), UIAlignment.CENTER);
+        UIElement t2 = new UIElement(new Transform(new Vector2(200, 200), new Dimension(50), Quaternion.IDENTITY()), new Sprite(Color.BLACK, Shape.RECTANGLE), UIAlignment.CENTER);
+
+        e1.addComponent(new UIAnimationComponent(
+                new Keyframe<>(new Vector2(0, 200), 0, 500),
+                new Keyframe<>(new Vector2(200, 200), 600, 1000),
+                new Keyframe<>(Quaternion.euler(360), 800, 800),
+                new Keyframe<>(new Dimension(150), 300, 1000),
+                new Keyframe<>(new Transform(new Vector2(), new Dimension(50), Quaternion.IDENTITY()), 1700, 200)
+        ));
+
+        getUIManager().addElement(t1);
+        getUIManager().addElement(t2);
+        getUIManager().addElement(e1);
     }
 
     @Override
@@ -62,6 +81,6 @@ public class Main extends GameEngine {
         if (InputManager.isKeyPressed(KeyEvent.VK_SHIFT))
             getCamera().z -= Screen.getFixedDeltaTime();
 
-        test2.transform.rotate(1);
+        //test2.transform.rotate(1);
     }
 }

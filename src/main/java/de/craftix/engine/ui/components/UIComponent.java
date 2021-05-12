@@ -9,6 +9,7 @@ public abstract class UIComponent implements Serializable {
     protected UIElement element;
 
     public abstract void render(Graphics2D g);
+    public void fixedUpdate() {}
 
     public void initialise(UIElement element) { this.element = element; }
 

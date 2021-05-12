@@ -78,7 +78,7 @@ public class Screen extends JPanel {
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                handleRendering(getGraphics());
+                repaint();
             }
         }, 0, 1000 / framesPerSecond);
         logger.info("FPS Management System started");
@@ -92,7 +92,9 @@ public class Screen extends JPanel {
     }
 
     private static long lastFrame = System.nanoTime();
-    protected void handleRendering(Graphics g) {
+
+    @Override
+    protected void paintComponent(Graphics g) {
         BufferedImage canvas = new BufferedImage(getWidth(), getHeight(), Image.SCALE_DEFAULT);
         render((Graphics2D) canvas.getGraphics());
         g.drawImage(canvas, 0, 0, null);

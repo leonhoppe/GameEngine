@@ -3,7 +3,7 @@ package de.craftix.engine.var;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Quaternion implements Serializable {
+public class Quaternion implements Serializable, Transformation {
     public static Quaternion IDENTITY() { return new Quaternion(Math.toRadians(0)); }
     public static Quaternion ANGLE90() { return new Quaternion(Math.toRadians(90)); }
     public static Quaternion ANGLE180() { return new Quaternion(Math.toRadians(180)); }

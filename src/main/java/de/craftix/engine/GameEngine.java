@@ -6,7 +6,9 @@ import de.craftix.engine.render.Camera;
 import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
+import de.craftix.engine.ui.UIElement;
 import de.craftix.engine.ui.UIManager;
+import de.craftix.engine.ui.components.UIComponent;
 import de.craftix.engine.var.Input;
 import de.craftix.engine.var.Scene;
 import de.craftix.engine.var.Updater;
@@ -82,6 +84,9 @@ public class GameEngine {
                 for (Component component : ((GameObject) object).getComponents())
                     component.fixedUpdate();
         }
+        for (UIElement element : getUIManager().getElements())
+            for (UIComponent component : element.getComponents())
+                component.fixedUpdate();
         for (Updater u : updater)
             u.fixedUpdate();
     }
