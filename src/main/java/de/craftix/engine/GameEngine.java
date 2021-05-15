@@ -14,10 +14,12 @@ import de.craftix.engine.var.Scene;
 import de.craftix.engine.var.Updater;
 
 import javax.swing.*;
+import java.io.*;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
 import java.util.Timer;
+import java.util.stream.Stream;
 
 public class GameEngine {
     private static GameEngine instance;
@@ -26,12 +28,14 @@ public class GameEngine {
     private static Logger logger;
     private static Logger globalLogger;
     private static int TPS;
+    private static String appName;
 
     private static final HashMap<String, Float> layers = new HashMap<>();
     private static final ArrayList<Updater> updater = new ArrayList<>();
 
-    protected static void setup(int width, int height, String title, GameEngine instance, int tps, boolean startGame) {
+    protected static void setup(int width, int height, String title, GameEngine instance, int tps) {
         TPS = tps;
+        appName = title;
         Logger.globalInfo("Initialising requirements...");
         logger = new Logger("GameEngine");
         globalLogger = new Logger(title);
@@ -49,7 +53,7 @@ public class GameEngine {
         instance.initialise();
         logger.info("Initialising Method executed");
 
-        screen = new Screen(width, height, title, (1000f / TPS) / 1000f, startGame);
+        screen = new Screen(width, height, title, (1000f / TPS) / 1000f);
         logger.info("Graphics initialised");
 
         new Timer().scheduleAtFixedRate(new TimerTask() {
@@ -91,11 +95,10 @@ public class GameEngine {
             u.fixedUpdate();
     }
 
-    public static void startGame() { Screen.getDisplay().setVisible(true); }
     public static void shutdown() {
         logger.info("Stopping Game...");
         try { Thread.sleep(200); }
-        catch (Exception e) { e.printStackTrace(); }
+        catch (Exception e) { throwError(e); }
         GameEngine.instance.stop();
         for (ScreenObject object : GameEngine.getActiveScene().getGameObjects())
             object.stop();
@@ -117,7 +120,7 @@ public class GameEngine {
         try {
             URL url = GameEngine.class.getResource(path);
             return new URI(url.toString().replace(" ","%20"));
-        }catch (Exception e) { e.printStackTrace(); }
+        }catch (Exception e) { throwError(e); }
         return null;
     }
 
@@ -126,6 +129,14 @@ public class GameEngine {
         screen.addMouseListener(input);
         screen.addMouseMotionListener(input);
         screen.addMouseWheelListener(input);
+    }
+
+    public static void throwError(Exception e) {
+        String className = e.getStackTrace()[e.getStackTrace().length - 1].getClassName();
+        Logger log = new Logger(appName);
+        log.warning("Error at " + className);
+        log.getStream().print(Logger.ANSI_RED);
+        e.printStackTrace(log.getStream());
     }
 
     public void fixedUpdate() {}
@@ -152,5 +163,4 @@ public class GameEngine {
         Screen.getDisplay().setIconImage(icon.getImage());
     }
     public static void addUpdater(Updater updater) { GameEngine.updater.add(updater); }
-
 }

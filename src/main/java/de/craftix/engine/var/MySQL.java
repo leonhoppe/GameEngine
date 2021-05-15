@@ -1,5 +1,7 @@
 package de.craftix.engine.var;
 
+import de.craftix.engine.GameEngine;
+
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -29,7 +31,9 @@ public class MySQL implements Serializable {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             con = DriverManager.getConnection("jdbc:mysql://" + server + ":" + port + "/" + database, username, password);
-        }catch (Exception e) { e.printStackTrace(); }
+        }catch (Exception e) {
+            GameEngine.throwError(e);
+        }
     }
 
     public void disconnect() {
@@ -37,7 +41,7 @@ public class MySQL implements Serializable {
         try {
             con.close();
             con = null;
-        }catch (Exception e) { e.printStackTrace(); }
+        }catch (Exception e) { GameEngine.throwError(e); }
     }
 
     public boolean isConnected() { return con != null; }
@@ -46,14 +50,14 @@ public class MySQL implements Serializable {
         if (!isConnected()) throw new NullPointerException("MySQL not connected");
         try {
             con.prepareStatement(qry).executeUpdate();
-        }catch (Exception e) { e.printStackTrace(); }
+        }catch (Exception e) { GameEngine.throwError(e); }
     }
 
     public ResultSet getData(String qry) {
         if (!isConnected()) throw new NullPointerException("MySQL not connected");
         try {
             return con.prepareStatement(qry).executeQuery();
-        }catch (Exception e) { e.printStackTrace(); }
+        }catch (Exception e) { GameEngine.throwError(e); }
         return null;
     }
 

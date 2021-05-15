@@ -21,7 +21,7 @@ public class Image extends Updater implements Serializable {
         try {
             this.url = URL.toURL();
         } catch (Exception e) {
-            e.printStackTrace();
+            GameEngine.throwError(e);
         }
         GameEngine.addUpdater(this);
     }

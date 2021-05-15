@@ -20,13 +20,13 @@ public class Sprite {
     public static Sprite load(String path) {
         try {
             return new Sprite(ImageIO.read(Objects.requireNonNull(Sprite.class.getClassLoader().getResource(path))), false);
-        }catch (Exception e) { e.printStackTrace(); }
+        }catch (Exception e) { GameEngine.throwError(e); }
         return new Sprite();
     }
     public static Sprite loadExt(String path) {
         try {
             return new Sprite(ImageIO.read(new File(path)), false);
-        }catch (Exception e) { e.printStackTrace(); }
+        }catch (Exception e) { GameEngine.throwError(e); }
         return new Sprite();
     }
 
@@ -164,6 +164,10 @@ public class Sprite {
             return Shape.RECTANGLE;
         else
             return shape;
+    }
+
+    public Sprite resize(int width, int height, Resizer method) {
+        return new Sprite(method.resize(texture, width, height), repeat);
     }
 
     public static void setResizingMethod(Resizer resizingMethod) { Sprite.resizingMethod = resizingMethod; }

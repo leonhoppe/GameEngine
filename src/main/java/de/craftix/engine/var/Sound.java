@@ -1,5 +1,7 @@
 package de.craftix.engine.var;
 
+import de.craftix.engine.GameEngine;
+
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
@@ -17,7 +19,9 @@ public class Sound implements Serializable {
             stream = AudioSystem.getAudioInputStream(new File(audioFile));
             clip = AudioSystem.getClip();
             clip.open(stream);
-        }catch (Exception e) { e.printStackTrace(); }
+        }catch (Exception e) {
+            GameEngine.throwError(e);
+        }
     }
 
     public void setProperty(FloatControl.Type property, float value) {

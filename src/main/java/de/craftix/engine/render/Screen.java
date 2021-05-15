@@ -41,7 +41,7 @@ public class Screen extends JPanel {
     private static boolean antialiasingEffectTextures = true;
     private static int framesPerSecond = 60;
 
-    public Screen(int width, int height, String title, float fixedDeltaTime, boolean startGame) {
+    public Screen(int width, int height, String title, float fixedDeltaTime) {
         logger = new Logger("Graphics");
         instance = this;
         Screen.fixedDeltaTime = fixedDeltaTime;
@@ -71,7 +71,7 @@ public class Screen extends JPanel {
             @Override
             public void windowDeactivated(WindowEvent e) {}
         });
-        frame.setVisible(startGame);
+        frame.setVisible(true);
         logger.info("JFrame settings set");
 
         logger.info("Starting FPS Management System...");
@@ -115,10 +115,13 @@ public class Screen extends JPanel {
         for (Updater updater : GameEngine.getUpdaters())
             updater.update();
 
-        if (antialiasing)
+        if (antialiasing) {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        else
+            g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        } else {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+            g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+        }
 
         if (GameEngine.getActiveScene().getBackground() != null) {
             if (GameEngine.getActiveScene().getBackground().texture == null && GameEngine.getActiveScene().getBackground().color != null) {
@@ -130,6 +133,7 @@ public class Screen extends JPanel {
                 if (GameEngine.getActiveScene().getBGAutoScale())
                     g.drawImage(bg.getTextureRaw(getWidth(), getHeight()), 0, 0, null);
                 else {
+                    bg.repeat = true;
                     Transform transform = new Transform(new Vector2(), new Dimension(bg.texture.getWidth(), bg.texture.getHeight()), Quaternion.IDENTITY());
                     bg.renderRaw(g, transform);
                 }

@@ -1,5 +1,7 @@
 package de.craftix.engine.var;
 
+import de.craftix.engine.GameEngine;
+
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -20,7 +22,7 @@ public class YamlConfiguration implements Serializable {
         try {
             new File(path).mkdirs();
             if (!file.exists()) file.createNewFile();
-        }catch (Exception e) { e.printStackTrace(); }
+        }catch (Exception e) { GameEngine.throwError(e); }
         return new YamlConfiguration(file.getPath());
     }
 
@@ -37,7 +39,7 @@ public class YamlConfiguration implements Serializable {
         ArrayList<String> lines = new ArrayList<>();
         try (Stream<String> stream = Files.lines(file.toPath(), StandardCharsets.UTF_8)) {
             stream.forEach(lines::add);
-        }catch (Exception e) { e.printStackTrace(); }
+        }catch (Exception e) { GameEngine.throwError(e); }
         for (String line : lines) {
             String[] separator = line.split(": ");
             variables.put(separator[0], separator[1]);
@@ -58,7 +60,7 @@ public class YamlConfiguration implements Serializable {
             BufferedWriter writer = new BufferedWriter(new FileWriter(file));
             writer.write(out.toString());
             writer.close();
-        }catch (Exception e) { e.printStackTrace(); }
+        }catch (Exception e) { GameEngine.throwError(e); }
     }
 
     @Override
