@@ -18,13 +18,12 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.awt.image.BufferedImage;
+import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Timer;
 import java.util.TimerTask;
 
-public class Screen extends JPanel {
+public class Screen extends Canvas {
     protected static Screen instance;
 
     private static int bufferedFPS;
@@ -40,6 +39,8 @@ public class Screen extends JPanel {
     private static Rectangle bufferedBounds;
     private static boolean antialiasingEffectTextures = true;
     private static int framesPerSecond = 60;
+    private static BufferStrategy bs;
+    private static boolean render = true;
 
     public Screen(int width, int height, String title, float fixedDeltaTime) {
         logger = new Logger("Graphics");
@@ -48,8 +49,7 @@ public class Screen extends JPanel {
         logger.info("Attempting to set JFrame settings...");
         frame.setSize(width + 17, height + 40);
         frame.setTitle(title);
-        frame.setLayout(null);
-        frame.setContentPane(this);
+        frame.add("Center", this);
         frame.setBackground(Color.BLACK);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
@@ -75,10 +75,16 @@ public class Screen extends JPanel {
         logger.info("JFrame settings set");
 
         logger.info("Starting FPS Management System...");
-        new Timer().scheduleAtFixedRate(new TimerTask() {
+        createBufferStrategy(3);
+        bs = getBufferStrategy();
+        GameEngine.getTimer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                repaint();
+                if (!render) return;
+                Graphics2D g = (Graphics2D) bs.getDrawGraphics();
+                render(g);
+                g.dispose();
+                bs.show();
             }
         }, 0, 1000 / framesPerSecond);
         logger.info("FPS Management System started");
@@ -92,14 +98,6 @@ public class Screen extends JPanel {
     }
 
     private static long lastFrame = System.nanoTime();
-
-    @Override
-    protected void paintComponent(Graphics g) {
-        BufferedImage canvas = new BufferedImage(getWidth(), getHeight(), Image.SCALE_DEFAULT);
-        render((Graphics2D) canvas.getGraphics());
-        g.drawImage(canvas, 0, 0, null);
-    }
-
     protected void render(Graphics2D g) {
         deltaTime = (System.nanoTime() - lastFrame) / 1000000000f;
         lastFrame = System.nanoTime();
@@ -239,6 +237,7 @@ public class Screen extends JPanel {
     public static boolean antialiasing() { return antialiasing; }
     public static void setResizeable(boolean value) { frame.setResizable(value); }
     public static void setFullscreen(boolean value) {
+        render = false;
         if (value) {
             bufferedBounds = frame.getBounds();
             frame.setVisible(false);
@@ -256,6 +255,8 @@ public class Screen extends JPanel {
             frame.setVisible(true);
             instance.requestFocus();
         }
+        instance.addNotify();
+        render = true;
     }
     public static void setAntialiasingEffectTextures(boolean value) { antialiasingEffectTextures = value; }
     public static int getFPS() { return fps; }
@@ -265,7 +266,7 @@ public class Screen extends JPanel {
     public static boolean isFullscreen() { return frame.isUndecorated(); }
     public static boolean antialiasingEffectTextures() { return antialiasingEffectTextures; }
     public static JFrame getDisplay() { return frame; }
-    public static JPanel getCanvas() { return instance; }
+    public static Screen getCanvas() { return instance; }
     public static int width() { return instance.getWidth(); }
     public static int height() { return instance.getHeight(); }
     public static void setFramesPerSecond(int framesPerSecond) { Screen.framesPerSecond = framesPerSecond; }

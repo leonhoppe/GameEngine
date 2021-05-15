@@ -23,7 +23,7 @@ public class Main extends GameEngine {
         Screen.antialiasing(true);
         Screen.showFrames(true);
         Screen.setResizeable(false);
-        Screen.setFramesPerSecond(60);
+        Screen.setFramesPerSecond(120);
         Screen.setAntialiasingEffectTextures(false);
         InputManager.setFullscreenKey(KeyEvent.VK_F11);
         InputManager.setClosingKey(KeyEvent.VK_ESCAPE);

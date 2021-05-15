@@ -29,6 +29,7 @@ public class GameEngine {
     private static Logger globalLogger;
     private static int TPS;
     private static String appName;
+    private static Timer timer;
 
     private static final HashMap<String, Float> layers = new HashMap<>();
     private static final ArrayList<Updater> updater = new ArrayList<>();
@@ -40,6 +41,8 @@ public class GameEngine {
         logger = new Logger("GameEngine");
         globalLogger = new Logger(title);
         logger.info("Logger initialised");
+        timer = new Timer();
+        logger.info("Timer initialised");
         activeScene = new Scene();
         logger.info("Scene initialised");
         GameEngine.instance = instance;
@@ -56,7 +59,7 @@ public class GameEngine {
         screen = new Screen(width, height, title, (1000f / TPS) / 1000f);
         logger.info("Graphics initialised");
 
-        new Timer().scheduleAtFixedRate(new TimerTask() {
+        timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
@@ -64,7 +67,7 @@ public class GameEngine {
             }
         }, 0, 1000 / TPS);
         logger.info("FixedUpdate Thread initialised");
-        new Timer().scheduleAtFixedRate(new TimerTask() {
+        timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 Screen.updateFPS();
@@ -155,6 +158,7 @@ public class GameEngine {
     public static Logger getLogger() { return globalLogger; }
     public static int getTPS() { return TPS; }
     public static Updater[] getUpdaters() { return updater.toArray(new Updater[0]); }
+    public static Timer getTimer() { return timer; }
 
     public static void setActiveScene(Scene scene) { activeScene = scene; }
     public static void addLayer(String name, float layer) { if (!layers.containsValue(layer) && !layers.containsKey(name)) layers.put(name, layer); }
