@@ -30,22 +30,16 @@ public class Sprite {
         return new Sprite();
     }
 
-    public Color color;
-    public Shape shape;
-
     public transient BufferedImage texture;
     public transient BufferedImage bufferedTexture;
     public transient BufferedImage bufferedOriginal;
     public boolean repeat = false;
 
-    public Sprite(Shape shape, Color color) { this.color = color; this.shape = shape; }
     public Sprite(BufferedImage texture, boolean repeat) { this.texture = texture; this.repeat = repeat; }
-    public Sprite() {}
+    protected Sprite() {}
 
     public Sprite copy() {
         Sprite copy = new Sprite();
-        copy.color = color;
-        copy.shape = shape;
         copy.texture = texture;
         return copy;
     }
@@ -77,11 +71,6 @@ public class Sprite {
     }
 
     public void render(Graphics2D g, Transform transform) {
-        if (texture == null) {
-            g.draw(shape.getRender(transform, true));
-            return;
-        }
-
         if (!repeat)
             g.drawImage(getTexture(transform.scale.width, transform.scale.height), (int) -((transform.scale.width * GameEngine.getCamera().getScale()) / 2f), (int) (-transform.scale.height * GameEngine.getCamera().getScale() / 2), null);
         else {
@@ -123,11 +112,6 @@ public class Sprite {
         }
     }
     public void renderRaw(Graphics2D g, Transform transform) {
-        if (texture == null) {
-            g.draw(shape.getRender(transform, false));
-            return;
-        }
-
         if (!repeat)
             g.drawImage(getTextureRaw(transform.scale.width, transform.scale.height), (int) -(transform.scale.width / 2f), (int) -(transform.scale.height / 2), null);
         else {
@@ -167,13 +151,6 @@ public class Sprite {
                 for (int y = (int) min.y; y < Screen.height(); y += height)
                     g.drawImage(render, x, y, null);
         }
-    }
-
-    public Shape getShape(Animation animation) {
-        if (texture != null || animation != null)
-            return Shape.RECTANGLE;
-        else
-            return shape;
     }
 
     public Sprite resize(int width, int height, Resizer method) {

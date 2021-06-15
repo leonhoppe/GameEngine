@@ -35,6 +35,10 @@ public class Main extends GameEngine {
         setIcon(blocks.getSprite(4));
         getActiveScene().setBackground(blocks.getSprite(1).resize(70, 70, Resizer.AVERAGE), false);
         instantiate(grass);
+
+        Mesh mesh = new Mesh(Color.GREEN, Shape.CIRCLE, new Transform(new Vector2(), new Dimension(1), Quaternion.IDENTITY()));
+        GameObject test = new GameObject(mesh, new Transform(new Vector2(), new Dimension(1), Quaternion.IDENTITY()));
+        instantiate(test);
     }
 
     @Override

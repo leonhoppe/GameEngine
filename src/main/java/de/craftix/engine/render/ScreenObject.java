@@ -9,6 +9,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
 public class ScreenObject implements Serializable {
@@ -24,17 +25,16 @@ public class ScreenObject implements Serializable {
         Point pos = Screen.calculateScreenPosition(transform);
         AffineTransform original = g.getTransform();
 
-        if (sprite == null) {
-            g.draw(mesh.getMesh(true));
-            return;
-        }
+        g.translate(pos.x + ((transform.scale.width * (GameEngine.getCamera().getScale())) / 2f), pos.y + (transform.scale.height * (GameEngine.getCamera().getScale())) / 2f);
+        g.rotate(transform.rotation.getAngle(), transform.position.x * (GameEngine.getCamera().getScale()), -transform.position.y * (GameEngine.getCamera().getScale()));
 
-        if (sprite.texture == null && sprite.color != null && animation == null) {
-            g.setColor(sprite.color);
-            g.fill(getScreenShape());
-        }else {
-            g.translate(pos.x + ((transform.scale.width * (GameEngine.getCamera().getScale())) / 2f), pos.y + (transform.scale.height * (GameEngine.getCamera().getScale())) / 2f);
-            g.rotate(transform.rotation.getAngle(), transform.position.x * (GameEngine.getCamera().getScale()), -transform.position.y * (GameEngine.getCamera().getScale()));
+        if (sprite == null) {
+            if (mesh.UVs == null) {
+                g.setColor(mesh.color);
+                g.fill(mesh.getMesh(true));
+            }
+            //TODO: Add Texture Mapping for Meshes
+            return;
         }
 
         if (sprite.texture != null && (animation == null || !animation.isRunning()))
@@ -74,12 +74,15 @@ public class ScreenObject implements Serializable {
         return new Area(Screen.getRawTransform(transform).createTransformedShape(getRawShape()));
     }
     public Area getScreenShape() {
-        return new Area(Screen.getTransform(transform).createTransformedShape(new Mesh(sprite.getShape(animation), transform).getMesh(true)));
+        if (sprite != null) {
+            return new Area(Screen.getTransform(transform).createTransformedShape(new Mesh(Color.BLACK, Shape.RECTANGLE, transform.copy()).getMesh(true)));
+        }else
+            return new Area(Screen.getTransform(transform).createTransformedShape(mesh.getMesh(true)));
     }
     public Area getRawShape() {
         if (sprite.texture != null || animation != null)
             return Shape.RECTANGLE.getRender(transform, false);
 
-        return sprite.shape.getRender(transform, false);
+        return new Mesh(Color.BLACK, Shape.RECTANGLE, transform.copy()).getMesh(false);
     }
 }

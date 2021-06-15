@@ -6,6 +6,7 @@ import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.ui.UIManager;
 
+import java.awt.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ public class Scene implements Serializable {
     private final UIManager uiManager = new UIManager();
     private final Camera camera = new Camera();
     private Sprite background;
+    private Color bg_Color;
     private boolean bg_autoscale;
 
     public GameObject[] getGameObjects() {
@@ -34,7 +36,9 @@ public class Scene implements Serializable {
     }
 
     public void setBackground(Sprite bg, boolean autoscale) { background = bg; bg_autoscale = autoscale; }
+    public void setBackgroundColor(Color color) { this.bg_Color = color; }
     public Sprite getBackground() { return background; }
+    public Color getBackgroundColor() { return bg_Color; }
     public boolean getBGAutoScale() { return bg_autoscale; }
 
     public UIManager getUIManager() { return uiManager; }

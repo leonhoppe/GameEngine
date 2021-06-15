@@ -1,5 +1,6 @@
 package de.craftix.engine.ui;
 
+import de.craftix.engine.render.Shape;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.ui.components.UIComponent;
 import de.craftix.engine.var.Animation;
@@ -46,7 +47,9 @@ public class UIElement implements Serializable {
             }else if (sprite != null) {
                 sprite.renderRaw(g, transform);
             }else {
-                g.draw(mesh.getMesh(false));
+                if (mesh.UVs == null)
+                    g.draw(mesh.getMesh(false));
+                //TODO: Add Texture Mapping for Meshes
             }
 
             g.setTransform(original);
@@ -83,7 +86,7 @@ public class UIElement implements Serializable {
         Vector2 pos = alignment.getScreenPosition(transform);
         at.rotate(transform.rotation.getAngle(), pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
         at.translate(pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
-        return new Area(at.createTransformedShape(new Mesh(sprite.getShape(animation), transform).getMesh(false)));
+        return new Area(at.createTransformedShape(new Mesh(Color.BLACK, Shape.RECTANGLE, transform.copy()).getMesh(false)));
     }
 
     public UIAlignment getAlignment() { return alignment; }

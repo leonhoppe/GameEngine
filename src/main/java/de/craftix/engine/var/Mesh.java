@@ -2,6 +2,7 @@ package de.craftix.engine.var;
 
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.render.Shape;
+import de.craftix.engine.render.Sprite;
 
 import java.awt.*;
 import java.awt.geom.Area;
@@ -12,20 +13,40 @@ import java.io.Serializable;
 public class Mesh implements Serializable {
     public final Vector2[] points;
     public final Shape shape;
-    public final Transform transform;
+    public final Vector2[] UVs;
+    public final Sprite texture;
+    public final Color color;
+    public Transform transform;
 
-    public Mesh(Vector2... points) {
+    public Mesh(Color color, Vector2... points) {
         if (points.length % 3 != 0)
-            throw new IllegalArgumentException("points not convertible to Polygons");
+            throw new IllegalArgumentException("points not convertible to Triangles");
         this.points = points;
         this.shape = null;
         this.transform = null;
+        this.UVs = null;
+        this.texture = null;
+        this.color = color;
     }
 
-    public Mesh(Shape shape, Transform transform) {
+    public Mesh(Vector2[] points, Vector2[] UVs, Sprite texture) {
+        if (points.length % 3 != 0)
+            throw new IllegalArgumentException("points not convertible to Triangles");
+        this.points = points;
+        this.shape = null;
+        this.transform = null;
+        this.UVs = UVs;
+        this.texture = texture;
+        this.color = null;
+    }
+
+    public Mesh(Color color, Shape shape, Transform transform) {
         this.points = null;
         this.shape = shape;
         this.transform = transform;
+        this.UVs = null;
+        this.texture = null;
+        this.color = color;
     }
 
     public Area getMesh(boolean useCamScale) {
@@ -34,9 +55,9 @@ public class Mesh implements Serializable {
 
         Area mesh = new Area();
         for (Vector2[] triangle : getTriangles(useCamScale)) {
-            Vector2 p1 = triangle[0];
-            Vector2 p2 = triangle[1];
-            Vector2 p3 = triangle[2];
+            Vector2 p1 = triangle[0].add(transform != null ? transform.position : new Vector2());
+            Vector2 p2 = triangle[1].add(transform != null ? transform.position : new Vector2());
+            Vector2 p3 = triangle[2].add(transform != null ? transform.position : new Vector2());
             Polygon2D polygon = new Polygon2D(
                     new float[] { p1.x, p2.x, p3.x },
                     new float[] { p1.y, p2.y, p3.y },

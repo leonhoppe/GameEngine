@@ -122,8 +122,8 @@ public class Screen extends Canvas {
         }
 
         if (GameEngine.getActiveScene().getBackground() != null) {
-            if (GameEngine.getActiveScene().getBackground().texture == null && GameEngine.getActiveScene().getBackground().color != null) {
-                g.setColor(GameEngine.getActiveScene().getBackground().color);
+            if (GameEngine.getActiveScene().getBackgroundColor() != null) {
+                g.setColor(GameEngine.getActiveScene().getBackgroundColor());
                 g.fillRect(0, 0, getWidth(), getHeight());
             }
             if (GameEngine.getActiveScene().getBackground().texture != null) {
@@ -153,10 +153,9 @@ public class Screen extends Canvas {
                 Area shape = object.getScreenShape();
                 shape.intersect(new Area(self));
                 if (shape.isEmpty()) continue;
-                if (object.renderBounds) g.draw(object.getScreenShape());
-                if (shape.isEmpty()) continue;
                 if (object.layer == layer)
                     object.render(g);
+                if (object.renderBounds) g.draw(object.getScreenShape());
             }
         }
         g.setTransform(orig);

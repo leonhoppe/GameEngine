@@ -24,6 +24,7 @@ public class GameObject extends ScreenObject implements Serializable {
     }
     public GameObject(Mesh mesh, Transform transform) {
         super();
+        this.sprite = null;
         this.mesh = mesh;
         this.transform = transform;
         visible = true;
