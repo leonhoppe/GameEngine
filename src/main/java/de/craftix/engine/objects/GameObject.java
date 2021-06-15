@@ -2,17 +2,12 @@ package de.craftix.engine.objects;
 
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.objects.components.Component;
-import de.craftix.engine.objects.components.MeshRenderer;
 import de.craftix.engine.objects.components.RenderingComponent;
-import de.craftix.engine.render.Screen;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
-import de.craftix.engine.var.Animation;
-import de.craftix.engine.var.Dimension;
-import de.craftix.engine.var.Vector2;
+import de.craftix.engine.var.*;
 
 import java.awt.*;
-import java.awt.geom.Area;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,19 +16,17 @@ public class GameObject extends ScreenObject implements Serializable {
     private final List<de.craftix.engine.objects.components.Component> components = new ArrayList<>();
     private boolean renderObject = true;
 
-    public GameObject(Sprite sprite, Vector2 position) {
+    public GameObject(Sprite sprite, Transform transform) {
         super();
         this.sprite = sprite;
-        transform.position = position;
-        if (sprite.texture != null) {
-            transform.scale.width = sprite.texture.getWidth();
-            transform.scale.height = sprite.texture.getHeight();
-        }
+        this.transform = transform;
         visible = true;
     }
-    public GameObject(Sprite sprite, Vector2 position, Dimension size) {
-        this(sprite, position);
-        this.transform.scale = size;
+    public GameObject(Mesh mesh, Transform transform) {
+        super();
+        this.mesh = mesh;
+        this.transform = transform;
+        visible = true;
     }
     protected GameObject() { super(); }
     private GameObject(ScreenObject object) {
@@ -87,14 +80,6 @@ public class GameObject extends ScreenObject implements Serializable {
             if (!(c instanceof RenderingComponent)) continue;
             ((RenderingComponent) c).render(g);
         }
-    }
-
-    @Override
-    public Area getScreenShape() {
-        if (hasComponent(MeshRenderer.class))
-            return new Area(Screen.getTransform(transform).createTransformedShape(((MeshRenderer) getComponent(MeshRenderer.class)).mesh.getMesh()));
-        else
-            return super.getScreenShape();
     }
 
     public void setLayer(String layer) { this.layer = GameEngine.getLayer(layer); }

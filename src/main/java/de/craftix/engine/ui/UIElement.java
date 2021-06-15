@@ -18,14 +18,20 @@ public class UIElement implements Serializable {
 
     protected UIAlignment alignment;
     protected Sprite sprite;
+    protected Mesh mesh;
     protected Animation animation;
     protected float layer;
     protected boolean renderObject = true;
     protected final ArrayList<UIComponent> components = new ArrayList<>();
 
-    public UIElement(Transform transform, Sprite sprite, UIAlignment alignment) {
+    public UIElement(Sprite sprite, Transform transform,  UIAlignment alignment) {
         this.transform = transform;
         this.sprite = sprite;
+        this.alignment = alignment;
+    }
+    public UIElement(Mesh mesh, Transform transform, UIAlignment alignment) {
+        this.transform = transform;
+        this.mesh = mesh;
         this.alignment = alignment;
     }
 
@@ -37,12 +43,10 @@ public class UIElement implements Serializable {
 
             if (animation != null) {
                 g.drawImage(animation.getImage().getTextureRaw(transform.scale.width, transform.scale.height), pos.getX(), pos.getY(), null);
-            }else if (sprite.texture != null) {
-                g.drawImage(sprite.getTextureRaw(transform.scale.width, transform.scale.height), pos.getX(), pos.getY(), null);
+            }else if (sprite != null) {
+                sprite.renderRaw(g, transform);
             }else {
-                g.translate(pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
-                g.setColor(sprite.color);
-                g.fill(new Mesh(sprite.getShape(animation), transform).getRawMesh());
+                g.draw(mesh.getMesh(false));
             }
 
             g.setTransform(original);
@@ -79,7 +83,7 @@ public class UIElement implements Serializable {
         Vector2 pos = alignment.getScreenPosition(transform);
         at.rotate(transform.rotation.getAngle(), pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
         at.translate(pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
-        return new Area(at.createTransformedShape(new Mesh(sprite.getShape(animation), transform).getRawMesh()));
+        return new Area(at.createTransformedShape(new Mesh(sprite.getShape(animation), transform).getMesh(false)));
     }
 
     public UIAlignment getAlignment() { return alignment; }

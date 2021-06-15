@@ -17,7 +17,7 @@ import java.awt.event.KeyEvent;
 
 public class Main extends GameEngine {
     private static final SpriteMap blocks = new SpriteMap(5, Sprite.load("terrain.png"), 16, 16);
-    private static final GameObject grass = new GameObject(blocks.getSprite(3), new Vector2(), new Dimension(2));
+    private static final GameObject grass = new GameObject(blocks.getSprite(3), new Transform(new Vector2(), new Dimension(2), Quaternion.IDENTITY()));
 
     public static void main(String[] args) {
         Screen.antialiasing(true);

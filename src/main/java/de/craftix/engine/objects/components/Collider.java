@@ -26,7 +26,7 @@ public class Collider extends Component implements Serializable {
     }
 
     private static Area getArea(Transform transform, Mesh mesh) {
-        return new Area(Screen.getTransform(transform).createTransformedShape(mesh.getMesh()));
+        return new Area(Screen.getTransform(transform).createTransformedShape(mesh.getMesh(true)));
     }
 
     public Mesh mesh;
