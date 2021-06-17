@@ -37,7 +37,7 @@ public class Main extends GameEngine {
         instantiate(grass);
 
         Mesh mesh = new Mesh(Color.GREEN, Shape.CIRCLE, new Transform(new Vector2(), new Dimension(1), Quaternion.IDENTITY()));
-        GameObject test = new GameObject(mesh, new Transform(new Vector2(), new Dimension(1), Quaternion.IDENTITY()));
+        GameObject test = new GameObject(mesh, new Transform());
         instantiate(test);
     }
 

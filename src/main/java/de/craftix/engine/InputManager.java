@@ -1,6 +1,7 @@
 package de.craftix.engine;
 
 import de.craftix.engine.render.Screen;
+import de.craftix.engine.render.Sprite;
 import de.craftix.engine.var.Input;
 import de.craftix.engine.var.Vector2;
 
@@ -43,6 +44,16 @@ public class InputManager extends Input {
     public static boolean isKeyPressed(int key) { return keys[key]; }
     public static boolean isMouseClicked(int button) { return mouseButtons[button - 1]; }
 
+    public static void setCursor(int cursor) {
+        Cursor c = new Cursor(cursor);
+        Screen.getDisplay().setCursor(c);
+    }
+    public static void setCursor(Sprite cursor) {
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        Image img = cursor.texture;
+        Cursor c = toolkit.createCustomCursor(img, new Point(Screen.getDisplay().getX(), Screen.getDisplay().getY()), "img");
+        Screen.getDisplay().setCursor(c);
+    }
     public static void setFullscreenKey(int key) {
         fullscreenKey = key;
         useFullscreenKey = true;
