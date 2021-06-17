@@ -9,6 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 public class InputManager extends Input {
     private static final boolean[] keys = new boolean[1024];
@@ -53,6 +54,12 @@ public class InputManager extends Input {
         Image img = cursor.texture;
         Cursor c = toolkit.createCustomCursor(img, new Point(Screen.getDisplay().getX(), Screen.getDisplay().getY()), "img");
         Screen.getDisplay().setCursor(c);
+    }
+    public static void removeCursor() {
+        Screen.getDisplay().setCursor(Screen.getDisplay().getToolkit().createCustomCursor(
+                new BufferedImage( 1, 1, BufferedImage.TYPE_INT_ARGB ),
+                new Point(),
+                null ) );
     }
     public static void setFullscreenKey(int key) {
         fullscreenKey = key;

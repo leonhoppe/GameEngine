@@ -35,7 +35,12 @@ public class Transform implements Serializable, Transformation {
         this.scale = scale;
         this.rotation = rotation;
     }
-    protected Transform(Vector2 pos, Dimension dim) { this(); position = pos; scale = dim; }
+    public Transform(Vector2 pos, Dimension dim) { this(); position = pos; scale = dim; }
+    public Transform(Vector2 pos, Quaternion rotation) { this(); position = pos; this.rotation = rotation; }
+    public Transform(Dimension dim, Quaternion rotation) { this(); scale = dim; this.rotation = rotation; }
+    public Transform(Vector2 pos) { this(); position = pos; }
+    public Transform(Dimension dim) { this(); scale = dim; }
+    public Transform(Quaternion rotation) { this(); this.rotation = rotation; }
 
     public void add(Transform transform) {
         position.addSelf(transform.position);

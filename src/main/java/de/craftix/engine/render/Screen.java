@@ -21,6 +21,7 @@ import java.awt.geom.Area;
 import java.awt.image.BufferStrategy;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.TimerTask;
 
 public class Screen extends Canvas {
@@ -41,6 +42,9 @@ public class Screen extends Canvas {
     private static int framesPerSecond = 60;
     private static BufferStrategy bs;
     private static boolean render = true;
+
+    private final static List<RenderingListener> earlyRenderingListener = new ArrayList<>();
+    private final static List<RenderingListener> lateRenderingListener = new ArrayList<>();
 
     public Screen(int width, int height, String title, float fixedDeltaTime) {
         logger = new Logger("Graphics");
@@ -82,7 +86,10 @@ public class Screen extends Canvas {
             public void run() {
                 if (!render) return;
                 Graphics2D g = (Graphics2D) bs.getDrawGraphics();
+                executeUpdates();
+                earlyRenderingListener.forEach(listener -> listener.onRender(g));
                 render(g);
+                lateRenderingListener.forEach(listener -> listener.onRender(g));
                 g.dispose();
                 bs.show();
             }
@@ -98,7 +105,7 @@ public class Screen extends Canvas {
     }
 
     private static long lastFrame = System.nanoTime();
-    protected void render(Graphics2D g) {
+    protected void executeUpdates() {
         deltaTime = (System.nanoTime() - lastFrame) / 1000000000f;
         lastFrame = System.nanoTime();
 
@@ -112,7 +119,9 @@ public class Screen extends Canvas {
         }
         for (Updater updater : GameEngine.getUpdaters())
             updater.update();
+    }
 
+    protected void render(Graphics2D g) {
         if (antialiasing) {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -269,6 +278,8 @@ public class Screen extends Canvas {
     public static int width() { return instance.getWidth(); }
     public static int height() { return instance.getHeight(); }
     public static void setFramesPerSecond(int framesPerSecond) { Screen.framesPerSecond = framesPerSecond; }
+    public static void addEarlyRenderingListener(RenderingListener listener) { earlyRenderingListener.add(listener); }
+    public static void addLateRenderingListener(RenderingListener listener) { lateRenderingListener.add(listener); }
 
     public static AffineTransform getTransform(Transform transform) {
         Point pos = Screen.calculateScreenPosition(transform);
@@ -282,5 +293,9 @@ public class Screen extends Canvas {
         trans.translate(transform.position.x + (transform.scale.width / 2f), transform.position.y + (transform.scale.height / 2f));
         trans.rotate(transform.rotation.getAngle(), 0, 0);
         return trans;
+    }
+
+    public interface RenderingListener {
+        void onRender(Graphics2D g);
     }
 }

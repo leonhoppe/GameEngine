@@ -14,8 +14,9 @@ import de.craftix.engine.var.Dimension;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
-public class Main extends GameEngine {
+public class Main extends GameEngine implements Screen.RenderingListener {
     private static final SpriteMap blocks = new SpriteMap(5, Sprite.load("terrain.png"), 16, 16);
     private static final GameObject grass = new GameObject(blocks.getSprite(3), new Transform(new Vector2(), new Dimension(2), Quaternion.IDENTITY()));
 
@@ -27,11 +28,13 @@ public class Main extends GameEngine {
         Screen.setAntialiasingEffectTextures(false);
         InputManager.setFullscreenKey(KeyEvent.VK_F11);
         InputManager.setClosingKey(KeyEvent.VK_ESCAPE);
+        InputManager.removeCursor();
         setup(800, 600, "GameEngine 3.0", new Main(), 120);
     }
 
     @Override
     public void initialise() {
+        Screen.addLateRenderingListener(this);
         setIcon(blocks.getSprite(4));
         getActiveScene().setBackground(blocks.getSprite(1).resize(70, 70, Resizer.AVERAGE), false);
         instantiate(grass);
@@ -46,5 +49,16 @@ public class Main extends GameEngine {
         float speed = 5 * grass.transform.position.dist(InputManager.getMousePos());
         grass.transform.lookAt(InputManager.getMousePos());
         grass.transform.translate(grass.transform.forward().mul(Screen.getFixedDeltaTime() * speed));
+    }
+
+    @Override
+    public void onRender(Graphics2D g) {
+        BufferedImage cursor = blocks.getSprite(2).texture;
+        Vector2 mouse = InputManager.getMouseRaw();
+        mouse.subSelf(new Vector2(
+                cursor.getWidth() / 2f,
+                cursor.getHeight() / 2f
+        ));
+        g.drawImage(cursor, mouse.toPoint().x, mouse.toPoint().y, null);
     }
 }
