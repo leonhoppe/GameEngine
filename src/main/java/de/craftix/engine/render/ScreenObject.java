@@ -29,11 +29,7 @@ public class ScreenObject implements Serializable {
         g.rotate(transform.rotation.getAngle(), transform.position.x * (GameEngine.getCamera().getScale()), -transform.position.y * (GameEngine.getCamera().getScale()));
 
         if (sprite == null) {
-            if (mesh.UVs == null) {
-                g.setColor(mesh.color);
-                g.fill(mesh.getMesh(true));
-            }
-            //TODO: Add Texture Mapping for Meshes
+            mesh.render(g, true);
             return;
         }
 

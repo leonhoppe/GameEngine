@@ -47,9 +47,7 @@ public class UIElement implements Serializable {
             }else if (sprite != null) {
                 sprite.renderRaw(g, transform);
             }else {
-                if (mesh.UVs == null)
-                    g.draw(mesh.getMesh(false));
-                //TODO: Add Texture Mapping for Meshes
+                mesh.render(g, false);
             }
 
             g.setTransform(original);

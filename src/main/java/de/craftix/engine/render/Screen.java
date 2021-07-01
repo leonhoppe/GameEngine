@@ -87,6 +87,7 @@ public class Screen extends Canvas {
                 if (!render) return;
                 Graphics2D g = (Graphics2D) bs.getDrawGraphics();
                 executeUpdates();
+                renderBG(g);
                 earlyRenderingListener.forEach(listener -> listener.onRender(g));
                 render(g);
                 lateRenderingListener.forEach(listener -> listener.onRender(g));
@@ -121,7 +122,7 @@ public class Screen extends Canvas {
             updater.update();
     }
 
-    protected void render(Graphics2D g) {
+    protected void renderBG(Graphics2D g) {
         if (antialiasing) {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
@@ -146,7 +147,8 @@ public class Screen extends Canvas {
                 }
             }
         }
-
+    }
+    protected void render(Graphics2D g) {
         //Apply Camera Transform
         AffineTransform orig = g.getTransform();
         g.translate(width() / 2f + GameEngine.getCamera().transform.position.x, height() / 2f + GameEngine.getCamera().transform.position.y);

@@ -20,6 +20,8 @@ public class Main extends GameEngine implements Screen.RenderingListener {
     private static final SpriteMap blocks = new SpriteMap(5, Sprite.load("terrain.png"), 16, 16);
     private static final GameObject grass = new GameObject(blocks.getSprite(3), new Transform(new Vector2(), new Dimension(2), Quaternion.IDENTITY()));
 
+    private static GameObject test;
+
     public static void main(String[] args) {
         Screen.antialiasing(true);
         Screen.showFrames(true);
@@ -39,8 +41,22 @@ public class Main extends GameEngine implements Screen.RenderingListener {
         getActiveScene().setBackground(blocks.getSprite(1).resize(70, 70, Resizer.AVERAGE), false);
         instantiate(grass);
 
-        Mesh mesh = new Mesh(Color.GREEN, Shape.CIRCLE, new Transform(new Vector2(), new Dimension(1), Quaternion.IDENTITY()));
-        GameObject test = new GameObject(mesh, new Transform());
+        Mesh mesh = new Mesh(new Vector2[] {
+                new Vector2(-1, -1),
+                new Vector2(1, -1),
+                new Vector2(1, 1),
+                new Vector2(-1, -1),
+                new Vector2(-1, 1),
+                new Vector2(1, 1)
+        }, new Vector2[]{
+                new Vector2(1, 1),
+                new Vector2(1, 0),
+                new Vector2(0, 0),
+                new Vector2(1, 1),
+                new Vector2(0, 1),
+                new Vector2(0, 0)
+        }, blocks.getSprite(3).resize(128, 128, Resizer.AVERAGE));
+        test = new GameObject(mesh, new Transform());
         instantiate(test);
     }
 
