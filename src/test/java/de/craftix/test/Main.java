@@ -12,9 +12,12 @@ import de.craftix.engine.ui.components.UIAnimationComponent;
 import de.craftix.engine.var.*;
 import de.craftix.engine.var.Dimension;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 public class Main extends GameEngine implements Screen.RenderingListener {
     private static final SpriteMap blocks = new SpriteMap(5, Sprite.load("terrain.png"), 16, 16);
@@ -39,7 +42,7 @@ public class Main extends GameEngine implements Screen.RenderingListener {
         Screen.addLateRenderingListener(this);
         setIcon(blocks.getSprite(4));
         getActiveScene().setBackground(blocks.getSprite(1).resize(70, 70, Resizer.AVERAGE), false);
-        instantiate(grass);
+        //instantiate(grass);
 
         Mesh mesh = new Mesh(new Vector2[] {
                 new Vector2(-1, -1),
@@ -65,6 +68,20 @@ public class Main extends GameEngine implements Screen.RenderingListener {
         float speed = 5 * grass.transform.position.dist(InputManager.getMousePos());
         grass.transform.lookAt(InputManager.getMousePos());
         grass.transform.translate(grass.transform.forward().mul(Screen.getFixedDeltaTime() * speed));
+
+        if (InputManager.isKeyPressed(KeyEvent.VK_W))
+            getCamera().transform.translate(getCamera().transform.forward().mul(2));
+        if (InputManager.isKeyPressed(KeyEvent.VK_A))
+            getCamera().transform.translate(getCamera().transform.left().mul(2));
+        if (InputManager.isKeyPressed(KeyEvent.VK_S))
+            getCamera().transform.translate(getCamera().transform.backward().mul(2));
+        if (InputManager.isKeyPressed(KeyEvent.VK_D))
+            getCamera().transform.translate(getCamera().transform.right().mul(2));
+
+        if (InputManager.isKeyPressed(KeyEvent.VK_SPACE))
+            getCamera().setScalingFactor(getCamera().getScalingFactor() + 5);
+        if (InputManager.isKeyPressed(KeyEvent.VK_SHIFT))
+            getCamera().setScalingFactor(getCamera().getScalingFactor() - 5);
     }
 
     @Override

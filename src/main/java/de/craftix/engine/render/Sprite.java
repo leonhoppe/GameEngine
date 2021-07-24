@@ -119,7 +119,7 @@ public class Sprite {
             AffineTransform orig = g.getTransform();
             g.setTransform(Screen.getTransform(transform));
             g.translate(-g.getTransform().getTranslateX(), -g.getTransform().getTranslateY());
-            Point pos = Screen.calculateScreenPosition(transform);
+            Point pos = Screen.calculateRawScreenPosition(transform);
             final float width = transform.scale.width;
             final float height = transform.scale.height;
 

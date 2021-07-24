@@ -5,14 +5,12 @@ import de.craftix.engine.render.Screen;
 
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
 import java.io.Serializable;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Arrays;
 
-public class Image extends Updater implements Serializable {
+public class Image implements Serializable {
     private URL url;
     private JLabel canvas;
     private Transform transform;
@@ -38,7 +36,7 @@ public class Image extends Updater implements Serializable {
     }
     public void hide() { Screen.getDisplay().remove(canvas); }
 
-    @Override
+    @Updater(update = true)
     public void update() {
         if (canvas == null) return;
         Point p = Screen.calculateRawScreenPosition(transform);

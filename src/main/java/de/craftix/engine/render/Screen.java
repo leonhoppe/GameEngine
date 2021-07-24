@@ -5,20 +5,20 @@ import de.craftix.engine.InputManager;
 import de.craftix.engine.Logger;
 import de.craftix.engine.objects.components.Component;
 import de.craftix.engine.objects.GameObject;
-import de.craftix.engine.var.Quaternion;
-import de.craftix.engine.var.Transform;
+import de.craftix.engine.var.*;
 import de.craftix.engine.var.Dimension;
-import de.craftix.engine.var.Updater;
-import de.craftix.engine.var.Vector2;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Image;
 import java.awt.Shape;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
 import java.awt.image.BufferStrategy;
+import java.awt.image.BufferedImage;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -118,8 +118,20 @@ public class Screen extends Canvas {
                 for (Component component : ((GameObject) object).getComponents())
                     component.update();
         }
-        for (Updater updater : GameEngine.getUpdaters())
-            updater.update();
+
+        for (Object o : GameEngine.getUpdaters()) {
+            for (Method m : o.getClass().getMethods()) {
+                if (m.isAnnotationPresent(Updater.class)) {
+                    if (m.getDeclaredAnnotation(Updater.class).update()) {
+                        try {
+                            m.invoke(o);
+                        }catch (Exception e) {
+                            GameEngine.throwError(e);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     protected void renderBG(Graphics2D g) {
@@ -282,6 +294,16 @@ public class Screen extends Canvas {
     public static void setFramesPerSecond(int framesPerSecond) { Screen.framesPerSecond = framesPerSecond; }
     public static void addEarlyRenderingListener(RenderingListener listener) { earlyRenderingListener.add(listener); }
     public static void addLateRenderingListener(RenderingListener listener) { lateRenderingListener.add(listener); }
+    public static BufferedImage exportFrame() {
+        BufferedImage frame = new BufferedImage(width(), height(), Image.SCALE_DEFAULT);
+        Graphics2D g = (Graphics2D) frame.getGraphics();
+        instance.renderBG(g);
+        earlyRenderingListener.forEach(listener -> listener.onRender(g));
+        instance.render(g);
+        lateRenderingListener.forEach(listener -> listener.onRender(g));
+        g.dispose();
+        return frame;
+    }
 
     public static AffineTransform getTransform(Transform transform) {
         Point pos = Screen.calculateScreenPosition(transform);

@@ -14,12 +14,11 @@ import de.craftix.engine.var.Scene;
 import de.craftix.engine.var.Updater;
 
 import javax.swing.*;
-import java.io.*;
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 import java.util.*;
 import java.util.Timer;
-import java.util.stream.Stream;
 
 public class GameEngine {
     private static GameEngine instance;
@@ -32,7 +31,7 @@ public class GameEngine {
     private static Timer timer;
 
     private static final HashMap<String, Float> layers = new HashMap<>();
-    private static final ArrayList<Updater> updater = new ArrayList<>();
+    private static final ArrayList<Object> updaters = new ArrayList<>();
 
     protected static void setup(int width, int height, String title, GameEngine instance, int tps) {
         TPS = tps;
@@ -92,10 +91,23 @@ public class GameEngine {
                     component.fixedUpdate();
         }
         for (UIElement element : getUIManager().getElements())
-            for (UIComponent component : element.getComponents())
+            for (UIComponent component : element.getComponents()) {
                 component.fixedUpdate();
-        for (Updater u : updater)
-            u.fixedUpdate();
+            }
+
+        for (Object o : updaters) {
+            for (Method m : o.getClass().getMethods()) {
+                if (m.isAnnotationPresent(Updater.class)) {
+                    if (m.getDeclaredAnnotation(Updater.class).fixedUpdate()) {
+                        try {
+                            m.invoke(o);
+                        }catch (Exception e) {
+                            throwError(e);
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public static void shutdown() {
@@ -157,8 +169,8 @@ public class GameEngine {
     public static Screen getScreenInstance() { return screen; }
     public static Logger getLogger() { return globalLogger; }
     public static int getTPS() { return TPS; }
-    public static Updater[] getUpdaters() { return updater.toArray(new Updater[0]); }
     public static Timer getTimer() { return timer; }
+    public static Object[] getUpdaters() { return updaters.toArray(); }
 
     public static void setActiveScene(Scene scene) { activeScene = scene; }
     public static void addLayer(String name, float layer) { if (!layers.containsValue(layer) && !layers.containsKey(name)) layers.put(name, layer); }
@@ -166,5 +178,5 @@ public class GameEngine {
         ImageIcon icon = new ImageIcon(sprite.texture);
         Screen.getDisplay().setIconImage(icon.getImage());
     }
-    public static void addUpdater(Updater updater) { GameEngine.updater.add(updater); }
+    public static void addUpdater(Object instance) { GameEngine.updaters.add(instance); }
 }
