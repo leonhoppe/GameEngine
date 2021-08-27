@@ -14,7 +14,7 @@ import java.io.Serializable;
 
 public class ScreenObject implements Serializable {
     public Transform transform;
-    protected Sprite sprite;
+    protected transient Sprite sprite;
     protected Mesh mesh;
     protected Animation animation;
     protected float layer;
@@ -23,13 +23,13 @@ public class ScreenObject implements Serializable {
 
     protected void render(Graphics2D g) {
         Point pos = Screen.calculateScreenPosition(transform);
-        AffineTransform original = g.getTransform();
+        AffineTransform original = (AffineTransform) g.getTransform().clone();
 
         g.translate(pos.x + ((transform.scale.width * (GameEngine.getCamera().getScale())) / 2f), pos.y + (transform.scale.height * (GameEngine.getCamera().getScale())) / 2f);
         g.rotate(transform.rotation.getAngle(), transform.position.x * (GameEngine.getCamera().getScale()), -transform.position.y * (GameEngine.getCamera().getScale()));
 
         if (sprite == null) {
-            mesh.render(g, true);
+            mesh.render(g, true, transform);
             return;
         }
 
@@ -50,17 +50,12 @@ public class ScreenObject implements Serializable {
     public void start() {}
     public void stop() {}
 
-    public ScreenObject copy() {
-        ScreenObject copy = new ScreenObject();
-        copy.transform = transform.copy();
-        copy.sprite = sprite.copy();
-        copy.visible = visible;
-        copy.layer = layer;
-        return copy;
-    }
-
     public Sprite getSprite() { return sprite; }
     public Animation getAnimation() { return animation; }
+    public Mesh getMesh() {
+        if (mesh != null) return mesh;
+        return new Mesh(Color.BLACK, Shape.RECTANGLE);
+    }
     public float getLayer() { return layer; }
     public boolean isVisible() { return visible; }
 
@@ -71,14 +66,14 @@ public class ScreenObject implements Serializable {
     }
     public Area getScreenShape() {
         if (sprite != null) {
-            return new Area(Screen.getTransform(transform).createTransformedShape(new Mesh(Color.BLACK, Shape.RECTANGLE, transform.copy()).getMesh(true)));
+            return new Area(Screen.getTransform(transform).createTransformedShape(new Mesh(Color.BLACK, Shape.RECTANGLE).getMesh(true, transform)));
         }else
-            return new Area(Screen.getTransform(transform).createTransformedShape(mesh.getMesh(true)));
+            return new Area(Screen.getTransform(transform).createTransformedShape(mesh.getMesh(true, transform)));
     }
     public Area getRawShape() {
         if (sprite.texture != null || animation != null)
             return Shape.RECTANGLE.getRender(transform, false);
 
-        return new Mesh(Color.BLACK, Shape.RECTANGLE, transform.copy()).getMesh(false);
+        return new Mesh(Color.BLACK, Shape.RECTANGLE).getMesh(false, transform);
     }
 }

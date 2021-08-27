@@ -47,7 +47,7 @@ public class UIElement implements Serializable {
             }else if (sprite != null) {
                 sprite.renderRaw(g, transform);
             }else {
-                mesh.render(g, false);
+                mesh.render(g, false, transform);
             }
 
             g.setTransform(original);
@@ -84,7 +84,7 @@ public class UIElement implements Serializable {
         Vector2 pos = alignment.getScreenPosition(transform);
         at.rotate(transform.rotation.getAngle(), pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
         at.translate(pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
-        return new Area(at.createTransformedShape(new Mesh(Color.BLACK, Shape.RECTANGLE, transform.copy()).getMesh(false)));
+        return new Area(at.createTransformedShape(new Mesh(Color.BLACK, Shape.RECTANGLE).getMesh(false, transform)));
     }
 
     public UIAlignment getAlignment() { return alignment; }

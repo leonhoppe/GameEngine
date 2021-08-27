@@ -39,37 +39,31 @@ public class GameObject extends ScreenObject implements Serializable {
         this.animation = object.getAnimation();
     }
 
-    public void addComponent(de.craftix.engine.objects.components.Component component) {
+    public void addComponent(Component component) {
         components.add(component);
         component.initialise(this);
     }
-    public de.craftix.engine.objects.components.Component[] getComponents() { return components.toArray(new de.craftix.engine.objects.components.Component[0]); }
+    public Component[] getComponents() { return components.toArray(new Component[0]); }
 
-    public void removeComponent(Class<? extends de.craftix.engine.objects.components.Component> component) {
-        for (de.craftix.engine.objects.components.Component all : components) {
+    public void removeComponent(Class<? extends Component> component) {
+        for (Component all : components) {
             if (all.getClass() == component) {
                 components.remove(all);
                 return;
             }
         }
     }
-    public boolean hasComponent(Class<? extends de.craftix.engine.objects.components.Component> component) {
-        for (de.craftix.engine.objects.components.Component all : components) {
+    public boolean hasComponent(Class<? extends Component> component) {
+        for (Component all : components) {
             if (all.getClass() == component) return true;
         }
         return false;
     }
-    public de.craftix.engine.objects.components.Component getComponent(Class<? extends de.craftix.engine.objects.components.Component> component) {
-        for (de.craftix.engine.objects.components.Component all : components) {
+    public Component getComponent(Class<? extends Component> component) {
+        for (Component all : components) {
             if (all.getClass() == component) return all;
         }
         return null;
-    }
-
-    public GameObject copy() {
-        GameObject copy = new GameObject(super.copy());
-        for (de.craftix.engine.objects.components.Component component : components) copy.addComponent(component.copy(copy));
-        return copy;
     }
 
     @Override

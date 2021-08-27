@@ -5,8 +5,8 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Vector2 implements Serializable, Transformation {
-    public static Vector2 forward() { return new Vector2(0, 1); }
-    public static Vector2 backward() { return new Vector2(0, -1); }
+    public static Vector2 up() { return new Vector2(0, 1); }
+    public static Vector2 down() { return new Vector2(0, -1); }
     public static Vector2 right() { return new Vector2(1, 0); }
     public static Vector2 left() { return new Vector2(-1, 0); }
 
@@ -43,30 +43,36 @@ public class Vector2 implements Serializable, Transformation {
     }
 
     //Vector Math
-    public Vector2 add(Vector2 vec) { return new Vector2(x + vec.x, y + vec.y); }
-    public Vector2 sub(Vector2 vec) { return new Vector2(x - vec.x, y - vec.y); }
-    public Vector2 mul(Vector2 vec) { return new Vector2(x * vec.x, y * vec.y); }
-    public Vector2 div(Vector2 vec) { return new Vector2(x / vec.x, y / vec.y); }
-
-    public void addSelf(Vector2 vec) { this.x += vec.x; this.y += vec.y; }
-    public void subSelf(Vector2 vec) { this.x -= vec.x; this.y -= vec.y; }
-    public void mulSelf(Vector2 vec) { this.x *= vec.x; this.y *= vec.y; }
-    public void divSelf(Vector2 vec) { this.x /= vec.x; this.y /= vec.y; }
+    public Vector2 add(Vector2 vec) { this.x += vec.x; this.y += vec.y; return this; }
+    public Vector2 sub(Vector2 vec) { this.x -= vec.x; this.y -= vec.y; return this; }
+    public Vector2 mul(Vector2 vec) { this.x *= vec.x; this.y *= vec.y; return this; }
+    public Vector2 div(Vector2 vec) { this.x /= vec.x; this.y /= vec.y; return this; }
 
     //Float Math
-    public Vector2 add(float value) { return add(new Vector2(value)); }
-    public Vector2 sub(float value) { return sub(new Vector2(value)); }
-    public Vector2 mul(float value) { return mul(new Vector2(value)); }
-    public Vector2 div(float value) { return div(new Vector2(value)); }
+    public Vector2 add(float value) { add(new Vector2(value)); return this; }
+    public Vector2 sub(float value) { sub(new Vector2(value)); return this; }
+    public Vector2 mul(float value) { mul(new Vector2(value)); return this; }
+    public Vector2 div(float value) { div(new Vector2(value)); return this; }
 
-    public void addSelf(float value) { addSelf(new Vector2(value)); }
-    public void subSelf(float value) { subSelf(new Vector2(value)); }
-    public void mulSelf(float value) { mulSelf(new Vector2(value)); }
-    public void divSelf(float value) { divSelf(new Vector2(value)); }
-
-    public float dist(Vector2 vector) {
-        float px = vector.x - x;
-        float py = vector.y - y;
+    //Calculations
+    public static float distance(Vector2 p1, Vector2 p2) {
+        p1 = p1.copy(); p2 = p2.copy();
+        float px = p1.x - p2.x;
+        float py = p1.y - p2.y;
         return (float) Math.sqrt(px * px + py * py);
+    }
+    public static double angle(Vector2 p1, Vector2 p2) {
+        p1 = p1.copy(); p2 = p2.copy();
+        p2.x -= p1.x;
+        p2.y -= p1.y;
+        return Math.atan2(p1.x, p1.y);
+    }
+    public static Vector2 direction(Vector2 p1, Vector2 p2) {
+        p1 = p1.copy(); p2 = p2.copy();
+        double angle = angle(p1, p2);
+        Vector2 dir = new Vector2();
+        dir.x = (float) Math.sin(angle);
+        dir.y = (float) Math.cos(angle);
+        return dir;
     }
 }

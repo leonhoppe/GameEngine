@@ -29,7 +29,7 @@ public class UIChildComponent extends UIComponent {
                 Transform original = child.transform.copy();
                 Transform self = element.transform.copy();
                 self.scale = new Dimension();
-                child.transform.position.addSelf(self.position);
+                child.transform.position.add(self.position);
                 child.render(g);
                 child.transform = original;
             }

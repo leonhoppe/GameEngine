@@ -4,6 +4,8 @@ import de.craftix.engine.GameEngine;
 import de.craftix.engine.InputManager;
 import de.craftix.engine.objects.GameObject;
 import de.craftix.engine.objects.components.AnimationComponent;
+import de.craftix.engine.objects.components.Collider;
+import de.craftix.engine.objects.components.PhysicsComponent;
 import de.craftix.engine.render.*;
 import de.craftix.engine.render.Shape;
 import de.craftix.engine.ui.UIAlignment;
@@ -19,79 +21,45 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Main extends GameEngine implements Screen.RenderingListener {
+public class Main extends GameEngine {
     private static final SpriteMap blocks = new SpriteMap(5, Sprite.load("terrain.png"), 16, 16);
-    private static final GameObject grass = new GameObject(blocks.getSprite(3), new Transform(new Vector2(), new Dimension(2), Quaternion.IDENTITY()));
-
-    private static GameObject test;
 
     public static void main(String[] args) {
         Screen.antialiasing(true);
         Screen.showFrames(true);
-        Screen.setResizeable(false);
+        Screen.setResizeable(true);
         Screen.setFramesPerSecond(120);
         Screen.setAntialiasingEffectTextures(false);
         InputManager.setFullscreenKey(KeyEvent.VK_F11);
         InputManager.setClosingKey(KeyEvent.VK_ESCAPE);
-        InputManager.removeCursor();
-        setup(800, 600, "GameEngine 3.0", new Main(), 120);
+        setup(800, 600, "GameEngine 3.0", new Main(), 1);
     }
+
+    private final PhysicsComponent playerPhysics = new PhysicsComponent();
 
     @Override
     public void initialise() {
-        Screen.addLateRenderingListener(this);
-        setIcon(blocks.getSprite(4));
-        getActiveScene().setBackground(blocks.getSprite(1).resize(70, 70, Resizer.AVERAGE), false);
-        //instantiate(grass);
+        getActiveScene().setBackground(blocks.getSprite(2).resize(50, 50, Resizer.AVERAGE), false);
 
-        Mesh mesh = new Mesh(new Vector2[] {
-                new Vector2(-1, -1),
-                new Vector2(1, -1),
-                new Vector2(1, 1),
-                new Vector2(-1, -1),
-                new Vector2(-1, 1),
-                new Vector2(1, 1)
-        }, new Vector2[]{
-                new Vector2(1, 1),
-                new Vector2(1, 0),
-                new Vector2(0, 0),
-                new Vector2(1, 1),
-                new Vector2(0, 1),
-                new Vector2(0, 0)
-        }, blocks.getSprite(3).resize(128, 128, Resizer.AVERAGE));
-        test = new GameObject(mesh, new Transform());
-        instantiate(test);
+        GameObject ground = new GameObject(blocks.getSprite(1), new Transform(new Vector2(0, -5), new Dimension(20, 2), Quaternion.IDENTITY()));
+        GameObject player = new GameObject(new Mesh(Color.RED, Shape.CIRCLE), new Transform(new Vector2(0, 5), new Dimension(1), Quaternion.IDENTITY()));
+
+        player.addComponent(playerPhysics);
+        player.addComponent(new Collider(player.getMesh(), false));
+        ground.addComponent(new Collider(ground.getMesh(), false));
+
+        instantiate(ground);
+        instantiate(player);
     }
 
     @Override
-    public void fixedUpdate() {
-        float speed = 5 * grass.transform.position.dist(InputManager.getMousePos());
-        grass.transform.lookAt(InputManager.getMousePos());
-        grass.transform.translate(grass.transform.forward().mul(Screen.getFixedDeltaTime() * speed));
+    public void update() {
+        if (InputManager.isKeyPressed(KeyEvent.VK_SPACE) && playerPhysics.onGround())
+            playerPhysics.setVelocity(new Vector2(0, 7));
 
-        if (InputManager.isKeyPressed(KeyEvent.VK_W))
-            getCamera().transform.translate(getCamera().transform.forward().mul(2));
-        if (InputManager.isKeyPressed(KeyEvent.VK_A))
-            getCamera().transform.translate(getCamera().transform.left().mul(2));
-        if (InputManager.isKeyPressed(KeyEvent.VK_S))
-            getCamera().transform.translate(getCamera().transform.backward().mul(2));
         if (InputManager.isKeyPressed(KeyEvent.VK_D))
-            getCamera().transform.translate(getCamera().transform.right().mul(2));
-
-        if (InputManager.isKeyPressed(KeyEvent.VK_SPACE))
-            getCamera().setScalingFactor(getCamera().getScalingFactor() + 5);
-        if (InputManager.isKeyPressed(KeyEvent.VK_SHIFT))
-            getCamera().setScalingFactor(getCamera().getScalingFactor() - 5);
-    }
-
-    @Override
-    public void onRender(Graphics2D g) {
-        BufferedImage cursor = blocks.getSprite(2).texture;
-        Vector2 mouse = InputManager.getMouseRaw();
-        mouse.subSelf(new Vector2(
-                cursor.getWidth() / 2f,
-                cursor.getHeight() / 2f
-        ));
-        g.drawImage(cursor, mouse.toPoint().x, mouse.toPoint().y, null);
+            playerPhysics.gameObject().transform.translate(Vector2.right().mul(Screen.getDeltaTime() * 5f));
+        if (InputManager.isKeyPressed(KeyEvent.VK_A))
+            playerPhysics.gameObject().transform.translate(Vector2.left().mul(Screen.getDeltaTime() * 5f));
     }
 }

@@ -100,8 +100,8 @@ public class AnimationComponent extends Component {
                 frame.value.x - pos_Original.x,
                 frame.value.y - pos_Original.y
         );
-        motion.divSelf(frame.timeInTPS);
-        object.transform.position.addSelf(motion);
+        motion.div(frame.timeInTPS);
+        object.transform.position.add(motion);
     }
 
     private boolean scale_running = true;

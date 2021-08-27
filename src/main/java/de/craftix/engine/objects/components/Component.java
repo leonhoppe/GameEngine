@@ -15,5 +15,5 @@ public class Component implements Serializable {
 
     public void initialise(GameObject object) { this.object = object; }
 
-    public Component copy(GameObject object) { return new Component(object); }
+    public GameObject gameObject() { return object; }
 }

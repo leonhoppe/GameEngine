@@ -65,6 +65,12 @@
             <artifactId>jmf</artifactId>
             <version>2.1.1e</version>
         </dependency>
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>2.5</version>
+        </dependency>
     </dependencies>
 
 </project>

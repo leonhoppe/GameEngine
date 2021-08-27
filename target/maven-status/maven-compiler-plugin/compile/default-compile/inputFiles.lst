@@ -1,39 +1,44 @@
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\ui\UIManager.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\InputManager.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\objects\components\CollisionHandler.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\objects\components\TextComponent.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\ui\UIAlignment.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\var\Input.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\objects\components\ChildComponent.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\GameEngine.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\var\Mesh.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\render\Resizer.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\render\SpriteMap.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\var\Dimension.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\var\MySQL.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\objects\components\InteractionComponent.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\render\Shape.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\objects\components\Collider.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\ui\UIComponent.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\var\Image.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\objects\GameObject.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\ui\UIInteractionComponent.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\ui\UITextComponent.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\var\Vector2.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\var\Quaternion.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\render\Sprite.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\Logger.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\render\Camera.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\var\Scene.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\var\Transform.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\var\Updater.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\var\Animation.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\render\ScreenObject.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\ui\UIChildComponent.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\var\YamlConfiguration.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\ui\UIElement.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\objects\components\Component.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\objects\components\RenderingComponent.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\var\Sound.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\objects\components\MeshRenderer.java
-D:\Java Programs\GameEngine 3.0\src\main\java\de\craftix\engine\render\Screen.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\Logger.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Polygon2D.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\GameEngine.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\objects\components\TextComponent.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\render\Screen.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\ui\components\UIAnimationComponent.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\MySQL.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Image.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Sound.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\YamlConfiguration.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Dimension.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\ui\UIManager.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Keyframe.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\ui\components\UITextComponent.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Animation.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\objects\components\Component.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\render\SpriteMap.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Quaternion.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Transformation.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\ui\UIElement.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\render\Camera.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\ui\components\UIChildComponent.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\ui\components\UIInteractionComponent.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Scene.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\render\Resizer.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\render\Sprite.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\ui\components\UIComponent.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Transform.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Updater.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Input.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\objects\components\Collider.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\objects\GameObject.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\objects\components\ChildComponent.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\ui\UIAlignment.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\objects\components\AnimationComponent.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\objects\components\RenderingComponent.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Mathf.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\objects\components\InteractionComponent.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\objects\components\CollisionHandler.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\render\Shape.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Vector2.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\var\Mesh.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\InputManager.java
+D:\Java\GameEngine\src\main\java\de\craftix\engine\render\ScreenObject.java

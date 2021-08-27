@@ -20,14 +20,12 @@ public class Mesh implements Serializable {
     public Vector2[] UVs;
     public Sprite texture;
     public Color[] colors;
-    public Transform transform;
 
     public Mesh(Vector2[] points, Color[] meshColors) {
         if (points.length % 3 != 0)
             throw new IllegalArgumentException("points not convertible to Triangles");
         this.points = points;
         this.shape = null;
-        this.transform = null;
         this.UVs = null;
         this.texture = null;
         this.colors = meshColors;
@@ -37,7 +35,6 @@ public class Mesh implements Serializable {
             throw new IllegalArgumentException("points not convertible to Triangles");
         this.points = points;
         this.shape = null;
-        this.transform = null;
         this.UVs = null;
         this.texture = null;
         this.colors = new Color[points.length / 3];
@@ -49,23 +46,22 @@ public class Mesh implements Serializable {
             throw new IllegalArgumentException("points not convertible to Triangles");
         this.points = points;
         this.shape = null;
-        this.transform = null;
         this.UVs = UVs;
         this.texture = texture;
         this.colors = null;
     }
 
-    public Mesh(Color color, Shape shape, Transform transform) {
+    public Mesh(Color color, Shape shape) {
         this.points = null;
         this.shape = shape;
-        this.transform = transform;
         this.UVs = null;
         this.texture = null;
         this.colors = new Color[] { color };
     }
 
-    public void render(Graphics2D g, boolean useCamScale) {
+    public void render(Graphics2D g, boolean useCamScale, Transform transform) {
         if (shape != null) {
+            g.setColor(colors[0]);
             g.fill(shape.getRender(transform, useCamScale));
             return;
         }
@@ -94,7 +90,7 @@ public class Mesh implements Serializable {
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }
 
-    public Area getMesh(boolean useCamScale) {
+    public Area getMesh(boolean useCamScale, Transform transform) {
         if (shape != null)
             return shape.getRender(transform, useCamScale);
 

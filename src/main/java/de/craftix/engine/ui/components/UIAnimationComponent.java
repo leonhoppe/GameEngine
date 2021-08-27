@@ -107,8 +107,8 @@ public class UIAnimationComponent extends UIComponent {
                 frame.value.x - pos_Original.x,
                 frame.value.y - pos_Original.y
         );
-        motion.divSelf(frame.timeInTPS);
-        element.transform.position.addSelf(motion);
+        motion.div(frame.timeInTPS);
+        element.transform.position.add(motion);
     }
 
     private boolean scale_running = true;

@@ -9,7 +9,7 @@ public enum UIAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(Screen.width() / 2f, 0);
-            result.addSelf(UIAlignment.calculateOffset(trans));
+            result.add(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -17,7 +17,7 @@ public enum UIAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(Screen.width() / 2f, Screen.height());
-            result.addSelf(UIAlignment.calculateOffset(trans));
+            result.add(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -25,7 +25,7 @@ public enum UIAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(Screen.width() / 2f, Screen.height() / 2f);
-            result.addSelf(UIAlignment.calculateOffset(trans));
+            result.add(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -33,7 +33,7 @@ public enum UIAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(0, Screen.height() / 2f);
-            result.addSelf(UIAlignment.calculateOffset(trans));
+            result.add(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -41,7 +41,7 @@ public enum UIAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(Screen.width(), Screen.height() / 2f);
-            result.addSelf(UIAlignment.calculateOffset(trans));
+            result.add(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -50,7 +50,7 @@ public enum UIAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(0);
-            result.addSelf(UIAlignment.calculateOffset(trans));
+            result.add(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -58,7 +58,7 @@ public enum UIAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(Screen.width(), 0);
-            result.addSelf(UIAlignment.calculateOffset(trans));
+            result.add(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -66,7 +66,7 @@ public enum UIAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(0, Screen.height());
-            result.addSelf(UIAlignment.calculateOffset(trans));
+            result.add(UIAlignment.calculateOffset(trans));
             return result;
         }
     },
@@ -74,7 +74,7 @@ public enum UIAlignment {
         @Override
         public Vector2 getScreenPosition(Transform trans) {
             Vector2 result = new Vector2(Screen.width(), Screen.height());
-            result.addSelf(UIAlignment.calculateOffset(trans));
+            result.add(UIAlignment.calculateOffset(trans));
             return result;
         }
     };
@@ -82,11 +82,11 @@ public enum UIAlignment {
     public abstract Vector2 getScreenPosition(Transform trans);
     private static Vector2 calculateOffset(Transform transform) {
         Vector2 result = new Vector2();
-        result.subSelf(new Vector2(
+        result.sub(new Vector2(
                 transform.scale.width / 2f,
                 transform.scale.height / 2f
         ));
-        result.addSelf(new Vector2(transform.position.x, -transform.position.y));
+        result.add(new Vector2(transform.position.x, -transform.position.y));
         return result;
     }
 }

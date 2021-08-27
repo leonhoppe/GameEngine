@@ -37,6 +37,8 @@ public class Screen extends Canvas {
     private static int fps;
     private static float deltaTime;
     private static float fixedDeltaTime;
+    private static long updateTimestamp;
+    private static long fixedUpdateTimestamp;
     private static Rectangle bufferedBounds;
     private static boolean antialiasingEffectTextures = true;
     private static int framesPerSecond = 60;
@@ -86,6 +88,7 @@ public class Screen extends Canvas {
             public void run() {
                 if (!render) return;
                 Graphics2D g = (Graphics2D) bs.getDrawGraphics();
+                updateTimestamp = System.currentTimeMillis();
                 executeUpdates();
                 renderBG(g);
                 earlyRenderingListener.forEach(listener -> listener.onRender(g));
@@ -148,7 +151,7 @@ public class Screen extends Canvas {
                 g.setColor(GameEngine.getActiveScene().getBackgroundColor());
                 g.fillRect(0, 0, getWidth(), getHeight());
             }
-            if (GameEngine.getActiveScene().getBackground().texture != null) {
+            if (GameEngine.getActiveScene().getBackground() != null) {
                 Sprite bg = GameEngine.getActiveScene().getBackground();
                 if (GameEngine.getActiveScene().getBGAutoScale())
                     g.drawImage(bg.getTextureRaw(getWidth(), getHeight()), 0, 0, null);
@@ -162,7 +165,7 @@ public class Screen extends Canvas {
     }
     protected void render(Graphics2D g) {
         //Apply Camera Transform
-        AffineTransform orig = g.getTransform();
+        AffineTransform orig = (AffineTransform) g.getTransform().clone();
         g.translate(width() / 2f + GameEngine.getCamera().transform.position.x, height() / 2f + GameEngine.getCamera().transform.position.y);
         g.rotate(GameEngine.getCamera().transform.rotation.getAngle(), 0, 0);
         g.translate(-g.getTransform().getTranslateX(), -g.getTransform().getTranslateY());
@@ -213,6 +216,7 @@ public class Screen extends Canvas {
     public static void updateFixedDeltaTime() {
         fixedDeltaTime = (System.currentTimeMillis() - lastFixedUpdate) / 1000f;
         lastFixedUpdate = System.currentTimeMillis();
+        fixedUpdateTimestamp = System.currentTimeMillis();
     }
 
     public static Point calculateScreenPosition(Transform transform) {
@@ -229,11 +233,11 @@ public class Screen extends Canvas {
     }
     public static Point calculateRawScreenPosition(Transform transform) {
         Vector2 result = new Vector2(instance.getWidth() / 2f, instance.getHeight() / 2f);
-        result.subSelf(new Vector2(
+        result.sub(new Vector2(
                 transform.scale.width / 2f,
                 transform.scale.height / 2f
         ));
-        result.addSelf(new Vector2(
+        result.add(new Vector2(
                 (float) (transform.position.x * Math.sin(Math.toRadians(90) - transform.rotation.getAngle()) +
                         transform.position.y * Math.cos(Math.toRadians(90) - transform.rotation.getAngle())),
                 (float) (transform.position.x * Math.cos(Math.toRadians(90) - transform.rotation.getAngle()) -
@@ -284,6 +288,8 @@ public class Screen extends Canvas {
     public static int getFPS() { return fps; }
     public static float getDeltaTime() { return deltaTime; }
     public static float getFixedDeltaTime() { return fixedDeltaTime; }
+    public static long getUpdateTimestamp() { return updateTimestamp; }
+    public static long getFixedUpdateTimestamp() { return fixedUpdateTimestamp; }
     public static int getBufferedFPS() { return bufferedFPS; }
     public static boolean isFullscreen() { return frame.isUndecorated(); }
     public static boolean antialiasingEffectTextures() { return antialiasingEffectTextures; }

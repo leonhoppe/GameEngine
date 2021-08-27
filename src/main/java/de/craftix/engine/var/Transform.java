@@ -43,7 +43,7 @@ public class Transform implements Serializable, Transformation {
     public Transform(Quaternion rotation) { this(); this.rotation = rotation; }
 
     public void add(Transform transform) {
-        position.addSelf(transform.position);
+        position.add(transform.position);
         scale.width += transform.scale.width;
         scale.height += transform.scale.height;
         rotation.angle += transform.rotation.angle;
@@ -52,11 +52,13 @@ public class Transform implements Serializable, Transformation {
     //Modify Rotation
     public void rotate(double angle) { rotation.angle += Math.toRadians(angle); }
     public void lookAt(Vector2 pos) {
+        pos = pos.copy();
         pos.x -= position.x;
         pos.y -= position.y;
         rotation.angle = Math.atan2(pos.x, pos.y);
     }
     public void rotateAround(Vector2 pos, double angle) {
+        pos = pos.copy();
         angle *= -1;
 
         double absAngle = Math.abs(angle);
@@ -64,7 +66,7 @@ public class Transform implements Serializable, Transformation {
         float c = (float) Math.cos(Math.toRadians(absAngle));
         Vector2 pp = new Vector2(position);
 
-        pp.subSelf(pos);
+        pp.sub(pos);
         float xNew;
         float yNew;
         if (angle > 0) {
@@ -80,16 +82,16 @@ public class Transform implements Serializable, Transformation {
         position = pp;
 
         Vector2 rotVector = new Vector2(pos);
-        rotVector.subSelf(position);
+        rotVector.sub(position);
         rotation.angle = Math.atan2(rotVector.x, rotVector.y) + Math.toRadians(180);
     }
 
     //Modify Position
     public void translate(Vector2 pos) {
-        position.addSelf(pos);
+        position.add(pos);
     }
     public void translate(float value) {
-        position.addSelf(value);
+        position.add(value);
     }
 
     //Get Transformed Vectors

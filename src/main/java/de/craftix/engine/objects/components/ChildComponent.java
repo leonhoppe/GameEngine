@@ -29,7 +29,7 @@ public class ChildComponent extends RenderingComponent {
                 Transform original = child.transform.copy();
                 Transform self = object.transform.copy();
                 self.scale = new Dimension();
-                child.transform.position.addSelf(self.position);
+                child.transform.position.add(self.position);
                 child.render(g);
                 child.transform = original;
             }

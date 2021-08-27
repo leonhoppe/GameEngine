@@ -90,7 +90,7 @@ public class Sprite {
 
             //top
             while (!intersection.isEmpty()) {
-                min.subSelf(new Vector2(0, height));
+                min.sub(new Vector2(0, height));
                 self = new Rectangle2D.Float(1, min.y, width, height);
                 intersection = new Area(g.getTransform().createTransformedShape(self));
                 intersection.intersect(screen);
@@ -99,7 +99,7 @@ public class Sprite {
             intersection = new Area(new Rectangle2D.Float(1, 1, width, height));
             //Left
             while (!intersection.isEmpty()) {
-                min.subSelf(new Vector2(width, 0));
+                min.sub(new Vector2(width, 0));
                 self = new Rectangle2D.Float(min.x, 1, width, height);
                 intersection = new Area(g.getTransform().createTransformedShape(self));
                 intersection.intersect(screen);
@@ -131,7 +131,7 @@ public class Sprite {
 
             //top
             while (!intersection.isEmpty()) {
-                min.subSelf(new Vector2(0, height));
+                min.sub(new Vector2(0, height));
                 self = new Rectangle2D.Float(1, min.y, width, height);
                 intersection = new Area(g.getTransform().createTransformedShape(self));
                 intersection.intersect(screen);
@@ -140,7 +140,7 @@ public class Sprite {
             intersection = new Area(new Rectangle2D.Float(1, 1, width, height));
             //Left
             while (!intersection.isEmpty()) {
-                min.subSelf(new Vector2(width, 0));
+                min.sub(new Vector2(width, 0));
                 self = new Rectangle2D.Float(min.x, 1, width, height);
                 intersection = new Area(g.getTransform().createTransformedShape(self));
                 intersection.intersect(screen);
