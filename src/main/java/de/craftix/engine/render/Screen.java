@@ -16,6 +16,7 @@ import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
+import java.awt.geom.Point2D;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
 import java.lang.reflect.Method;
@@ -146,20 +147,18 @@ public class Screen extends Canvas {
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
         }
 
+        if (GameEngine.getActiveScene().getBackgroundColor() != null) {
+            g.setColor(GameEngine.getActiveScene().getBackgroundColor());
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
         if (GameEngine.getActiveScene().getBackground() != null) {
-            if (GameEngine.getActiveScene().getBackgroundColor() != null) {
-                g.setColor(GameEngine.getActiveScene().getBackgroundColor());
-                g.fillRect(0, 0, getWidth(), getHeight());
-            }
-            if (GameEngine.getActiveScene().getBackground() != null) {
-                Sprite bg = GameEngine.getActiveScene().getBackground();
-                if (GameEngine.getActiveScene().getBGAutoScale())
-                    g.drawImage(bg.getTextureRaw(getWidth(), getHeight()), 0, 0, null);
-                else {
-                    bg.repeat = true;
-                    Transform transform = new Transform(new Vector2(), new Dimension(bg.texture.getWidth(), bg.texture.getHeight()), Quaternion.IDENTITY());
-                    bg.renderRaw(g, transform);
-                }
+            Sprite bg = GameEngine.getActiveScene().getBackground();
+            if (GameEngine.getActiveScene().getBGAutoScale())
+                g.drawImage(bg.getTextureRaw(getWidth(), getHeight()), 0, 0, null);
+            else {
+                bg.repeat = true;
+                Transform transform = new Transform(new Vector2(), new Dimension(bg.texture.getWidth(), bg.texture.getHeight()), Quaternion.IDENTITY());
+                bg.renderRaw(g, transform);
             }
         }
     }
@@ -221,8 +220,8 @@ public class Screen extends Canvas {
 
     public static Point calculateScreenPosition(Transform transform) {
         Vector2 result = new Vector2(instance.getWidth() / 2f, instance.getHeight() / 2f);
-        result.x -= GameEngine.getCamera().transform.position.x;
-        result.y += GameEngine.getCamera().transform.position.y;
+        result.x -= GameEngine.getCamera().transform.position.x * GameEngine.getCamera().getScale();
+        result.y += GameEngine.getCamera().transform.position.y * GameEngine.getCamera().getScale();
         result.x -= (transform.scale.width * GameEngine.getCamera().getScale()) / 2f;
         result.y -= (transform.scale.height * GameEngine.getCamera().getScale()) / 2f;
         result.y += (transform.position.x * GameEngine.getCamera().getScale()) * Math.cos(Math.toRadians(90) - transform.rotation.getAngle()) -
@@ -246,6 +245,15 @@ public class Screen extends Canvas {
         return result.toPoint();
     }
     public static Vector2 calculateVirtualPosition(Vector2 pos) {
+        pos = pos.copy();
+
+        Point zero = calculateScreenPosition(new Transform(Vector2.zero(), new Dimension(), Quaternion.IDENTITY()));
+        AffineTransform trans = new AffineTransform();
+        trans.rotate(-GameEngine.getCamera().transform.rotation.getAngle(), zero.x, zero.y);
+        Point2D temp = new Point2D.Float();
+        trans.transform(pos.toPoint2D(), temp);
+        pos = new Vector2(temp);
+
         Vector2 result = new Vector2(-(instance.getWidth() / 2f), -(instance.getHeight() / 2f));
         result.x += GameEngine.getCamera().transform.position.x + pos.x;
         result.y += -GameEngine.getCamera().transform.position.y + pos.y;
@@ -313,7 +321,9 @@ public class Screen extends Canvas {
 
     public static AffineTransform getTransform(Transform transform) {
         Point pos = Screen.calculateScreenPosition(transform);
+        Point zero = calculateScreenPosition(new Transform(Vector2.zero(), new Dimension(), Quaternion.IDENTITY()));
         AffineTransform trans = new AffineTransform();
+        trans.rotate(GameEngine.getCamera().transform.rotation.getAngle(), zero.x, zero.y);
         trans.translate(pos.x + ((transform.scale.width * (GameEngine.getCamera().getScale())) / 2f), pos.y + (transform.scale.height * (GameEngine.getCamera().getScale())) / 2f);
         trans.rotate(transform.rotation.getAngle(), transform.position.x * (GameEngine.getCamera().getScale()), -transform.position.y * (GameEngine.getCamera().getScale()));
         return trans;

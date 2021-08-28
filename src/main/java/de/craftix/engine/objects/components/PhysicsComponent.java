@@ -9,7 +9,7 @@ public class PhysicsComponent extends Component {
     public static final float EARTH_MASS = 9.81f;
 
     private static final double G = 0.0000000000674;
-    private static final double MULTIPLICATOR = 10E7;
+    private static final double MULTIPLICATOR = 1.5 * 10E9;
 
     //Gravity
     private boolean gravity = true;
@@ -29,17 +29,23 @@ public class PhysicsComponent extends Component {
     @Override
     public void update() {
         calculateGravity();
+        calculateDrag();
 
-        if (checkMovement(currentVelocity))
+        // TODO: Fix the movement issue
+        if (checkMovement(currentVelocity)) {
             object.transform.translate(currentVelocity.copy().mul(Screen.getDeltaTime()));
+        }
     }
 
     private void calculateGravity() {
         if (!hasGravity() || onGround()) return;
         Vector2 dir = Vector2.down();
         Vector2 force = new Vector2(dir.mul((float) (G * (mass * EARTH_MASS))));
-        Vector2 acceleration = force.mul(mass).mul((float) MULTIPLICATOR);
+        Vector2 acceleration = force.mul(mass).mul((float) MULTIPLICATOR).mul(Screen.getDeltaTime());
         currentVelocity.add(acceleration);
+    }
+    private void calculateDrag() {
+        // TODO: calculate the Drag Force of the Object
     }
     private boolean checkMovement(Vector2 velocity) {
         boolean valid = true;
@@ -54,7 +60,7 @@ public class PhysicsComponent extends Component {
     }
 
     public boolean onGround() {
-        return !checkMovement(currentVelocity);
+        return !checkMovement(new Vector2(0, currentVelocity.y - 0.1f));
     }
 
     public float getMass() { return mass; }

@@ -2,14 +2,11 @@ package de.craftix.engine.render;
 
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.var.Animation;
-import de.craftix.engine.var.Mesh;
 import de.craftix.engine.var.Transform;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
 public class ScreenObject implements Serializable {
@@ -30,14 +27,13 @@ public class ScreenObject implements Serializable {
 
         if (sprite == null) {
             mesh.render(g, true, transform);
-            return;
+        }else {
+            if (sprite.texture != null && (animation == null || !animation.isRunning()))
+                sprite.render(g, transform);
+
+            if (animation != null)
+                animation.getImage().render(g, transform);
         }
-
-        if (sprite.texture != null && (animation == null || !animation.isRunning()))
-            sprite.render(g, transform);
-
-        if (animation != null)
-            animation.getImage().render(g, transform);
 
         g.setColor(Color.BLACK);
         g.setTransform(original);
@@ -54,7 +50,7 @@ public class ScreenObject implements Serializable {
     public Animation getAnimation() { return animation; }
     public Mesh getMesh() {
         if (mesh != null) return mesh;
-        return new Mesh(Color.BLACK, Shape.RECTANGLE);
+        return new Mesh(Shape.RECTANGLE, Color.BLACK);
     }
     public float getLayer() { return layer; }
     public boolean isVisible() { return visible; }
@@ -66,7 +62,7 @@ public class ScreenObject implements Serializable {
     }
     public Area getScreenShape() {
         if (sprite != null) {
-            return new Area(Screen.getTransform(transform).createTransformedShape(new Mesh(Color.BLACK, Shape.RECTANGLE).getMesh(true, transform)));
+            return new Area(Screen.getTransform(transform).createTransformedShape(new Mesh(Shape.RECTANGLE, Color.BLACK).getMesh(true, transform)));
         }else
             return new Area(Screen.getTransform(transform).createTransformedShape(mesh.getMesh(true, transform)));
     }
@@ -74,6 +70,6 @@ public class ScreenObject implements Serializable {
         if (sprite.texture != null || animation != null)
             return Shape.RECTANGLE.getRender(transform, false);
 
-        return new Mesh(Color.BLACK, Shape.RECTANGLE).getMesh(false, transform);
+        return new Mesh(Shape.RECTANGLE, Color.BLACK).getMesh(false, transform);
     }
 }

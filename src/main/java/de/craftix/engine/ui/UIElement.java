@@ -4,7 +4,7 @@ import de.craftix.engine.render.Shape;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.ui.components.UIComponent;
 import de.craftix.engine.var.Animation;
-import de.craftix.engine.var.Mesh;
+import de.craftix.engine.render.Mesh;
 import de.craftix.engine.var.Transform;
 import de.craftix.engine.var.Vector2;
 
@@ -38,9 +38,10 @@ public class UIElement implements Serializable {
 
     public void render(Graphics2D g) {
         if (renderObject) {
-            AffineTransform original = g.getTransform();
+            AffineTransform original = (AffineTransform) g.getTransform().clone();
             Vector2 pos = alignment.getScreenPosition(transform);
-            g.rotate(transform.rotation.getAngle(), pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
+            g.translate(pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
+            g.rotate(transform.rotation.getAngle(), 0, 0);
 
             if (animation != null) {
                 g.drawImage(animation.getImage().getTextureRaw(transform.scale.width, transform.scale.height), pos.getX(), pos.getY(), null);
@@ -84,7 +85,7 @@ public class UIElement implements Serializable {
         Vector2 pos = alignment.getScreenPosition(transform);
         at.rotate(transform.rotation.getAngle(), pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
         at.translate(pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
-        return new Area(at.createTransformedShape(new Mesh(Color.BLACK, Shape.RECTANGLE).getMesh(false, transform)));
+        return new Area(at.createTransformedShape(new Mesh(Shape.RECTANGLE, Color.BLACK).getMesh(false, transform)));
     }
 
     public UIAlignment getAlignment() { return alignment; }

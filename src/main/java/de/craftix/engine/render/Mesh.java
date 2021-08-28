@@ -1,17 +1,14 @@
-package de.craftix.engine.var;
+package de.craftix.engine.render;
 
 import de.craftix.engine.GameEngine;
-import de.craftix.engine.render.Screen;
-import de.craftix.engine.render.Shape;
-import de.craftix.engine.render.Sprite;
+import de.craftix.engine.var.Mathf;
+import de.craftix.engine.var.Transform;
+import de.craftix.engine.var.Vector2;
 
 import java.awt.*;
 import java.awt.geom.Area;
-import java.awt.geom.Ellipse2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class Mesh implements Serializable {
@@ -51,7 +48,7 @@ public class Mesh implements Serializable {
         this.colors = null;
     }
 
-    public Mesh(Color color, Shape shape) {
+    public Mesh(Shape shape, Color color) {
         this.points = null;
         this.shape = shape;
         this.UVs = null;

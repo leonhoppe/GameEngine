@@ -2,9 +2,9 @@ package de.craftix.engine.objects.components;
 
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.objects.GameObject;
+import de.craftix.engine.render.Mesh;
 import de.craftix.engine.render.Screen;
 import de.craftix.engine.var.*;
-import de.craftix.engine.var.Dimension;
 
 import java.awt.geom.Area;
 import java.io.Serializable;
@@ -40,12 +40,9 @@ public class Collider extends Component implements Serializable {
     private final HashMap<Collider, Boolean> colliding = new HashMap<>();
 
     public Collider(Mesh mesh, boolean isTrigger) { this.mesh = mesh; trigger = isTrigger; }
-    public Collider(Mesh mesh, boolean isTrigger, Vector2 pos, Dimension size) {
+    public Collider(Mesh mesh, boolean isTrigger, Transform transform) {
         this(mesh, isTrigger);
-        transform = new Transform();
-        transform.position = pos;
-        transform.scale = size;
-        transform.rotation = Quaternion.IDENTITY();
+        this.transform = transform;
     }
 
     @Override

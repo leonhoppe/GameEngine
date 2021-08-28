@@ -1,10 +1,12 @@
 package de.craftix.engine.var;
 
 import java.awt.*;
+import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Vector2 implements Serializable, Transformation {
+    public static Vector2 zero() { return new Vector2(0, 0); }
     public static Vector2 up() { return new Vector2(0, 1); }
     public static Vector2 down() { return new Vector2(0, -1); }
     public static Vector2 right() { return new Vector2(1, 0); }
@@ -15,12 +17,15 @@ public class Vector2 implements Serializable, Transformation {
 
     public Vector2() { this(0, 0); }
     public Vector2(float x, float y) { this.x = x; this.y = y; }
+    public Vector2(double x, double y) { this.x = (float) x; this.y = (float) y; }
     public Vector2(float xy) { this(xy, xy); }
     public Vector2(Vector2 vector) { this(vector.x, vector.y); }
     public Vector2(Point point) { this(point.x, point.y); }
+    public Vector2(Point2D point2D) { this(point2D.getX(), point2D.getY()); }
 
     public Point toPoint() { return new Point(Math.round(x), Math.round(y)); }
     public Point toPointFloored() { return new Point((int) x, (int) y); }
+    public Point2D toPoint2D() { return new Point2D.Float(x, y); }
 
     public int getX() { return Math.round(x); }
     public int getY() { return Math.round(y); }

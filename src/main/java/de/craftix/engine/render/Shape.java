@@ -1,7 +1,6 @@
 package de.craftix.engine.render;
 
 import de.craftix.engine.GameEngine;
-import de.craftix.engine.var.Polygon2D;
 import de.craftix.engine.var.Transform;
 import de.craftix.engine.var.Vector2;
 

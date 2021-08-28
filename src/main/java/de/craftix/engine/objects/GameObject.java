@@ -3,9 +3,11 @@ package de.craftix.engine.objects;
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.objects.components.Component;
 import de.craftix.engine.objects.components.RenderingComponent;
+import de.craftix.engine.render.Mesh;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.var.*;
+import org.apache.commons.lang.SerializationUtils;
 
 import java.awt.*;
 import java.io.Serializable;
