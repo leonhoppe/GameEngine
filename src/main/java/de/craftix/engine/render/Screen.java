@@ -115,7 +115,7 @@ public class Screen extends Canvas {
         lastFrame = System.nanoTime();
 
         GameEngine.getInstance().update();
-        for (ScreenObject object : GameEngine.getActiveScene().getRawObjects()) {
+        for (ScreenObject object : GameEngine.getScene().getRawObjects()) {
             object.update();
             if (object.animation != null) object.animation.update();
             if (object instanceof GameObject)
@@ -147,13 +147,13 @@ public class Screen extends Canvas {
             g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
         }
 
-        if (GameEngine.getActiveScene().getBackgroundColor() != null) {
-            g.setColor(GameEngine.getActiveScene().getBackgroundColor());
+        if (GameEngine.getScene().getBackgroundColor() != null) {
+            g.setColor(GameEngine.getScene().getBackgroundColor());
             g.fillRect(0, 0, getWidth(), getHeight());
         }
-        if (GameEngine.getActiveScene().getBackground() != null) {
-            Sprite bg = GameEngine.getActiveScene().getBackground();
-            if (GameEngine.getActiveScene().getBGAutoScale())
+        if (GameEngine.getScene().getBackground() != null) {
+            Sprite bg = GameEngine.getScene().getBackground();
+            if (GameEngine.getScene().getBGAutoScale())
                 g.drawImage(bg.getTextureRaw(getWidth(), getHeight()), 0, 0, null);
             else {
                 bg.repeat = true;
@@ -174,7 +174,7 @@ public class Screen extends Canvas {
         ArrayList<Float> layers = new ArrayList<>(GameEngine.getLayers().values());
         Collections.sort(layers);
         for (Float layer : layers) {
-            for (ScreenObject object : GameEngine.getActiveScene().getRawObjects()) {
+            for (ScreenObject object : GameEngine.getScene().getRawObjects()) {
                 Area shape = object.getScreenShape();
                 shape.intersect(new Area(self));
                 if (shape.isEmpty()) continue;
@@ -185,7 +185,7 @@ public class Screen extends Canvas {
         }
         g.setTransform(orig);
 
-        GameEngine.getActiveScene().getUIManager().renderComponents(g);
+        GameEngine.getScene().getUIManager().renderComponents(g);
 
         if (showGrid) {
             g.setColor(Color.WHITE);

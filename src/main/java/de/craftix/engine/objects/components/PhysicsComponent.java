@@ -52,7 +52,7 @@ public class PhysicsComponent extends Component {
         if (object.hasComponent(Collider.class)) {
             GameObject temp = (GameObject) SerializationUtils.clone(object);
             temp.transform.translate(velocity.copy().mul(Screen.getDeltaTime()));
-            Collider col = (Collider) temp.getComponent(Collider.class);
+            Collider col = temp.getComponent(Collider.class);
             col.update(object);
             if (col.isColliding()) valid = false;
         }

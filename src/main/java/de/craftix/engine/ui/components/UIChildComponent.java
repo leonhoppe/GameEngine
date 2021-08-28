@@ -20,7 +20,7 @@ public class UIChildComponent extends UIComponent {
         AffineTransform orig = g.getTransform();
         Vector2 pos = element.getAlignment().getScreenPosition(element.transform);
         g.rotate(element.transform.rotation.getAngle(), pos.x + (element.transform.scale.width / 2f), pos.y + (element.transform.scale.height / 2f));
-        List<Float> sortedLayers = (List<Float>) GameEngine.getActiveScene().getUIManager().getLayers().clone();
+        List<Float> sortedLayers = (List<Float>) GameEngine.getScene().getUIManager().getLayers().clone();
         Collections.sort(sortedLayers);
 
         for (float layer : sortedLayers) {

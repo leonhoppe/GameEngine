@@ -15,31 +15,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameObject extends ScreenObject implements Serializable {
-    private final List<de.craftix.engine.objects.components.Component> components = new ArrayList<>();
+    private final List<Component> components = new ArrayList<>();
     private boolean renderObject = true;
+    private final String name;
 
-    public GameObject(Sprite sprite, Transform transform) {
+    public GameObject(String name, Sprite sprite, Transform transform) {
         super();
         this.sprite = sprite;
         this.transform = transform;
         visible = true;
+        this.name = name;
     }
-    public GameObject(Mesh mesh, Transform transform) {
+    public GameObject(String name, Mesh mesh, Transform transform) {
         super();
         this.sprite = null;
         this.mesh = mesh;
         this.transform = transform;
         visible = true;
+        this.name = name;
     }
-    protected GameObject() { super(); }
-    private GameObject(ScreenObject object) {
-        super();
-        this.transform = object.transform;
-        this.sprite = object.getSprite();
-        this.layer = object.getLayer();
-        this.visible = object.isVisible();
-        this.animation = object.getAnimation();
-    }
+    protected GameObject() { super(); this.name = null; }
 
     public void addComponent(Component component) {
         components.add(component);
@@ -61,11 +56,18 @@ public class GameObject extends ScreenObject implements Serializable {
         }
         return false;
     }
-    public Component getComponent(Class<? extends Component> component) {
+    public <T extends Component> T getComponent(Class<T> component) {
         for (Component all : components) {
-            if (all.getClass() == component) return all;
+            if (all.getClass() == component) return (T) all;
         }
         return null;
+    }
+    public <T extends Component> T[] getComponents(Class<T> component) {
+        List<T> comps = new ArrayList<>();
+        for (Component all : components) {
+            if (all.getClass() == component) comps.add((T) all);
+        }
+        return comps.toArray(component.getEnumConstants());
     }
 
     @Override
@@ -84,4 +86,6 @@ public class GameObject extends ScreenObject implements Serializable {
     public void setSprite(Sprite texture) { this.sprite = texture; }
     public void setVisible(boolean visible) { this.visible = visible; }
     public void renderObject(boolean renderObject) { this.renderObject = renderObject; }
+
+    public String getName() { return name; }
 }

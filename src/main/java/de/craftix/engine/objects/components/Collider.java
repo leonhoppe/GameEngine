@@ -15,9 +15,9 @@ import java.util.List;
 public class Collider extends Component implements Serializable {
     public static Collider[] calculateCollisions(GameObject object) {
         ArrayList<Collider> collisions = new ArrayList<>();
-        for (GameObject other : GameEngine.getActiveScene().getGameObjects()) {
+        for (GameObject other : GameEngine.getScene().getGameObjects()) {
             if (object == other || !other.hasComponent(Collider.class)) continue;
-            Collider otherCol = (Collider) other.getComponent(Collider.class);
+            Collider otherCol = other.getComponent(Collider.class);
             if (otherCol.isTrigger()) continue;
             Area current = object.getShape();
             current.intersect(getArea(otherCol.transform, otherCol.mesh));
@@ -55,10 +55,10 @@ public class Collider extends Component implements Serializable {
     private HashMap<Collider, Boolean> lastFrame = new HashMap<>();
     public void update() {
         isColliding = false;
-        for (GameObject other : GameEngine.getActiveScene().getGameObjects()) {
+        for (GameObject other : GameEngine.getScene().getGameObjects()) {
             if (other == object) continue;
             if (!other.hasComponent(Collider.class)) continue;
-            Collider otherCol = (Collider) other.getComponent(Collider.class);
+            Collider otherCol = other.getComponent(Collider.class);
             Area collision = getArea(transform, mesh);
             collision.intersect(getArea(otherCol.transform, otherCol.mesh));
             if (!collision.isEmpty()) {
@@ -90,10 +90,10 @@ public class Collider extends Component implements Serializable {
 
     protected void update(Object orig) {
         isColliding = false;
-        for (GameObject other : GameEngine.getActiveScene().getGameObjects()) {
+        for (GameObject other : GameEngine.getScene().getGameObjects()) {
             if (other == object || other == orig) continue;
             if (!other.hasComponent(Collider.class)) continue;
-            Collider otherCol = (Collider) other.getComponent(Collider.class);
+            Collider otherCol = other.getComponent(Collider.class);
             Area collision = getArea(transform, mesh);
             collision.intersect(getArea(otherCol.transform, otherCol.mesh));
             if (!collision.isEmpty()) {

@@ -23,7 +23,7 @@ import java.util.Timer;
 public class GameEngine {
     private static GameEngine instance;
     private static Screen screen;
-    private static Scene activeScene;
+    private static Scene scene;
     private static Logger logger;
     private static Logger globalLogger;
     private static int TPS;
@@ -42,7 +42,7 @@ public class GameEngine {
         logger.info("Logger initialised");
         timer = new Timer();
         logger.info("Timer initialised");
-        activeScene = new Scene();
+        scene = new Scene();
         logger.info("Scene initialised");
         GameEngine.instance = instance;
         logger.info("instance initialised");
@@ -75,7 +75,7 @@ public class GameEngine {
         logger.info("FPS Updater Thread initialised");
 
         instance.start();
-        for (ScreenObject object : activeScene.getGameObjects())
+        for (ScreenObject object : scene.getGameObjects())
             object.start();
         logger.info("Start Method for each GameObject executed");
         logger.info("Game started successfully");
@@ -84,7 +84,7 @@ public class GameEngine {
     private static void handleDeltaUpdates() {
         Screen.updateFixedDeltaTime();
         instance.fixedUpdate();
-        for (ScreenObject object : activeScene.getRawObjects()) {
+        for (ScreenObject object : scene.getRawObjects()) {
             object.fixedUpdate();
             if (object instanceof GameObject)
                 for (Component component : ((GameObject) object).getComponents())
@@ -115,7 +115,7 @@ public class GameEngine {
         try { Thread.sleep(200); }
         catch (Exception e) { throwError(e); }
         GameEngine.instance.stop();
-        for (ScreenObject object : GameEngine.getActiveScene().getGameObjects())
+        for (ScreenObject object : GameEngine.getScene().getGameObjects())
             object.stop();
         logger.info("Stop Methods Executed");
         logger.info("Sending Stop command");
@@ -123,12 +123,19 @@ public class GameEngine {
     }
 
     public static void instantiate(GameObject object) {
-        getActiveScene().addObject(object);
+        getScene().addObject(object);
         object.start();
     }
     public static void destroy(GameObject object) {
-        getActiveScene().removeObject(object);
+        getScene().removeObject(object);
         object.stop();
+    }
+    public static GameObject getObjectByName(String name) {
+        for (GameObject all : getScene().getGameObjects()) {
+            if (all.getName().equals(name))
+                return all;
+        }
+        return null;
     }
 
     public static URI loadFile(String path) {
@@ -161,9 +168,9 @@ public class GameEngine {
     public void initialise() {}
 
     public static GameEngine getInstance() { return instance; }
-    public static Camera getCamera() { return getActiveScene().getCamera(); }
-    public static Scene getActiveScene() { return activeScene; }
-    public static UIManager getUIManager() { return activeScene.getUIManager(); }
+    public static Camera getCamera() { return getScene().getCamera(); }
+    public static Scene getScene() { return scene; }
+    public static UIManager getUIManager() { return scene.getUIManager(); }
     public static Float getLayer(String name) { return layers.get(name); }
     public static HashMap<String, Float> getLayers() { return layers; }
     public static Screen getScreenInstance() { return screen; }
@@ -172,7 +179,7 @@ public class GameEngine {
     public static Timer getTimer() { return timer; }
     public static Object[] getUpdaters() { return updaters.toArray(); }
 
-    public static void setActiveScene(Scene scene) { activeScene = scene; }
+    public static void setScene(Scene scene) { GameEngine.scene = scene; }
     public static void addLayer(String name, float layer) { if (!layers.containsValue(layer) && !layers.containsKey(name)) layers.put(name, layer); }
     public static void setIcon(Sprite sprite) {
         ImageIcon icon = new ImageIcon(sprite.texture);
