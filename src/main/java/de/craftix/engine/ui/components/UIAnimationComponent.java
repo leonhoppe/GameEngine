@@ -24,15 +24,15 @@ public class UIAnimationComponent extends UIComponent {
         ArrayList<Keyframe<Quaternion>> quaternions = new ArrayList<>();
         for (Keyframe<? extends Transformation> keyframe : keyframes) {
             if (keyframe.value instanceof Vector2)
-                vectors.add(new Keyframe<>((Vector2) keyframe.value, keyframe.startPoint, keyframe.timeInTPS));
+                vectors.add(new Keyframe<>((Vector2) keyframe.value, keyframe.startPoint, keyframe.timeInMillis));
             if (keyframe.value instanceof Dimension)
-                dimensions.add(new Keyframe<>((Dimension) keyframe.value, keyframe.startPoint, keyframe.timeInTPS));
+                dimensions.add(new Keyframe<>((Dimension) keyframe.value, keyframe.startPoint, keyframe.timeInMillis));
             if (keyframe.value instanceof Quaternion)
-                quaternions.add(new Keyframe<>((Quaternion) keyframe.value, keyframe.startPoint, keyframe.timeInTPS));
+                quaternions.add(new Keyframe<>((Quaternion) keyframe.value, keyframe.startPoint, keyframe.timeInMillis));
             if (keyframe.value instanceof Transform) {
-                vectors.add(new Keyframe<>(((Transform) keyframe.value).position, keyframe.startPoint, keyframe.timeInTPS));
-                dimensions.add(new Keyframe<>(((Transform) keyframe.value).scale, keyframe.startPoint, keyframe.timeInTPS));
-                quaternions.add(new Keyframe<>(((Transform) keyframe.value).rotation, keyframe.startPoint, keyframe.timeInTPS));
+                vectors.add(new Keyframe<>(((Transform) keyframe.value).position, keyframe.startPoint, keyframe.timeInMillis));
+                dimensions.add(new Keyframe<>(((Transform) keyframe.value).scale, keyframe.startPoint, keyframe.timeInMillis));
+                quaternions.add(new Keyframe<>(((Transform) keyframe.value).rotation, keyframe.startPoint, keyframe.timeInMillis));
             }
         }
         posKeyframes = vectors.toArray(new Keyframe[0]);
@@ -69,7 +69,7 @@ public class UIAnimationComponent extends UIComponent {
     private void applyRotation() {
         if (!rot_running) return;
         Keyframe<Quaternion> frame = rotKeyframes[rot_currentKeyframe];
-        if (rot_passedTPS == frame.startPoint + frame.timeInTPS) {
+        if (rot_passedTPS == frame.startPoint + frame.timeInMillis) {
             element.transform.rotation = frame.value.copy();
             rot_currentKeyframe++;
             rot_Original = element.transform.rotation.copy();
@@ -81,7 +81,7 @@ public class UIAnimationComponent extends UIComponent {
         if (rot_passedTPS < frame.startPoint) return;
 
         double difference = frame.value.getAngle() - rot_Original.getAngle();
-        difference /= frame.timeInTPS;
+        difference /= frame.timeInMillis;
         element.transform.rotate(Math.toDegrees(difference));
     }
 
@@ -92,7 +92,7 @@ public class UIAnimationComponent extends UIComponent {
     private void applyPosition() {
         if (!pos_running) return;
         Keyframe<Vector2> frame = posKeyframes[pos_currentKeyframe];
-        if (pos_passedTPS == frame.startPoint + frame.timeInTPS) {
+        if (pos_passedTPS == frame.startPoint + frame.timeInMillis) {
             element.transform.position = frame.value.copy();
             pos_currentKeyframe++;
             pos_Original = element.transform.position.copy();
@@ -107,7 +107,7 @@ public class UIAnimationComponent extends UIComponent {
                 frame.value.x - pos_Original.x,
                 frame.value.y - pos_Original.y
         );
-        motion.div(frame.timeInTPS);
+        motion.div(frame.timeInMillis);
         element.transform.position.add(motion);
     }
 
@@ -118,7 +118,7 @@ public class UIAnimationComponent extends UIComponent {
     private void applyScale() {
         if (!scale_running) return;
         Keyframe<Dimension> frame = scaleKeyframes[scale_currentKeyframe];
-        if (scale_passedTPS == frame.startPoint + frame.timeInTPS) {
+        if (scale_passedTPS == frame.startPoint + frame.timeInMillis) {
             element.transform.scale = frame.value.copy();
             scale_currentKeyframe++;
             scale_Original = element.transform.scale.copy();
@@ -133,8 +133,8 @@ public class UIAnimationComponent extends UIComponent {
                 frame.value.width - scale_Original.width,
                 frame.value.height - scale_Original.height
         );
-        scale.width /= frame.timeInTPS;
-        scale.height /= frame.timeInTPS;
+        scale.width /= frame.timeInMillis;
+        scale.height /= frame.timeInMillis;
         element.transform.scale.width += scale.width;
         element.transform.scale.height += scale.height;
     }

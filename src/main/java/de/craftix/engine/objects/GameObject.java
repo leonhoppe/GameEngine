@@ -58,14 +58,14 @@ public class GameObject extends ScreenObject implements Serializable {
     }
     public <T extends Component> T getComponent(Class<T> component) {
         for (Component all : components) {
-            if (all.getClass() == component) return (T) all;
+            if (all.getClass() == component) return component.cast(all);
         }
         return null;
     }
     public <T extends Component> T[] getComponents(Class<T> component) {
         List<T> comps = new ArrayList<>();
         for (Component all : components) {
-            if (all.getClass() == component) comps.add((T) all);
+            if (all.getClass() == component) comps.add(component.cast(all));
         }
         return comps.toArray(component.getEnumConstants());
     }

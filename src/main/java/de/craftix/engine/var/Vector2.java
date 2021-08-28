@@ -70,7 +70,7 @@ public class Vector2 implements Serializable, Transformation {
         p1 = p1.copy(); p2 = p2.copy();
         p2.x -= p1.x;
         p2.y -= p1.y;
-        return Math.atan2(p1.x, p1.y);
+        return Math.atan2(p2.x, p2.y);
     }
     public static Vector2 direction(Vector2 p1, Vector2 p2) {
         p1 = p1.copy(); p2 = p2.copy();

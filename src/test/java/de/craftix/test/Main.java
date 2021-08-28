@@ -3,6 +3,7 @@ package de.craftix.test;
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.InputManager;
 import de.craftix.engine.objects.GameObject;
+import de.craftix.engine.objects.components.AnimationComponent;
 import de.craftix.engine.objects.components.Collider;
 import de.craftix.engine.objects.components.PhysicsComponent;
 import de.craftix.engine.render.*;
@@ -26,7 +27,7 @@ public class Main extends GameEngine {
         Screen.setAntialiasingEffectTextures(false);
         InputManager.setClosingKey(KeyEvent.VK_ESCAPE);
         InputManager.setFullscreenKey(KeyEvent.VK_F11);
-        setup(800, 600, "GameEngine 3.0", new Main(), 120);
+        setup(800, 600, "GameEngine 3.0", new Main(), 60);
     }
 
     @Override
@@ -45,20 +46,21 @@ public class Main extends GameEngine {
         instantiate(ground);
         instantiate(player);
 
-        UIElement sun = new UIElement(new Mesh(Shape.CIRCLE, Color.YELLOW), new Transform(new Vector2(50, -50), new Dimension(50, 50), Quaternion.IDENTITY()), UIAlignment.TOP_LEFT);
+        UIElement sun = new UIElement(new Mesh(Shape.CIRCLE, Color.YELLOW), new Transform(new Vector2(50, -50), new Dimension(75, 75), Quaternion.IDENTITY()), UIAlignment.TOP_LEFT);
         getUIManager().addElement(sun);
     }
 
     @Override
     public void update() {
-        PhysicsComponent playerPhysics = getObjectByName("player").getComponent(PhysicsComponent.class);
+        GameObject player = getObjectByName("player");
+        PhysicsComponent playerPhysics = player.getComponent(PhysicsComponent.class);
 
         if (InputManager.isKeyPressed(KeyEvent.VK_SPACE) && playerPhysics.onGround())
-            playerPhysics.setVelocity(new Vector2(0, 10));
+            playerPhysics.setVelocity(new Vector2(0, 10f));
 
         if (InputManager.isKeyPressed(KeyEvent.VK_D))
-            playerPhysics.addVelocity(Vector2.right().mul(Screen.getDeltaTime() * 5f));
+            playerPhysics.addVelocity(Vector2.right().mul(Screen.getDeltaTime() * 7f));
         if (InputManager.isKeyPressed(KeyEvent.VK_A))
-            playerPhysics.addVelocity(Vector2.left().mul(Screen.getDeltaTime() * 5f));
+            playerPhysics.addVelocity(Vector2.left().mul(Screen.getDeltaTime() * 7f));
     }
 }
