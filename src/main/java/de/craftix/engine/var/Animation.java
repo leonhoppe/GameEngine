@@ -3,6 +3,8 @@ package de.craftix.engine.var;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 public class Animation {
@@ -109,7 +111,6 @@ public class Animation {
         applyPosition();
         applyScale();
         applySprite();
-        // TODO: add Sprite Animation
     }
 
     private boolean rot_running = false;
@@ -211,8 +212,32 @@ public class Animation {
             return;
         }
         if (currentTimeInAnimation < frame.startPoint) return;
-        object.getSprite().texture = frame.value.texture;
-        // TODO: fade between the Images
+        BufferedImage result = new BufferedImage(object.getSprite().texture.getWidth(), object.getSprite().texture.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage bottom = new BufferedImage(object.getSprite().texture.getWidth(), object.getSprite().texture.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        BufferedImage top = new BufferedImage(object.getSprite().texture.getWidth(), object.getSprite().texture.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics g = result.getGraphics();
+        for (int x = 0; x < result.getWidth(); x++) {
+            for (int y = 0; y < result.getHeight(); y++) {
+                Color pixel = new Color(sprite_original.texture.getRGB(x, y), true);
+                int alpha = -Math.round(Mathf.map(currentTimeInAnimation - frame.startPoint, 0, frame.timeInMillis, 0, pixel.getAlpha())) + 255;
+                if (pixel.getAlpha() != 0) {
+                    top.setRGB(x, y, new Color(pixel.getRed(), pixel.getGreen(), pixel.getBlue(), alpha).getRGB());
+                    bottom.setRGB(x, y, frame.value.texture.getRGB(x, y));
+                }else {
+                    top.setRGB(x, y, pixel.getRGB());
+                    pixel = new Color(frame.value.texture.getRGB(x, y), true);
+                    alpha = Math.round(Mathf.map(currentTimeInAnimation - frame.startPoint, 0, frame.timeInMillis, 0, pixel.getAlpha()));
+                    if (pixel.getAlpha() != 0)
+                        bottom.setRGB(x, y, new Color(pixel.getRed(), pixel.getGreen(), pixel.getBlue(), alpha).getRGB());
+                    else
+                        bottom.setRGB(x, y, pixel.getRGB());
+                }
+            }
+        }
+        g.drawImage(bottom, 0, 0, null);
+        g.drawImage(top, 0, 0, null);
+        g.dispose();
+        object.getSprite().texture = result;
     }
 
     public String getName() { return name; }

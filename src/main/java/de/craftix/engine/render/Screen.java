@@ -50,6 +50,7 @@ public class Screen extends Canvas {
 
     private final static List<RenderingListener> earlyRenderingListener = new ArrayList<>();
     private final static List<RenderingListener> lateRenderingListener = new ArrayList<>();
+    private final static List<PostRendering> postRenderer = new ArrayList<>();
 
     public Screen(int width, int height, String title, float fixedDeltaTime) {
         logger = new Logger("Graphics");
@@ -93,10 +94,18 @@ public class Screen extends Canvas {
                 Graphics2D g = (Graphics2D) bs.getDrawGraphics();
                 updateTimestamp = System.currentTimeMillis();
                 executeUpdates();
-                renderBG(g);
-                earlyRenderingListener.forEach(listener -> listener.onRender(g));
-                render(g);
-                lateRenderingListener.forEach(listener -> listener.onRender(g));
+                BufferedImage frame = exportFrame();
+                if (Screen.postRenderer.size() != 0) {
+                    for (int x = 0; x < frame.getWidth(); x++)
+                        for (int y = 0; y < frame.getHeight(); y++) {
+                            Color pixel = new Color(frame.getRGB(x, y));
+                            for (PostRendering renderer : Screen.postRenderer) {
+                                pixel = renderer.renderPixel(pixel, x, y, frame);
+                            }
+                            frame.setRGB(x, y, pixel.getRGB());
+                        }
+                }
+                g.drawImage(frame, 0, 0, null);
                 g.dispose();
                 bs.show();
             }
@@ -320,8 +329,10 @@ public class Screen extends Canvas {
     public static void setFramesPerSecond(int framesPerSecond) { Screen.framesPerSecond = framesPerSecond; }
     public static void addEarlyRenderingListener(RenderingListener listener) { earlyRenderingListener.add(listener); }
     public static void addLateRenderingListener(RenderingListener listener) { lateRenderingListener.add(listener); }
+    public static void addPostRenderer(PostRendering renderer) { postRenderer.add(renderer); }
+    public static void removePostRenderer(PostRendering renderer) { postRenderer.remove(renderer); }
     public static BufferedImage exportFrame() {
-        BufferedImage frame = new BufferedImage(width(), height(), Image.SCALE_DEFAULT);
+        BufferedImage frame = new BufferedImage(width(), height(), BufferedImage.TYPE_INT_RGB);
         Graphics2D g = (Graphics2D) frame.getGraphics();
         instance.renderBG(g);
         earlyRenderingListener.forEach(listener -> listener.onRender(g));
