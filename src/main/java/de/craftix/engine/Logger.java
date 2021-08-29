@@ -48,18 +48,18 @@ public class Logger implements Serializable {
     public void printInfoSyntax(PrintStream stream) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
-        stream.print("[" + ANSI_BLUE + dtf.format(now) + ANSI_RESET + "] [" + ANSI_CYAN + "INFO" + ANSI_RESET + "] [" + applicationName + "] ");
+        stream.print(ANSI_RESET + "[" + ANSI_BLUE + dtf.format(now) + ANSI_RESET + "] [" + ANSI_CYAN + "INFO" + ANSI_RESET + "] [" + applicationName + "] ");
     }
 
     public void printWarningSyntax(PrintStream stream) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
-        stream.print("[" + ANSI_BLUE + dtf.format(now) + ANSI_RESET + "] [" + ANSI_YELLOW + "WARNING" + ANSI_RESET + "] [" + applicationName + "] ");
+        stream.print(ANSI_RESET + "[" + ANSI_BLUE + dtf.format(now) + ANSI_RESET + "] [" + ANSI_YELLOW + "WARNING" + ANSI_RESET + "] [" + applicationName + "] ");
     }
 
     public void printErrorSyntax(PrintStream stream) {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
-        stream.print("[" + ANSI_BLUE + dtf.format(now) + ANSI_RESET + "] [" + ANSI_RED + "ERROR" + ANSI_RESET + "] [" + applicationName + "] " + ANSI_RED);
+        stream.print(ANSI_RESET + "[" + ANSI_BLUE + dtf.format(now) + ANSI_RESET + "] [" + ANSI_RED + "ERROR" + ANSI_RESET + "] [" + applicationName + "] " + ANSI_RED);
     }
 }

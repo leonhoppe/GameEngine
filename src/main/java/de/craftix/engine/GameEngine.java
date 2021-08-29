@@ -156,7 +156,7 @@ public class GameEngine {
 
     public static URI loadFile(String path) {
         try {
-            URL url = GameEngine.class.getResource(path);
+            URL url = GameEngine.class.getClassLoader().getResource(path);
             return new URI(url.toString().replace(" ","%20"));
         }catch (Exception e) { throwError(e); }
         return null;
@@ -171,10 +171,11 @@ public class GameEngine {
 
     public static void throwError(Exception e) {
         String className = e.getStackTrace()[e.getStackTrace().length - 1].getClassName();
-        Logger log = new Logger(appName);
-        log.warning("Error at " + className);
+        Logger log = new Logger(appName == null ? "GameEngine" : appName);
+        log.warning("Error at " + Logger.ANSI_RED + className);
         log.getStream().print(Logger.ANSI_RED);
         e.printStackTrace(log.getStream());
+        shutdown();
     }
 
     public void fixedUpdate() {}

@@ -37,6 +37,12 @@ public class Sound implements Serializable {
         return control.getValue();
     }
 
+    public void setVolume(int volume) {
+        FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        float value = Mathf.map(volume, 0, 100, control.getMinimum(), control.getMaximum());
+        control.setValue(value);
+    }
+
     public void start() { clip.start(); }
     public void stop() { clip.stop(); }
 
