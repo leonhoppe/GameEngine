@@ -5,7 +5,7 @@ import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Vector2 implements Serializable, Transformation {
+public class Vector2 implements Serializable, Animatable {
     public static Vector2 zero() { return new Vector2(0, 0); }
     public static Vector2 up() { return new Vector2(0, 1); }
     public static Vector2 down() { return new Vector2(0, -1); }

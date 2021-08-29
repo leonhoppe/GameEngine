@@ -5,6 +5,8 @@ import de.craftix.engine.InputManager;
 import de.craftix.engine.Logger;
 import de.craftix.engine.objects.components.Component;
 import de.craftix.engine.objects.GameObject;
+import de.craftix.engine.ui.UIElement;
+import de.craftix.engine.ui.components.UIComponent;
 import de.craftix.engine.var.*;
 import de.craftix.engine.var.Dimension;
 
@@ -111,30 +113,40 @@ public class Screen extends Canvas {
 
     private static long lastFrame = System.nanoTime();
     protected void executeUpdates() {
-        deltaTime = (System.nanoTime() - lastFrame) / 1000000000f;
-        lastFrame = System.nanoTime();
+        try {
+            deltaTime = (System.nanoTime() - lastFrame) / 1000000000f;
+            lastFrame = System.nanoTime();
 
-        GameEngine.getInstance().update();
-        for (ScreenObject object : GameEngine.getScene().getRawObjects()) {
-            object.update();
-            if (object.animation != null) object.animation.update();
-            if (object instanceof GameObject)
-                for (Component component : ((GameObject) object).getComponents())
+            GameEngine.getInstance().update();
+            for (ScreenObject object : GameEngine.getScene().getRawObjects()) {
+                object.update();
+                if (object instanceof GameObject)
+                    for (Component component : ((GameObject) object).getComponents())
+                        component.update();
+            }
+
+            for (UIElement element : GameEngine.getUIManager().getElements()) {
+                element.update();
+                for (UIComponent component : element.getComponents()) {
                     component.update();
-        }
+                }
+            }
 
-        for (Object o : GameEngine.getUpdaters()) {
-            for (Method m : o.getClass().getMethods()) {
-                if (m.isAnnotationPresent(Updater.class)) {
-                    if (m.getDeclaredAnnotation(Updater.class).update()) {
-                        try {
-                            m.invoke(o);
-                        }catch (Exception e) {
-                            GameEngine.throwError(e);
+            for (Object o : GameEngine.getUpdaters()) {
+                for (Method m : o.getClass().getMethods()) {
+                    if (m.isAnnotationPresent(Updater.class)) {
+                        if (m.getDeclaredAnnotation(Updater.class).update()) {
+                            try {
+                                m.invoke(o);
+                            }catch (Exception e) {
+                                GameEngine.throwError(e);
+                            }
                         }
                     }
                 }
             }
+        }catch (Exception e) {
+            GameEngine.throwError(e);
         }
     }
 
@@ -323,7 +335,6 @@ public class Screen extends Canvas {
         Point pos = Screen.calculateScreenPosition(transform);
         Point zero = calculateScreenPosition(new Transform(Vector2.zero(), new Dimension(), Quaternion.IDENTITY()));
         AffineTransform trans = new AffineTransform();
-        trans.rotate(GameEngine.getCamera().transform.rotation.getAngle(), zero.x, zero.y);
         trans.translate(pos.x + ((transform.scale.width * (GameEngine.getCamera().getScale())) / 2f), pos.y + (transform.scale.height * (GameEngine.getCamera().getScale())) / 2f);
         trans.rotate(transform.rotation.getAngle(), transform.position.x * (GameEngine.getCamera().getScale()), -transform.position.y * (GameEngine.getCamera().getScale()));
         return trans;

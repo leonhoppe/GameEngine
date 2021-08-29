@@ -3,7 +3,7 @@ package de.craftix.engine.var;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class Dimension implements Serializable, Transformation {
+public class Dimension implements Serializable, Animatable {
 
     public float width;
     public float height;

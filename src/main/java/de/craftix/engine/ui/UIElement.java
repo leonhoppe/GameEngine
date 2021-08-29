@@ -1,9 +1,9 @@
 package de.craftix.engine.ui;
 
+import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Shape;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.ui.components.UIComponent;
-import de.craftix.engine.var.Animation;
 import de.craftix.engine.render.Mesh;
 import de.craftix.engine.var.Transform;
 import de.craftix.engine.var.Vector2;
@@ -14,14 +14,8 @@ import java.awt.geom.Area;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class UIElement implements Serializable {
-    public Transform transform;
-
+public class UIElement extends ScreenObject implements Serializable {
     protected UIAlignment alignment;
-    protected Sprite sprite;
-    protected Mesh mesh;
-    protected Animation animation;
-    protected float layer;
     protected boolean renderObject = true;
     protected final ArrayList<UIComponent> components = new ArrayList<>();
 
@@ -43,9 +37,7 @@ public class UIElement implements Serializable {
             g.translate(pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
             g.rotate(transform.rotation.getAngle(), 0, 0);
 
-            if (animation != null) {
-                g.drawImage(animation.getImage().getTextureRaw(transform.scale.width, transform.scale.height), pos.getX(), pos.getY(), null);
-            }else if (sprite != null) {
+            if (sprite.texture != null) {
                 sprite.renderRaw(g, transform);
             }else {
                 mesh.render(g, false, transform);
@@ -89,14 +81,8 @@ public class UIElement implements Serializable {
     }
 
     public UIAlignment getAlignment() { return alignment; }
-    public Sprite getSprite() { return sprite; }
-    public Animation getAnimation() { return animation; }
-    public float getLayer() { return layer; }
     public boolean renderObject() { return renderObject; }
 
     public void setAlignment(UIAlignment alignment) { this.alignment = alignment; }
-    public void  setSprite(Sprite sprite) { this.sprite = sprite; }
-    public void setAnimation(Animation animation) { this.animation = animation; }
-    public void setLayer(float layer) { this.layer = layer; }
     public void renderObject(boolean renderObject) { this.renderObject = renderObject; }
 }

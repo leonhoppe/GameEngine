@@ -1,4 +1,4 @@
 package de.craftix.engine.var;
 
-public interface Transformation {
+public interface Animatable {
 }

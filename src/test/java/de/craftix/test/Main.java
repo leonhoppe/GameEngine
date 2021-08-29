@@ -35,11 +35,20 @@ public class Main extends GameEngine {
         getScene().setBackgroundColor(Color.CYAN);
 
         GameObject ground = new GameObject("ground", new Mesh(Shape.RECTANGLE, Color.GREEN), new Transform(new Vector2(0, -5), new Dimension(20, 2), Quaternion.IDENTITY()));
-        GameObject player = new GameObject("player", new Mesh(Shape.CIRCLE, Color.RED), new Transform(new Vector2(0, 5), new Dimension(1), Quaternion.IDENTITY()));
+        GameObject player = new GameObject("player", blocks.getSprite(4), new Transform(new Vector2(0, 5), new Dimension(1), Quaternion.IDENTITY()));
 
-        player.addComponent(new PhysicsComponent());
+        //player.addComponent(new PhysicsComponent());
         player.addComponent(new Collider(player.getMesh(), false));
         ground.addComponent(new Collider(ground.getMesh(), false));
+
+        player.addComponent(new AnimationComponent(
+                new Animation("move", true, false,
+                        new Keyframe<>(new Vector2(0), 200, 2000),
+                        new Keyframe<>(new Vector2(0, 5), 3000, 1000),
+                        new Keyframe<>(blocks.getSprite(2), 0, 1000),
+                        new Keyframe<>(blocks.getSprite(4), 4500, 1000)
+                )
+        ));
 
         ground.setLayer("Background");
 
@@ -47,7 +56,7 @@ public class Main extends GameEngine {
         instantiate(player);
 
         UIElement sun = new UIElement(new Mesh(Shape.CIRCLE, Color.YELLOW), new Transform(new Vector2(50, -50), new Dimension(75, 75), Quaternion.IDENTITY()), UIAlignment.TOP_LEFT);
-        getUIManager().addElement(sun);
+        instantiateUI(sun);
     }
 
     @Override
@@ -62,5 +71,9 @@ public class Main extends GameEngine {
             playerPhysics.addVelocity(Vector2.right().mul(Screen.getDeltaTime() * 7f));
         if (InputManager.isKeyPressed(KeyEvent.VK_A))
             playerPhysics.addVelocity(Vector2.left().mul(Screen.getDeltaTime() * 7f));
+
+        Animation move = player.getComponent(AnimationComponent.class).getAnimation("move");
+        if (InputManager.isKeyPressed(KeyEvent.VK_ENTER) && !move.isRunning())
+            move.start();
     }
 }

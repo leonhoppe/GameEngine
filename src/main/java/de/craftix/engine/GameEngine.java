@@ -43,6 +43,7 @@ public class GameEngine {
         timer = new Timer();
         logger.info("Timer initialised");
         scene = new Scene();
+        scene.start();
         logger.info("Scene initialised");
         GameEngine.instance = instance;
         logger.info("instance initialised");
@@ -82,31 +83,37 @@ public class GameEngine {
     }
 
     private static void handleDeltaUpdates() {
-        Screen.updateFixedDeltaTime();
-        instance.fixedUpdate();
-        for (ScreenObject object : scene.getRawObjects()) {
-            object.fixedUpdate();
-            if (object instanceof GameObject)
-                for (Component component : ((GameObject) object).getComponents())
+        try {
+            Screen.updateFixedDeltaTime();
+            instance.fixedUpdate();
+            for (ScreenObject object : scene.getRawObjects()) {
+                object.fixedUpdate();
+                if (object instanceof GameObject)
+                    for (Component component : ((GameObject) object).getComponents())
+                        component.fixedUpdate();
+            }
+            for (UIElement element : getUIManager().getElements()) {
+                element.fixedUpdate();
+                for (UIComponent component : element.getComponents()) {
                     component.fixedUpdate();
-        }
-        for (UIElement element : getUIManager().getElements())
-            for (UIComponent component : element.getComponents()) {
-                component.fixedUpdate();
+                }
             }
 
-        for (Object o : updaters) {
-            for (Method m : o.getClass().getMethods()) {
-                if (m.isAnnotationPresent(Updater.class)) {
-                    if (m.getDeclaredAnnotation(Updater.class).fixedUpdate()) {
-                        try {
-                            m.invoke(o);
-                        }catch (Exception e) {
-                            throwError(e);
+            for (Object o : updaters) {
+                for (Method m : o.getClass().getMethods()) {
+                    if (m.isAnnotationPresent(Updater.class)) {
+                        if (m.getDeclaredAnnotation(Updater.class).fixedUpdate()) {
+                            try {
+                                m.invoke(o);
+                            }catch (Exception e) {
+                                throwError(e);
+                            }
                         }
                     }
                 }
             }
+        }catch (Exception e) {
+            throwError(e);
         }
     }
 
@@ -136,6 +143,15 @@ public class GameEngine {
                 return all;
         }
         return null;
+    }
+
+    public static void instantiateUI(UIElement element) {
+        getUIManager().addElement(element);
+        element.start();
+    }
+    public static void destroyUI(UIElement element) {
+        getUIManager().removeElement(element);
+        element.stop();
     }
 
     public static URI loadFile(String path) {
@@ -179,7 +195,11 @@ public class GameEngine {
     public static Timer getTimer() { return timer; }
     public static Object[] getUpdaters() { return updaters.toArray(); }
 
-    public static void setScene(Scene scene) { GameEngine.scene = scene; }
+    public static void setScene(Scene scene) {
+        GameEngine.scene.stop();
+        GameEngine.scene = scene;
+        GameEngine.scene.start();
+    }
     public static void addLayer(String name, float layer) { if (!layers.containsValue(layer) && !layers.containsKey(name)) layers.put(name, layer); }
     public static void setIcon(Sprite sprite) {
         ImageIcon icon = new ImageIcon(sprite.texture);

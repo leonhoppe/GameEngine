@@ -7,7 +7,6 @@ import de.craftix.engine.render.Mesh;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.var.*;
-import org.apache.commons.lang.SerializationUtils;
 
 import java.awt.*;
 import java.io.Serializable;
@@ -82,7 +81,6 @@ public class GameObject extends ScreenObject implements Serializable {
     }
 
     public void setLayer(String layer) { this.layer = GameEngine.getLayer(layer); }
-    public void setAnimation(Animation animation) { this.animation = animation; }
     public void setSprite(Sprite texture) { this.sprite = texture; }
     public void setVisible(boolean visible) { this.visible = visible; }
     public void renderObject(boolean renderObject) { this.renderObject = renderObject; }

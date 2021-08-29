@@ -4,6 +4,7 @@ import de.craftix.engine.objects.GameObject;
 import de.craftix.engine.render.Camera;
 import de.craftix.engine.render.ScreenObject;
 import de.craftix.engine.render.Sprite;
+import de.craftix.engine.ui.UIElement;
 import de.craftix.engine.ui.UIManager;
 
 import java.awt.*;
@@ -43,4 +44,17 @@ public class Scene implements Serializable {
 
     public UIManager getUIManager() { return uiManager; }
     public Camera getCamera() { return camera; }
+
+    public void start() {
+        for (ScreenObject obj : objects)
+            obj.start();
+        for (UIElement element : uiManager.getElements())
+            element.start();
+    }
+    public void stop() {
+        for (ScreenObject obj : objects)
+            obj.stop();
+        for (UIElement element : uiManager.getElements())
+            element.stop();
+    }
 }

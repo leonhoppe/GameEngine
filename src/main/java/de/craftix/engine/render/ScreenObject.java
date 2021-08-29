@@ -1,7 +1,5 @@
 package de.craftix.engine.render;
 
-import de.craftix.engine.GameEngine;
-import de.craftix.engine.var.Animation;
 import de.craftix.engine.var.Transform;
 
 import java.awt.*;
@@ -13,26 +11,19 @@ public class ScreenObject implements Serializable {
     public Transform transform;
     protected transient Sprite sprite;
     protected Mesh mesh;
-    protected Animation animation;
     protected float layer;
     protected boolean visible;
     protected boolean renderBounds;
 
     protected void render(Graphics2D g) {
-        Point pos = Screen.calculateScreenPosition(transform);
         AffineTransform original = (AffineTransform) g.getTransform().clone();
 
-        g.translate(pos.x + ((transform.scale.width * (GameEngine.getCamera().getScale())) / 2f), pos.y + (transform.scale.height * (GameEngine.getCamera().getScale())) / 2f);
-        g.rotate(transform.rotation.getAngle(), transform.position.x * (GameEngine.getCamera().getScale()), -transform.position.y * (GameEngine.getCamera().getScale()));
+        g.setTransform(Screen.getTransform(transform));
 
         if (sprite == null) {
             mesh.render(g, true, transform);
         }else {
-            if (sprite.texture != null && (animation == null || !animation.isRunning()))
-                sprite.render(g, transform);
-
-            if (animation != null)
-                animation.getImage().render(g, transform);
+            sprite.render(g, transform);
         }
 
         g.setColor(Color.BLACK);
@@ -47,7 +38,6 @@ public class ScreenObject implements Serializable {
     public void stop() {}
 
     public Sprite getSprite() { return sprite; }
-    public Animation getAnimation() { return animation; }
     public Mesh getMesh() {
         if (mesh != null) return mesh;
         return new Mesh(Shape.RECTANGLE, Color.BLACK);
@@ -67,7 +57,7 @@ public class ScreenObject implements Serializable {
             return new Area(Screen.getTransform(transform).createTransformedShape(mesh.getMesh(true, transform)));
     }
     public Area getRawShape() {
-        if (sprite.texture != null || animation != null)
+        if (sprite.texture != null)
             return Shape.RECTANGLE.getRender(transform, false);
 
         return new Mesh(Shape.RECTANGLE, Color.BLACK).getMesh(false, transform);

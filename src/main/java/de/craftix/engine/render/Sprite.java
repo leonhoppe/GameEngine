@@ -1,7 +1,7 @@
 package de.craftix.engine.render;
 
 import de.craftix.engine.GameEngine;
-import de.craftix.engine.var.Animation;
+import de.craftix.engine.var.Animatable;
 import de.craftix.engine.var.Transform;
 import de.craftix.engine.var.Vector2;
 
@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.Objects;
 
-public class Sprite {
+public class Sprite implements Animatable {
     private static Resizer resizingMethod = null;
 
     public static Sprite load(String path) {
