@@ -24,11 +24,14 @@ public class Vector2 implements Serializable, Animatable {
     public Vector2(Point2D point2D) { this(point2D.getX(), point2D.getY()); }
 
     public Point toPoint() { return new Point(Math.round(x), Math.round(y)); }
-    public Point toPointFloored() { return new Point((int) x, (int) y); }
+    public Point toPointFloored() { return new Point((int) Math.floor(x), (int) Math.floor(y)); }
     public Point2D toPoint2D() { return new Point2D.Float(x, y); }
 
     public int getX() { return Math.round(x); }
     public int getY() { return Math.round(y); }
+
+    public Vector2 round() { x = Math.round(x); y = Math.round(y); return this; }
+    public Vector2 floor() { x = (float) Math.floor(x); y = (float) Math.floor(y); return this; }
 
     public Vector2 copy() { return new Vector2(x, y); }
     public String toString() {

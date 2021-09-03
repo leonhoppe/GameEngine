@@ -7,6 +7,7 @@ import de.craftix.engine.var.Vector2;
 
 import java.awt.*;
 import java.awt.geom.Area;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.Arrays;
@@ -15,7 +16,7 @@ public class Mesh implements Serializable {
     public Vector2[] points;
     public Shape shape;
     public Vector2[] UVs;
-    public Sprite texture;
+    public transient Sprite texture;
     public Color[] colors;
 
     public Mesh(Vector2[] points, Color[] meshColors) {
@@ -72,19 +73,55 @@ public class Mesh implements Serializable {
             }
         }
         //TODO: Add UV rendering
-        Vector2[][] UVPoints = getUVTriangles();
         Vector2[][] trisPoints = getTriangles(useCamScale);
-        int w = texture.texture.getWidth();
-        int h = texture.texture.getHeight();
+        Vector2[][] uvTris = getUVTriangles();
         for (int i = 0; i < tris.length; i++) {
-            Vector2 p1 = UVPoints[i][0].mul(new Vector2(w, h));
-            Vector2 p2 = UVPoints[i][1].mul(new Vector2(w, h));
-            Vector2 p3 = UVPoints[i][2].mul(new Vector2(w, h));
-            Polygon2D poly = new Polygon2D(new float[] { p1.x, p2.x, p3.x }, new float[] { p1.y, p2.y, p3.y }, 3);
-            g.drawImage(getCutout(poly, trisPoints[i]), 0, 0, null);
+            Vector2 aUV = uvTris[i][0];
+            Vector2 bUV = uvTris[i][1];
+            Vector2 cUV = uvTris[i][2];
+            Vector2 a = trisPoints[i][0];
+            Vector2 b = trisPoints[i][1];
+            Vector2 c = trisPoints[i][2];
+            Rectangle area = new Area(tris[i]).getBounds();
+            Rectangle2D uvArea = new Area(new Polygon2D(new float[] {aUV.x, bUV.x, cUV.x}, new float[] {aUV.y, bUV.y, cUV.y}, 3)).getBounds2D();
+            Point bounds = getTextureBounds(area, uvArea);
+            BufferedImage out = new BufferedImage(bounds.x, bounds.y, BufferedImage.TYPE_INT_ARGB);
+            BufferedImage currTexture = texture.resize(bounds.x, bounds.y, Resizer.AVERAGE).texture;
+            int w = currTexture.getWidth();
+            int h = currTexture.getHeight();
+
+            for (int x = area.x; x < area.x + area.width; x++) {
+                for (int y = area.y; y < area.y + area.height; y++) {
+                    if (!new Area(tris[i]).contains(new Point(x, y))) continue;
+                    Vector2 p = new Vector2(x, y);
+                    Vector2 barryA = new Vector2(((b.y - c.y) * (p.x - c.x) + (c.x - b.x) * (p.y - c.y)) / ((b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y)));
+                    Vector2 barryB = new Vector2(((c.y - a.y) * (p.x - c.x) + (a.x - c.x) * (p.y - c.y)) / ((b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y)));
+                    Vector2 barryC = new Vector2(1 - barryA.x - barryB.x, 1 - barryA.y - barryB.y);
+
+                    Point uv = new Vector2(
+                            barryA.x * aUV.x + barryB.x * bUV.x + barryC.x * cUV.x,
+                            barryA.y * aUV.y + barryB.y * bUV.y + barryC.y * cUV.y
+                    ).mul(new Vector2(w, h)).toPoint();
+
+                    int rgb = currTexture.getRGB(uv.x, uv.y);
+                    out.setRGB(uv.x, uv.y, rgb);
+                }
+            }
+
+            g.drawImage(out, area.x, area.y, null);
         }
         if (Screen.antialiasing())
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+    }
+
+    private Point getTextureBounds(Rectangle area, Rectangle2D uvArea) {
+        float overhangX = (float) (1 - uvArea.getWidth());
+        float overhangY = (float) (1 - uvArea.getHeight());
+
+        int x = Math.round((area.width * 2) * overhangX) + area.width;
+        int y = Math.round((area.height * 2) * overhangY) + area.height;
+
+        return new Point(x, y);
     }
 
     public Area getMesh(boolean useCamScale, Transform transform) {
@@ -157,14 +194,17 @@ public class Mesh implements Serializable {
         }
         return triangles;
     }
-
-    private BufferedImage getCutout(Polygon2D poly, Vector2[] tris) {
-        //TODO: Scale the Mesh based on the Vertices
-        BufferedImage out = new BufferedImage(texture.texture.getWidth(), texture.texture.getHeight(), texture.texture.getType());
-        Graphics g = out.getGraphics();
-        g.setClip(poly);
-        g.drawImage(texture.texture, 0, 0, null);
-        g.dispose();
-        return out;
+    public Polygon2D[] getUVTriangleShapes() {
+        Vector2[][] vectors = getUVTriangles();
+        Polygon2D[] triangles = new Polygon2D[vectors.length];
+        int index = 0;
+        for (Vector2[] tris : vectors) {
+            Vector2 p1 = tris[0];
+            Vector2 p2 = tris[1];
+            Vector2 p3 = tris[2];
+            triangles[index] = new Polygon2D(new float[] { p1.x, p2.x, p3.x }, new float[] { p1.y, p2.y, p3.y }, 3);
+            index++;
+        }
+        return triangles;
     }
 }

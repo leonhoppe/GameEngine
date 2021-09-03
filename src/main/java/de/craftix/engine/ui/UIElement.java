@@ -37,7 +37,7 @@ public class UIElement extends ScreenObject implements Serializable {
             g.translate(pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
             g.rotate(transform.rotation.getAngle(), 0, 0);
 
-            if (sprite.texture != null) {
+            if (sprite != null) {
                 sprite.renderRaw(g, transform);
             }else {
                 mesh.render(g, false, transform);

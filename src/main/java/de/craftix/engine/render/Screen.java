@@ -47,6 +47,7 @@ public class Screen extends Canvas {
     private static int framesPerSecond = 60;
     private static BufferStrategy bs;
     private static boolean render = true;
+    private static final long programStart = System.currentTimeMillis();
 
     private final static List<RenderingListener> earlyRenderingListener = new ArrayList<>();
     private final static List<RenderingListener> lateRenderingListener = new ArrayList<>();
@@ -120,12 +121,13 @@ public class Screen extends Canvas {
         logger.info("Graphics loaded successfully");
     }
 
-    private static long lastFrame = System.nanoTime();
+    private static long lastFrame;
     protected void executeUpdates() {
-        try {
-            deltaTime = (System.nanoTime() - lastFrame) / 1000000000f;
-            lastFrame = System.nanoTime();
+        deltaTime = (System.nanoTime() - lastFrame) / 1000000000f;
+        lastFrame = System.nanoTime();
+        if (System.currentTimeMillis() - programStart < 500) return;
 
+        try {
             GameEngine.getInstance().update();
             for (ScreenObject object : GameEngine.getScene().getRawObjects()) {
                 object.update();
@@ -201,7 +203,6 @@ public class Screen extends Canvas {
                 if (shape.isEmpty()) continue;
                 if (object.layer == layer)
                     object.render(g);
-                if (object.renderBounds) g.draw(object.getScreenShape());
             }
         }
         g.setTransform(orig);
@@ -324,6 +325,7 @@ public class Screen extends Canvas {
     public static boolean antialiasingEffectTextures() { return antialiasingEffectTextures; }
     public static JFrame getDisplay() { return frame; }
     public static Screen getCanvas() { return instance; }
+    public static long getProgramStartTime() { return programStart; }
     public static int width() { return instance.getWidth(); }
     public static int height() { return instance.getHeight(); }
     public static void setFramesPerSecond(int framesPerSecond) { Screen.framesPerSecond = framesPerSecond; }
@@ -341,10 +343,15 @@ public class Screen extends Canvas {
         g.dispose();
         return frame;
     }
+    public static boolean isOnScreen(ScreenObject object) {
+        Area screen = new Area(new Rectangle(0, 0, width(), height()));
+        Area obj = object.getScreenShape();
+        obj.intersect(screen);
+        return !obj.isEmpty();
+    }
 
     public static AffineTransform getTransform(Transform transform) {
         Point pos = Screen.calculateScreenPosition(transform);
-        Point zero = calculateScreenPosition(new Transform(Vector2.zero(), new Dimension(), Quaternion.IDENTITY()));
         AffineTransform trans = new AffineTransform();
         trans.translate(pos.x + ((transform.scale.width * (GameEngine.getCamera().getScale())) / 2f), pos.y + (transform.scale.height * (GameEngine.getCamera().getScale())) / 2f);
         trans.rotate(transform.rotation.getAngle(), transform.position.x * (GameEngine.getCamera().getScale()), -transform.position.y * (GameEngine.getCamera().getScale()));

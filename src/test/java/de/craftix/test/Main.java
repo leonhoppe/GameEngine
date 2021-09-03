@@ -36,13 +36,14 @@ public class Main extends GameEngine {
         getScene().setBackgroundColor(Color.CYAN);
 
         GameObject ground = new GameObject("ground", new Mesh(Shape.RECTANGLE, Color.GREEN), new Transform(new Vector2(0, -5), new Dimension(20, 2), Quaternion.IDENTITY()));
-        GameObject player = new GameObject("player", new Mesh(Shape.CIRCLE, Color.RED), new Transform(new Vector2(0, 5), new Dimension(1), Quaternion.IDENTITY()));
+        GameObject player = new GameObject("player", new Mesh(Shape.CIRCLE, Color.RED), new Transform(new Vector2(0, 0), new Dimension(1), Quaternion.IDENTITY()));
 
         player.addComponent(new PhysicsComponent());
         player.addComponent(new Collider(player.getMesh(), false));
         ground.addComponent(new Collider(ground.getMesh(), false));
 
         ground.setLayer("Background");
+        player.setLayer("Foreground");
 
         instantiate(ground);
         instantiate(player);

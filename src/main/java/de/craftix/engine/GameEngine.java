@@ -85,6 +85,7 @@ public class GameEngine {
     private static void handleDeltaUpdates() {
         try {
             Screen.updateFixedDeltaTime();
+            if (System.currentTimeMillis() - Screen.getProgramStartTime() < 500) return;
             instance.fixedUpdate();
             for (ScreenObject object : scene.getRawObjects()) {
                 object.fixedUpdate();

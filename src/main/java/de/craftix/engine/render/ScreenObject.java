@@ -13,7 +13,6 @@ public class ScreenObject implements Serializable {
     protected Mesh mesh;
     protected float layer;
     protected boolean visible;
-    protected boolean renderBounds;
 
     protected void render(Graphics2D g) {
         AffineTransform original = (AffineTransform) g.getTransform().clone();
@@ -30,7 +29,7 @@ public class ScreenObject implements Serializable {
         g.setTransform(original);
     }
 
-    protected ScreenObject() { transform = new Transform(); sprite = new Sprite(); layer = 0f; visible = false; renderBounds = false; }
+    protected ScreenObject() { transform = new Transform(); layer = 0f; visible = false; }
 
     public void fixedUpdate() {}
     public void update() {}
@@ -45,8 +44,6 @@ public class ScreenObject implements Serializable {
     public float getLayer() { return layer; }
     public boolean isVisible() { return visible; }
 
-    public void renderBounds(boolean value) { renderBounds = value; }
-
     public Area getShape() {
         return new Area(Screen.getRawTransform(transform).createTransformedShape(getRawShape()));
     }
@@ -57,7 +54,7 @@ public class ScreenObject implements Serializable {
             return new Area(Screen.getTransform(transform).createTransformedShape(mesh.getMesh(true, transform)));
     }
     public Area getRawShape() {
-        if (sprite.texture != null)
+        if (sprite != null)
             return Shape.RECTANGLE.getRender(transform, false);
 
         return new Mesh(Shape.RECTANGLE, Color.BLACK).getMesh(false, transform);
