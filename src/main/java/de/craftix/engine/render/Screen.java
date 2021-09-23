@@ -186,7 +186,6 @@ public class Screen extends Canvas {
         }
     }
     protected void render(Graphics2D g) {
-        //Apply Camera Transform
         AffineTransform orig = (AffineTransform) g.getTransform().clone();
         g.translate(width() / 2f + GameEngine.getCamera().transform.position.x, height() / 2f + GameEngine.getCamera().transform.position.y);
         g.rotate(GameEngine.getCamera().transform.rotation.getAngle(), 0, 0);
@@ -203,6 +202,7 @@ public class Screen extends Canvas {
                 if (shape.isEmpty()) continue;
                 if (object.layer == layer)
                     object.render(g);
+                g.draw(object.getScreenShape());
             }
         }
         g.setTransform(orig);

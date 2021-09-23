@@ -14,6 +14,7 @@ public class Quaternion implements Serializable, Animatable {
     protected double angle;
     public Quaternion(double angle) { this.angle = angle; }
     public double getAngle() { return angle; }
+    public float getAngleDeg() { return (float) Math.toDegrees(angle); }
 
 
 

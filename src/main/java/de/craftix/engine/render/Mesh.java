@@ -71,45 +71,45 @@ public class Mesh implements Serializable {
                 g.setColor(colors[i]);
                 g.fill(new Area(tris[i]));
             }
-        }
-        //TODO: Add UV rendering
-        Vector2[][] trisPoints = getTriangles(useCamScale);
-        Vector2[][] uvTris = getUVTriangles();
-        for (int i = 0; i < tris.length; i++) {
-            Vector2 aUV = uvTris[i][0];
-            Vector2 bUV = uvTris[i][1];
-            Vector2 cUV = uvTris[i][2];
-            Vector2 a = trisPoints[i][0];
-            Vector2 b = trisPoints[i][1];
-            Vector2 c = trisPoints[i][2];
-            Rectangle area = new Area(tris[i]).getBounds();
-            Rectangle2D uvArea = new Area(new Polygon2D(new float[] {aUV.x, bUV.x, cUV.x}, new float[] {aUV.y, bUV.y, cUV.y}, 3)).getBounds2D();
-            Point bounds = getTextureBounds(area, uvArea);
-            BufferedImage out = new BufferedImage(bounds.x, bounds.y, BufferedImage.TYPE_INT_ARGB);
-            BufferedImage currTexture = texture.resize(bounds.x, bounds.y, Resizer.AVERAGE).texture;
-            int w = currTexture.getWidth();
-            int h = currTexture.getHeight();
+        }else {
+            Vector2[][] trisPoints = getTriangles(useCamScale);
+            Vector2[][] uvTris = getUVTriangles();
+            for (int i = 0; i < tris.length; i++) {
+                Vector2 aUV = uvTris[i][0];
+                Vector2 bUV = uvTris[i][1];
+                Vector2 cUV = uvTris[i][2];
+                Vector2 a = trisPoints[i][0];
+                Vector2 b = trisPoints[i][1];
+                Vector2 c = trisPoints[i][2];
+                Rectangle area = new Area(tris[i]).getBounds();
+                Rectangle2D uvArea = new Area(new Polygon2D(new float[] {aUV.x, bUV.x, cUV.x}, new float[] {aUV.y, bUV.y, cUV.y}, 3)).getBounds2D();
+                Point bounds = getTextureBounds(area, uvArea);
+                BufferedImage out = new BufferedImage(bounds.x, bounds.y, BufferedImage.TYPE_INT_ARGB);
+                BufferedImage currTexture = texture.resize(bounds.x, bounds.y, Resizer.AVERAGE).texture;
+                int w = currTexture.getWidth();
+                int h = currTexture.getHeight();
 
-            for (int x = area.x; x < area.x + area.width; x++) {
-                for (int y = area.y; y < area.y + area.height; y++) {
-                    if (!new Area(tris[i]).contains(new Point(x, y))) continue;
-                    Vector2 p = new Vector2(x, y);
-                    Vector2 barryA = new Vector2(((b.y - c.y) * (p.x - c.x) + (c.x - b.x) * (p.y - c.y)) / ((b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y)));
-                    Vector2 barryB = new Vector2(((c.y - a.y) * (p.x - c.x) + (a.x - c.x) * (p.y - c.y)) / ((b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y)));
-                    Vector2 barryC = new Vector2(1 - barryA.x - barryB.x, 1 - barryA.y - barryB.y);
+                for (int x = area.x; x < area.x + area.width; x++) {
+                    for (int y = area.y; y < area.y + area.height; y++) {
+                        if (!new Area(tris[i]).contains(new Point(x, y))) continue;
+                        Vector2 p = new Vector2(x, y);
+                        Vector2 barryA = new Vector2(((b.y - c.y) * (p.x - c.x) + (c.x - b.x) * (p.y - c.y)) / ((b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y)));
+                        Vector2 barryB = new Vector2(((c.y - a.y) * (p.x - c.x) + (a.x - c.x) * (p.y - c.y)) / ((b.y - c.y) * (a.x - c.x) + (c.x - b.x) * (a.y - c.y)));
+                        Vector2 barryC = new Vector2(1 - barryA.x - barryB.x, 1 - barryA.y - barryB.y);
 
-                    Point uv = new Vector2(
-                            barryA.x * aUV.x + barryB.x * bUV.x + barryC.x * cUV.x,
-                            barryA.y * aUV.y + barryB.y * bUV.y + barryC.y * cUV.y
-                    ).mul(new Vector2(w, h)).toPoint();
+                        Point uv = new Vector2(
+                                barryA.x * aUV.x + barryB.x * bUV.x + barryC.x * cUV.x,
+                                barryA.y * aUV.y + barryB.y * bUV.y + barryC.y * cUV.y
+                        ).mul(new Vector2(w, h)).toPoint();
 
-                    int rgb = currTexture.getRGB(uv.x, uv.y);
-                    out.setRGB(uv.x, uv.y, rgb);
+                        int rgb = currTexture.getRGB(uv.x, uv.y);
+                        out.setRGB(uv.x, uv.y, rgb);
+                    }
                 }
+                g.drawImage(out, area.x, area.y, null);
             }
-
-            g.drawImage(out, area.x, area.y, null);
         }
+
         if (Screen.antialiasing())
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
     }

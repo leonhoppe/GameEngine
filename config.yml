@@ -1,0 +1,15 @@
+mysql:
+  server: localhost
+  port: 3306
+  database: database
+  username: user
+  password: pass
+player:
+  position:
+    x: 100.0
+    y: 100.0
+  dimensions:
+    width: 20.0
+    height: 10.0
+  rotation: 180.0
+speed: 10.0
