@@ -5,6 +5,7 @@ import de.craftix.engine.render.Shape;
 import de.craftix.engine.render.Sprite;
 import de.craftix.engine.ui.components.UIComponent;
 import de.craftix.engine.render.Mesh;
+import de.craftix.engine.var.Quaternion;
 import de.craftix.engine.var.Transform;
 import de.craftix.engine.var.Vector2;
 
@@ -19,6 +20,7 @@ public class UIElement extends ScreenObject implements Serializable {
     protected boolean renderObject = true;
     protected final ArrayList<UIComponent> components = new ArrayList<>();
 
+    protected UIElement() { alignment = UIAlignment.CENTER; transform = new Transform(); mesh = new Mesh(Shape.RECTANGLE, Color.BLACK); }
     public UIElement(Sprite sprite, Transform transform,  UIAlignment alignment) {
         this.transform = transform;
         this.sprite = sprite;
@@ -31,23 +33,23 @@ public class UIElement extends ScreenObject implements Serializable {
     }
 
     public void render(Graphics2D g) {
+        if (transform.rotation.getAngle() >= Math.PI * 2) transform.rotation = new Quaternion(transform.rotation.getAngle() % Math.toRadians(360));
+        AffineTransform original = (AffineTransform) g.getTransform().clone();
+        Vector2 pos = alignment.getScreenPosition(transform);
+        g.translate(pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
+        g.rotate(transform.rotation.getAngle(), 0, 0);
         if (renderObject) {
-            AffineTransform original = (AffineTransform) g.getTransform().clone();
-            Vector2 pos = alignment.getScreenPosition(transform);
-            g.translate(pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
-            g.rotate(transform.rotation.getAngle(), 0, 0);
-
             if (sprite != null) {
                 sprite.renderRaw(g, transform);
             }else {
                 mesh.render(g, false, transform);
             }
-
-            g.setTransform(original);
         }
 
-        for (UIComponent component : components)
-            component.render(g);
+        for (int i = 0; i < components.size(); i++)
+            components.get(i).render(g);
+
+        g.setTransform(original);
     }
 
     public void addComponent(UIComponent component) { component.initialise(this); components.add(component); }
@@ -64,9 +66,9 @@ public class UIElement extends ScreenObject implements Serializable {
         }
         return false;
     }
-    public UIComponent getComponent(Class<? extends UIComponent> component) {
+    public <T extends UIComponent> T getComponent(Class<? extends UIComponent> component) {
         for (UIComponent all : components) {
-            if (all.getClass() == component) return all;
+            if (all.getClass() == component) return (T) all;
         }
         return null;
     }

@@ -1,5 +1,6 @@
 package de.craftix.engine.render;
 
+import de.craftix.engine.var.Quaternion;
 import de.craftix.engine.var.Transform;
 
 import java.awt.*;
@@ -15,6 +16,7 @@ public class ScreenObject implements Serializable {
     protected boolean visible;
 
     protected void render(Graphics2D g) {
+        if (transform.rotation.getAngle() >= Math.PI * 2) transform.rotation = new Quaternion(transform.rotation.getAngle() % Math.toRadians(360));
         AffineTransform original = (AffineTransform) g.getTransform().clone();
 
         g.setTransform(Screen.getTransform(transform));

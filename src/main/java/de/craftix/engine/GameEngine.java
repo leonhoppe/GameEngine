@@ -28,7 +28,8 @@ public class GameEngine {
     private static Logger globalLogger;
     private static int TPS;
     private static String appName;
-    private static Timer timer;
+    private static Timer screenTimer;
+    private static Timer fixedTimer;
 
     private static final HashMap<String, Float> layers = new HashMap<>();
     private static final ArrayList<Object> updaters = new ArrayList<>();
@@ -36,11 +37,11 @@ public class GameEngine {
     protected static void setup(int width, int height, String title, GameEngine instance, int tps) {
         TPS = tps;
         appName = title;
-        Logger.globalInfo("Initialising requirements...");
-        logger = new Logger("GameEngine");
+        logger = new Logger("GameEngine", true);
         globalLogger = new Logger(title);
-        logger.info("Logger initialised");
-        timer = new Timer();
+        logger.info("INITIALISING");
+        screenTimer = new Timer();
+        fixedTimer = new Timer();
         logger.info("Timer initialised");
         scene = new Scene();
         scene.start();
@@ -53,21 +54,20 @@ public class GameEngine {
         layers.put("Foreground", 1f);
         logger.info("Default layers created");
 
-        instance.initialise();
-        logger.info("Initialising Method executed");
-
         screen = new Screen(width, height, title, (1000f / TPS) / 1000f);
         logger.info("Graphics initialised");
 
-        timer.scheduleAtFixedRate(new TimerTask() {
+        instance.initialise();
+        logger.info("Initialising Method executed");
+
+        fixedTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                Thread.currentThread().setPriority(Thread.MAX_PRIORITY);
                 handleDeltaUpdates();
             }
         }, 0, 1000 / TPS);
         logger.info("FixedUpdate Thread initialised");
-        timer.scheduleAtFixedRate(new TimerTask() {
+        new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 Screen.updateFPS();
@@ -120,6 +120,8 @@ public class GameEngine {
 
     public static void shutdown() {
         logger.info("Stopping Game...");
+        screenTimer.cancel();
+        fixedTimer.cancel();
         try { Thread.sleep(200); }
         catch (Exception e) { throwError(e); }
         GameEngine.instance.stop();
@@ -168,6 +170,7 @@ public class GameEngine {
         screen.addMouseListener(input);
         screen.addMouseMotionListener(input);
         screen.addMouseWheelListener(input);
+        screen.addFocusListener(input);
     }
 
     public static void throwError(Exception e) {
@@ -194,7 +197,7 @@ public class GameEngine {
     public static Screen getScreenInstance() { return screen; }
     public static Logger getLogger() { return globalLogger; }
     public static int getTPS() { return TPS; }
-    public static Timer getTimer() { return timer; }
+    public static Timer getScreenTimer() { return screenTimer; }
     public static Object[] getUpdaters() { return updaters.toArray(); }
 
     public static void setScene(Scene scene) {
@@ -208,4 +211,5 @@ public class GameEngine {
         Screen.getDisplay().setIconImage(icon.getImage());
     }
     public static void addUpdater(Object instance) { GameEngine.updaters.add(instance); }
+    public static void resetScreenTimer() { screenTimer = new Timer(); }
 }

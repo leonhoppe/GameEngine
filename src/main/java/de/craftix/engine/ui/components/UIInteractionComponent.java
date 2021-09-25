@@ -12,9 +12,9 @@ import java.awt.geom.Area;
 
 public class UIInteractionComponent extends UIComponent {
 
-    private boolean isHovering = false;
-    private final ActionListener hover;
-    private final ActionListener click;
+    private boolean hovering = false;
+    private ActionListener hover;
+    private ActionListener click;
 
     public UIInteractionComponent(ActionListener hover, ActionListener click) {
         this.hover = hover;
@@ -26,14 +26,14 @@ public class UIInteractionComponent extends UIComponent {
     public void render(Graphics2D g) {
         if (hover == null) return;
         if (checkIntersection()) {
-            if (!isHovering)
+            if (!hovering)
                 hover.actionPerformed(new ActionEvent(this, 0, "start"));
             hover.actionPerformed(new ActionEvent(this, 0, "hover"));
-            isHovering = true;
+            hovering = true;
         }else {
-            if (isHovering)
+            if (hovering)
                 hover.actionPerformed(new ActionEvent(this, 0, "stop"));
-            isHovering = false;
+            hovering = false;
         }
     }
 
@@ -57,4 +57,8 @@ public class UIInteractionComponent extends UIComponent {
         return !area.isEmpty();
     }
 
+    public void setHover(ActionListener hover) { this.hover = hover; }
+    public void setClick(ActionListener click) { this.click = click; }
+
+    public boolean isHovering() { return hovering; }
 }

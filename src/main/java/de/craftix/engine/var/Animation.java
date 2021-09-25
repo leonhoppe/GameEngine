@@ -57,6 +57,7 @@ public class Animation {
     }
 
     public void start() {
+        stop();
         long currentTime = System.currentTimeMillis();
         currentTimeInAnimation = 0;
 
@@ -69,7 +70,7 @@ public class Animation {
         rot_original = object.transform.rotation.copy();
         pos_original = object.transform.position.copy();
         scale_original = object.transform.scale.copy();
-        sprite_original = object.getSprite().copy();
+        if (object.getSprite() != null) sprite_original = object.getSprite().copy();
 
         rot_currentFrame = 0;
         pos_currentFrame = 0;

@@ -14,6 +14,8 @@ public class PhysicsComponent extends Component {
     //Gravity
     private boolean gravity = true;
     private float mass = 1.0f;
+    private float drag = 2.0f;
+    private float maxAcceleration = 10.0f;
     private Vector2 initialVelocity = new Vector2();
     private Vector2 currentVelocity;
 
@@ -30,6 +32,8 @@ public class PhysicsComponent extends Component {
     public void update() {
         calculateGravity();
         calculateDrag();
+        currentVelocity.x = Math.min(maxAcceleration, currentVelocity.x);
+        currentVelocity.y = Math.min(maxAcceleration, currentVelocity.y);
 
         // TODO: Fix the movement issue
         if (checkMovement(currentVelocity)) {
@@ -46,6 +50,10 @@ public class PhysicsComponent extends Component {
     }
     private void calculateDrag() {
         // TODO: calculate the Drag Force of the Object
+        if (currentVelocity.x > 0) currentVelocity.x -= drag * getMass() * Screen.getDeltaTime();
+        if (currentVelocity.x < 0) currentVelocity.x += drag * getMass() * Screen.getDeltaTime();
+        if (currentVelocity.y > 0) currentVelocity.y -= drag * getMass() * Screen.getDeltaTime();
+        if (currentVelocity.y < 0) currentVelocity.y += drag * getMass() * Screen.getDeltaTime();
     }
     private boolean checkMovement(Vector2 velocity) {
         boolean valid = true;
@@ -68,6 +76,8 @@ public class PhysicsComponent extends Component {
     public Vector2 getVelocity() { return currentVelocity; }
 
     public void setMass(float mass) { this.mass = mass; }
+    public void setDrag(float drag) { this.drag = drag; }
+    public void setMaxAcceleration(float maxAcceleration) { this.maxAcceleration = maxAcceleration; }
     public void setGravity(boolean gravity) { this.gravity = gravity; }
     public void setInitialVelocity(Vector2 initialVelocity) { this.initialVelocity = initialVelocity; }
     public void setVelocity(Vector2 velocity) { this.currentVelocity = velocity; }

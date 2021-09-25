@@ -1,5 +1,6 @@
 package de.craftix.test;
 
+import de.craftix.engine.EngineSettings;
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.InputManager;
 import de.craftix.engine.objects.GameObject;
@@ -9,36 +10,26 @@ import de.craftix.engine.render.*;
 import de.craftix.engine.render.Shape;
 import de.craftix.engine.ui.UIAlignment;
 import de.craftix.engine.ui.UIElement;
+import de.craftix.engine.ui.elements.UITextBox;
 import de.craftix.engine.var.*;
 import de.craftix.engine.var.Dimension;
-import de.craftix.engine.var.configuration.file.YamlConfiguration;
-import de.craftix.engine.var.configuration.utils.Configurable;
-import de.craftix.engine.var.configuration.utils.ConfigurationManager;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
-import java.io.File;
 
 public class Main extends GameEngine {
     private static final SpriteMap blocks = new SpriteMap(5, Sprite.load("terrain.png"), 16, 16);
 
-    Configurable<String> server = new Configurable<>("mysql.server", "localhost");
-    Configurable<Integer> port = new Configurable<>("mysql.port", 3306);
-    Configurable<String> database = new Configurable<>("mysql.database", "database");
-    Configurable<String> username = new Configurable<>("mysql.username", "user");
-    Configurable<String> password = new Configurable<>("mysql.password", "pass");
-    Configurable<Transform> trans = new Configurable<>("player", new Transform());
-    Configurable<Float> speed = new Configurable<>("speed", 10f);
-    ConfigurationManager mysqlConfig = new ConfigurationManager(new File("config.yml"), server, port, database, username, password, trans, speed);
-
     public static void main(String[] args) {
-        Screen.antialiasing(true);
-        Screen.showFrames(true);
-        Screen.setResizeable(false);
-        Screen.setFramesPerSecond(120);
-        Screen.setAntialiasingEffectTextures(false);
-        InputManager.setClosingKey(KeyEvent.VK_ESCAPE);
-        InputManager.setFullscreenKey(KeyEvent.VK_F11);
+        EngineSettings.setAntialiasing(true);
+        EngineSettings.setAntialiasingForTextures(false);
+        EngineSettings.showFrames(true);
+        EngineSettings.setResizable(false);
+        EngineSettings.setFPS(120);
+        EngineSettings.setFullscreenKey(KeyEvent.VK_F11);
+        EngineSettings.setCloseKey(KeyEvent.VK_ESCAPE);
+        EngineSettings.printSystemLog(false);
+        EngineSettings.setFullscreen(true);
         setup(800, 600, "GameEngine 3.0", new Main(), 60);
     }
 
@@ -78,19 +69,21 @@ public class Main extends GameEngine {
 
         UIElement sun = new UIElement(new Mesh(Shape.CIRCLE, Color.YELLOW), new Transform(new Vector2(50, -50), new Dimension(75, 75), Quaternion.IDENTITY()), UIAlignment.TOP_LEFT);
         instantiateUI(sun);
+
+        //setScene(new LoginScene());
     }
 
     @Override
     public void update() {
-        GameObject player = getObjectByName("player");
-        PhysicsComponent playerPhysics = player.getComponent(PhysicsComponent.class);
+        float speed = 5.0f;
+        PhysicsComponent physics = getObjectByName("player").getComponent(PhysicsComponent.class);
+        physics.setGravity(false);
 
-        if (InputManager.isKeyPressed(KeyEvent.VK_SPACE) && playerPhysics.onGround())
-            playerPhysics.setVelocity(new Vector2(0, 10f));
+        float vertical = InputManager.getAxis("Vertical") * speed * Screen.getDeltaTime();
+        float horizontal = InputManager.getAxis("Horizontal") * speed * Screen.getDeltaTime();
 
-        if (InputManager.isKeyPressed(KeyEvent.VK_D))
-            playerPhysics.addVelocity(Vector2.right().mul(Screen.getDeltaTime() * 7f));
-        if (InputManager.isKeyPressed(KeyEvent.VK_A))
-            playerPhysics.addVelocity(Vector2.left().mul(Screen.getDeltaTime() * 7f));
+        physics.addVelocity(new Vector2(horizontal, vertical));
+
+        getCamera().transform.position = physics.gameObject().transform.position;
     }
 }

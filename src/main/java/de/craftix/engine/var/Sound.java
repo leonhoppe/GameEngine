@@ -26,13 +26,13 @@ public class Sound implements Serializable {
 
     public void setProperty(FloatControl.Type property, float value) {
         if (!clip.isControlSupported(property))
-            throw new IllegalArgumentException("Property not supported");
+            GameEngine.throwError(new IllegalArgumentException("Property not supported"));
         FloatControl control = (FloatControl) clip.getControl(property);
         control.setValue(value);
     }
     public float getProperty(FloatControl.Type property) {
         if (!clip.isControlSupported(property))
-            throw new IllegalArgumentException("Property not supported");
+            GameEngine.throwError(new IllegalArgumentException("Property not supported"));
         FloatControl control = (FloatControl) clip.getControl(property);
         return control.getValue();
     }
@@ -43,7 +43,7 @@ public class Sound implements Serializable {
         control.setValue(value);
     }
 
-    public void start() { clip.start(); }
+    public void play() { clip.start(); }
     public void stop() { clip.stop(); }
 
     public Clip getClip() { return clip; }

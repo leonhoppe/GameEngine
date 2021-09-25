@@ -22,6 +22,15 @@ public class UIManager implements Serializable {
     public boolean containsElement(UIElement component) { return elements.contains(component); }
     public void removeElement() { elements.clear(); }
     public ArrayList<UIElement> getElements() { return elements; }
+    public UIElement[] getElementTypes(Class<? extends UIElement> elementType) {
+        ArrayList<UIElement> typeElements = new ArrayList<>();
+        for (int i = 0; i < elements.size(); i++) {
+            UIElement element = elements.get(i);
+            if (element.getClass() == elementType)
+                typeElements.add(element);
+        }
+        return typeElements.toArray(new UIElement[0]);
+    }
 
     public void addLayer(float layer) { layers.add(layer); }
     public void removeLayer(float layer) { layers.remove(layer); }

@@ -6,6 +6,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Logger implements Serializable {
+    private static boolean printSystemLog = true;
+
     public static final String ANSI_RESET = "\u001B[0m";
     public static final String ANSI_BLACK = "\u001B[30m";
     public static final String ANSI_RED = "\u001B[31m";
@@ -17,22 +19,31 @@ public class Logger implements Serializable {
     public static final String ANSI_WHITE = "\u001B[37m";
 
     protected String applicationName;
+    protected boolean systemLog;
 
     public Logger(String applicationName) {
         this.applicationName = applicationName;
+        this.systemLog = false;
+    }
+    public Logger(String applicationName, boolean systemLog) {
+        this.applicationName = applicationName;
+        this.systemLog = systemLog;
     }
 
     public void info(Object message) {
+        if (systemLog && !printSystemLog) return;
         printInfoSyntax(getStream());
         getStream().println(message.toString() + ANSI_RESET);
     }
 
     public void warning(Object message) {
+        if (systemLog && !printSystemLog) return;
         printWarningSyntax(getStream());
         getStream().println(message.toString() + ANSI_RESET);
     }
 
     public void error(Object message) {
+        if (systemLog && !printSystemLog) return;
         printErrorSyntax(getStream());
         getStream().println(message.toString() + ANSI_RESET);
     }
@@ -46,20 +57,25 @@ public class Logger implements Serializable {
     }
 
     public void printInfoSyntax(PrintStream stream) {
+        if (systemLog && !printSystemLog) return;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         stream.print(ANSI_RESET + "[" + ANSI_BLUE + dtf.format(now) + ANSI_RESET + "] [" + ANSI_CYAN + "INFO" + ANSI_RESET + "] [" + applicationName + "] ");
     }
 
     public void printWarningSyntax(PrintStream stream) {
+        if (systemLog && !printSystemLog) return;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         stream.print(ANSI_RESET + "[" + ANSI_BLUE + dtf.format(now) + ANSI_RESET + "] [" + ANSI_YELLOW + "WARNING" + ANSI_RESET + "] [" + applicationName + "] ");
     }
 
     public void printErrorSyntax(PrintStream stream) {
+        if (systemLog && !printSystemLog) return;
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("HH:mm:ss");
         LocalDateTime now = LocalDateTime.now();
         stream.print(ANSI_RESET + "[" + ANSI_BLUE + dtf.format(now) + ANSI_RESET + "] [" + ANSI_RED + "ERROR" + ANSI_RESET + "] [" + applicationName + "] " + ANSI_RED);
     }
+
+    public static void printSystemLog(boolean value) { printSystemLog = value; }
 }

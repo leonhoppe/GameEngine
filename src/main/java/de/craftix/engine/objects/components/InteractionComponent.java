@@ -51,10 +51,8 @@ public class InteractionComponent extends Component {
 
     private boolean checkIntersection() {
         Point mouse = InputManager.getMouseRaw().toPoint();
-        Rectangle rect = new Rectangle(mouse.x, mouse.y, 1, 1);
         Area area = object.getScreenShape();
-        area.intersect(new Area(rect));
-        return !area.isEmpty();
+        return area.contains(mouse);
     }
 
     public GameObject getGameObject() { return object; }

@@ -83,4 +83,16 @@ public class Vector2 implements Serializable, Animatable {
         dir.y = (float) Math.cos(angle);
         return dir;
     }
+    public static Vector2 normalize(Vector2 vector, float min, float max) {
+        Vector2 out = new Vector2();
+        out.x = Mathf.normalise(vector.x, min, max);
+        out.y = Mathf.normalise(vector.y, min, max);
+        return out;
+    }
+    public static Vector2 map(Vector2 vector, float min, float max, float mMin, float mMax) {
+        Vector2 out = new Vector2();
+        out.x = Mathf.map(vector.x, min, max, mMin, mMax);
+        out.y = Mathf.map(vector.y, min, max, mMin, mMax);
+        return out;
+    }
 }

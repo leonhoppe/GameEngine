@@ -12,7 +12,6 @@ import de.craftix.engine.var.Dimension;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.Image;
 import java.awt.Shape;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -31,8 +30,7 @@ public class Screen extends Canvas {
     protected static Screen instance;
 
     private static int bufferedFPS;
-    private static Logger logger;
-    private static JFrame frame = new JFrame();
+    private static final JFrame frame = new JFrame();
     private static boolean showGrid = false;
     private static int gridSize = 50;
     private static boolean showFrames = false;
@@ -48,13 +46,16 @@ public class Screen extends Canvas {
     private static BufferStrategy bs;
     private static boolean render = true;
     private static final long programStart = System.currentTimeMillis();
+    private static boolean started = false;
+    private static boolean fullscreen = false;
+    private static TimerTask updateTask;
 
     private final static List<RenderingListener> earlyRenderingListener = new ArrayList<>();
     private final static List<RenderingListener> lateRenderingListener = new ArrayList<>();
     private final static List<PostRendering> postRenderer = new ArrayList<>();
 
     public Screen(int width, int height, String title, float fixedDeltaTime) {
-        logger = new Logger("Graphics");
+        Logger logger = new Logger("Graphics", true);
         instance = this;
         Screen.fixedDeltaTime = fixedDeltaTime;
         logger.info("Attempting to set JFrame settings...");
@@ -64,6 +65,7 @@ public class Screen extends Canvas {
         frame.setBackground(Color.BLACK);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLocationRelativeTo(null);
+        frame.setFocusTraversalKeys(KeyboardFocusManager.FORWARD_TRAVERSAL_KEYS, Collections.emptySet());
         frame.addWindowListener(new WindowListener() {
             @Override
             public void windowOpened(WindowEvent e) {}
@@ -82,16 +84,21 @@ public class Screen extends Canvas {
             @Override
             public void windowDeactivated(WindowEvent e) {}
         });
+
+        if (fullscreen) {
+            frame.setUndecorated(true);
+            java.awt.Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+            frame.setBounds(0, 0, dim.width, dim.height);
+        }
+
         frame.setVisible(true);
         logger.info("JFrame settings set");
 
         logger.info("Starting FPS Management System...");
-        createBufferStrategy(3);
-        bs = getBufferStrategy();
-        GameEngine.getTimer().scheduleAtFixedRate(new TimerTask() {
+        updateTask = new TimerTask() {
             @Override
             public void run() {
-                if (!render) return;
+                if (!render || !frame.isVisible()) return;
                 Graphics2D g = (Graphics2D) bs.getDrawGraphics();
                 updateTimestamp = System.currentTimeMillis();
                 executeUpdates();
@@ -108,9 +115,17 @@ public class Screen extends Canvas {
                 }
                 g.drawImage(frame, 0, 0, null);
                 g.dispose();
-                bs.show();
+                try { bs.show(); }catch (Exception e) {
+                    createBufferStrategy(3);
+                    bs = getBufferStrategy();
+                }
+
+                bufferedFPS++;
             }
-        }, 0, 1000 / framesPerSecond);
+        };
+        createBufferStrategy(3);
+        bs = getBufferStrategy();
+        GameEngine.getScreenTimer().scheduleAtFixedRate(updateTask, 0, 1000 / framesPerSecond);
         logger.info("FPS Management System started");
 
         InputManager iManager = new InputManager();
@@ -119,6 +134,7 @@ public class Screen extends Canvas {
         logger.info("Input management system initialised");
         requestFocus();
         logger.info("Graphics loaded successfully");
+        started = true;
     }
 
     private static long lastFrame;
@@ -202,7 +218,6 @@ public class Screen extends Canvas {
                 if (shape.isEmpty()) continue;
                 if (object.layer == layer)
                     object.render(g);
-                g.draw(object.getScreenShape());
             }
         }
         g.setTransform(orig);
@@ -224,8 +239,6 @@ public class Screen extends Canvas {
             g.setFont(new Font("Tacoma", Font.BOLD, 10));
             g.drawString("FPS: " + fps, 3, 10);
         }
-
-        bufferedFPS++;
     }
 
     public static void updateFPS() {
@@ -286,6 +299,8 @@ public class Screen extends Canvas {
         return result;
     }
 
+    private static long lastFullscreenChange = System.currentTimeMillis();
+
     public static void gridSize(int size) { gridSize = size; }
     public static void showGrid(boolean value) { showGrid = value; }
     public static void showFrames(boolean value) { showFrames = value; }
@@ -293,26 +308,34 @@ public class Screen extends Canvas {
     public static boolean antialiasing() { return antialiasing; }
     public static void setResizeable(boolean value) { frame.setResizable(value); }
     public static void setFullscreen(boolean value) {
-        render = false;
-        if (value) {
-            bufferedBounds = frame.getBounds();
-            frame.setVisible(false);
-            frame.dispose();
-            frame.setUndecorated(true);
-            java.awt.Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
-            frame.setBounds(0, 0, dim.width, dim.height);
-            frame.setVisible(true);
-            instance.requestFocus();
-        }else {
-            frame.setVisible(false);
-            frame.dispose();
-            frame.setUndecorated(false);
-            frame.setBounds(bufferedBounds);
-            frame.setVisible(true);
-            instance.requestFocus();
+        if (!started) Screen.fullscreen = value;
+        else {
+            if (System.currentTimeMillis() - lastFullscreenChange < 200) return;
+            render = false;
+            bs.dispose();
+            if (value) {
+                bufferedBounds = frame.getBounds();
+                frame.setVisible(false);
+                frame.dispose();
+                frame.setUndecorated(true);
+                java.awt.Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
+                frame.setBounds(0, 0, dim.width, dim.height);
+                frame.setVisible(true);
+                instance.requestFocus();
+            }else {
+                frame.setVisible(false);
+                frame.dispose();
+                frame.setUndecorated(false);
+                frame.setBounds(bufferedBounds);
+                frame.setVisible(true);
+                instance.requestFocus();
+            }
+            instance.createBufferStrategy(3);
+            bs = instance.getBufferStrategy();
+            instance.addNotify();
+            render = true;
+            lastFullscreenChange = System.currentTimeMillis();
         }
-        instance.addNotify();
-        render = true;
     }
     public static void setAntialiasingEffectTextures(boolean value) { antialiasingEffectTextures = value; }
     public static int getFPS() { return fps; }

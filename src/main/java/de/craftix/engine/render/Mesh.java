@@ -184,13 +184,13 @@ public class Mesh implements Serializable {
     public Vector2[][] getUVTriangles() {
         Vector2[][] triangles = new Vector2[UVs.length / 3][3];
         for (int i = 0; i < UVs.length; i += 3) {
-            Vector2 p1 = Mathf.mapVector(UVs[i], 0, 1, -1, 1);
-            Vector2 p2 = Mathf.mapVector(UVs[i + 1], 0, 1, -1, 1);
-            Vector2 p3 = Mathf.mapVector(UVs[i + 2], 0, 1, -1, 1);
+            Vector2 p1 = Vector2.map(UVs[i], 0, 1, -1, 1);
+            Vector2 p2 = Vector2.map(UVs[i + 1], 0, 1, -1, 1);
+            Vector2 p3 = Vector2.map(UVs[i + 2], 0, 1, -1, 1);
 
-            triangles[i / 3][0] = Mathf.normalizeVector(new Vector2(p1.x, -p1.y), -1, 1);
-            triangles[i / 3][1] = Mathf.normalizeVector(new Vector2(p2.x, -p2.y), -1, 1);
-            triangles[i / 3][2] = Mathf.normalizeVector(new Vector2(p3.x, -p3.y), -1, 1);
+            triangles[i / 3][0] = Vector2.normalize(new Vector2(p1.x, -p1.y), -1, 1);
+            triangles[i / 3][1] = Vector2.normalize(new Vector2(p2.x, -p2.y), -1, 1);
+            triangles[i / 3][2] = Vector2.normalize(new Vector2(p3.x, -p3.y), -1, 1);
         }
         return triangles;
     }
@@ -207,4 +207,6 @@ public class Mesh implements Serializable {
         }
         return triangles;
     }
+
+    public void setColors(Color... colors) { this.colors = colors; }
 }
