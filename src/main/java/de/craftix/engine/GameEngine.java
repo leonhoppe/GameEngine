@@ -14,6 +14,8 @@ import de.craftix.engine.var.Scene;
 import de.craftix.engine.var.Updater;
 
 import javax.swing.*;
+import java.io.File;
+import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
@@ -59,6 +61,7 @@ public class GameEngine {
 
         instance.initialise();
         logger.info("Initialising Method executed");
+        Screen.setRender(true);
 
         fixedTimer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -87,6 +90,7 @@ public class GameEngine {
             Screen.updateFixedDeltaTime();
             if (System.currentTimeMillis() - Screen.getProgramStartTime() < 500) return;
             instance.fixedUpdate();
+            getScene().fixedUpdate();
             for (ScreenObject object : scene.getRawObjects()) {
                 object.fixedUpdate();
                 if (object instanceof GameObject)
@@ -157,10 +161,9 @@ public class GameEngine {
         element.stop();
     }
 
-    public static URI loadFile(String path) {
+    public static InputStream loadFile(String path) {
         try {
-            URL url = GameEngine.class.getClassLoader().getResource(path);
-            return new URI(url.toString().replace(" ","%20"));
+            return GameEngine.class.getClassLoader().getResourceAsStream(path);
         }catch (Exception e) { throwError(e); }
         return null;
     }
@@ -179,6 +182,7 @@ public class GameEngine {
         log.warning("Error at " + Logger.ANSI_RED + className);
         log.getStream().print(Logger.ANSI_RED);
         e.printStackTrace(log.getStream());
+        log.getStream().print(Logger.ANSI_RESET);
         shutdown();
     }
 
@@ -199,6 +203,10 @@ public class GameEngine {
     public static int getTPS() { return TPS; }
     public static Timer getScreenTimer() { return screenTimer; }
     public static Object[] getUpdaters() { return updaters.toArray(); }
+    public static String awaitConsoleInput() {
+        Scanner scanner = new Scanner(System.in);
+        return scanner.nextLine();
+    }
 
     public static void setScene(Scene scene) {
         GameEngine.scene.stop();

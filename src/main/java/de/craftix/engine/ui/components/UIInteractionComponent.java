@@ -23,7 +23,10 @@ public class UIInteractionComponent extends UIComponent {
     }
 
     @Override
-    public void render(Graphics2D g) {
+    public void render(Graphics2D g) {}
+
+    @Override
+    public void update() {
         if (hover == null) return;
         if (checkIntersection()) {
             if (!hovering)
@@ -43,6 +46,7 @@ public class UIInteractionComponent extends UIComponent {
 
         @Override
         public void mousePressed(MouseEvent e) {
+            if (GameEngine.getScene() != element.getScene()) return;
             if (click == null) return;
             if (checkIntersection())
                 click.actionPerformed(new ActionEvent(c, 0, "click"));
@@ -51,10 +55,8 @@ public class UIInteractionComponent extends UIComponent {
 
     private boolean checkIntersection() {
         Point mouse = InputManager.getMouseRaw().toPoint();
-        Rectangle rect = new Rectangle(mouse.x, mouse.y, 1, 1);
-        Area area = element.getShape();
-        area.intersect(new Area(rect));
-        return !area.isEmpty();
+        Area area = element.getScreenShape();
+        return area.contains(mouse);
     }
 
     public void setHover(ActionListener hover) { this.hover = hover; }

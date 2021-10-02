@@ -19,7 +19,7 @@ public class Sprite implements Animatable {
 
     public static Sprite load(String path) {
         try {
-            return new Sprite(ImageIO.read(Objects.requireNonNull(Sprite.class.getClassLoader().getResource(path))), false);
+            return new Sprite(ImageIO.read(Objects.requireNonNull(GameEngine.loadFile(path))), false);
         }catch (Exception e) { GameEngine.throwError(e); }
         return new Sprite();
     }

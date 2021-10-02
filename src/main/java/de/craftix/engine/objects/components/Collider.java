@@ -9,7 +9,7 @@ import de.craftix.engine.var.*;
 import java.awt.geom.Area;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
 
 public class Collider extends Component implements Serializable {
@@ -33,11 +33,13 @@ public class Collider extends Component implements Serializable {
 
     public Mesh mesh;
     public Transform transform;
-    private boolean isColliding;
 
     private final boolean trigger;
     private final List<CollisionHandler> handlers = new ArrayList<>();
-    private final HashMap<Collider, Boolean> colliding = new HashMap<>();
+    private final List<Collider> colliding = new ArrayList<>();
+    private final List<Collider> triggering = new ArrayList<>();
+    private List<Collider> lastTriggers = new ArrayList<>();
+    private List<Collider> lastColliders = new ArrayList<>();
 
     public Collider(Mesh mesh, boolean isTrigger) { this.mesh = mesh; trigger = isTrigger; }
     public Collider(Mesh mesh, boolean isTrigger, Transform transform) {
@@ -52,44 +54,11 @@ public class Collider extends Component implements Serializable {
             transform = object.transform;
     }
 
-    private HashMap<Collider, Boolean> lastFrame = new HashMap<>();
     public void update() {
-        isColliding = false;
-        for (GameObject other : GameEngine.getScene().getGameObjects()) {
-            if (other == object) continue;
-            if (!other.hasComponent(Collider.class)) continue;
-            Collider otherCol = other.getComponent(Collider.class);
-            Area collision = getArea(transform, mesh);
-            collision.intersect(getArea(otherCol.transform, otherCol.mesh));
-            if (!collision.isEmpty()) {
-                for (CollisionHandler handler : handlers) {
-                    if (colliding.containsKey(otherCol) && !colliding.get(otherCol)) {
-                        if (otherCol.isTrigger()) handler.onTriggerEnter(otherCol);
-                        else handler.onCollisionEnter(otherCol);
-                    }
-                    if (otherCol.isTrigger()) handler.onTrigger(otherCol);
-                    else handler.onCollision(otherCol);
-                }
-                colliding.remove(otherCol);
-                this.colliding.put(otherCol, true);
-                isColliding = true;
-            }else {
-                for (CollisionHandler handler : handlers) {
-                    if (lastFrame.containsKey(otherCol) && lastFrame.get(otherCol)) {
-                        if (otherCol.isTrigger()) handler.onTriggerExit(otherCol);
-                        else handler.onCollisionExit(otherCol);
-                    }
-
-                }
-                colliding.remove(otherCol);
-                colliding.put(otherCol, false);
-            }
-        }
-        lastFrame = (HashMap<Collider, Boolean>) colliding.clone();
+        update(null);
     }
 
     protected void update(Object orig) {
-        isColliding = false;
         for (GameObject other : GameEngine.getScene().getGameObjects()) {
             if (other == object || other == orig) continue;
             if (!other.hasComponent(Collider.class)) continue;
@@ -97,34 +66,47 @@ public class Collider extends Component implements Serializable {
             Area collision = getArea(transform, mesh);
             collision.intersect(getArea(otherCol.transform, otherCol.mesh));
             if (!collision.isEmpty()) {
-                for (CollisionHandler handler : handlers) {
-                    if (colliding.containsKey(otherCol) && !colliding.get(otherCol)) {
-                        if (otherCol.isTrigger()) handler.onTriggerEnter(otherCol);
-                        else handler.onCollisionEnter(otherCol);
+                if (otherCol.isTrigger()) {
+                    boolean triggerEnter = !lastTriggers.contains(otherCol);
+                    for (CollisionHandler handler : handlers) {
+                        if (triggerEnter) handler.onTriggerEnter(otherCol);
+                        handler.onTrigger(otherCol);
                     }
-                    if (otherCol.isTrigger()) handler.onTrigger(otherCol);
-                    else handler.onCollision(otherCol);
+                    triggering.add(otherCol);
+                }else {
+                    boolean triggerEnter = !lastColliders.contains(otherCol);
+                    for (CollisionHandler handler : handlers) {
+                        if (triggerEnter) handler.onCollisionEnter(otherCol);
+                        handler.onCollision(otherCol);
+                    }
+                    colliding.add(otherCol);
                 }
-                colliding.remove(otherCol);
-                this.colliding.put(otherCol, true);
-                isColliding = true;
             }else {
-                for (CollisionHandler handler : handlers) {
-                    if (lastFrame.containsKey(otherCol) && lastFrame.get(otherCol)) {
-                        if (otherCol.isTrigger()) handler.onTriggerExit(otherCol);
-                        else handler.onCollisionExit(otherCol);
+                if (otherCol.isTrigger()) {
+                    if (lastTriggers.contains(otherCol)) {
+                        for (CollisionHandler handler : handlers)
+                            handler.onTriggerExit(otherCol);
                     }
-
+                    triggering.remove(otherCol);
+                }else {
+                    if (lastColliders.contains(otherCol)) {
+                        for (CollisionHandler handler : handlers)
+                            handler.onCollisionExit(otherCol);
+                    }
+                    colliding.remove(otherCol);
                 }
-                colliding.remove(otherCol);
-                colliding.put(otherCol, false);
             }
         }
-        lastFrame = (HashMap<Collider, Boolean>) colliding.clone();
+        lastTriggers = Arrays.asList(triggering.toArray(new Collider[0]));
+        lastColliders = Arrays.asList(colliding.toArray(new Collider[0]));
+        colliding.clear();
+        triggering.clear();
     }
 
     public void addCollisionHandler(CollisionHandler handler) { handlers.add(handler); }
 
-    public boolean isColliding() { return isColliding; }
     public boolean isTrigger() { return trigger; }
+
+    public boolean isColliding() { return lastColliders.size() >= 1; }
+    public boolean isCollidingWithTrigger() { return lastTriggers.size() >= 1; }
 }

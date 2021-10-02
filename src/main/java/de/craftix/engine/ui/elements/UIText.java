@@ -19,6 +19,7 @@ public class UIText extends UIElement {
     private Color color;
 
     public UIText(String text, Font font, Color color, Transform transform, UIAlignment alignment) {
+        renderObject = false;
         this.text = text;
         this.color = color;
         this.font = font;
@@ -36,11 +37,16 @@ public class UIText extends UIElement {
     }
     public UIText(String text, Color color, Transform transform, UIAlignment alignment) { this(text, new Font("Arial", Font.PLAIN, 10), color, transform, alignment); }
 
+    private void updateText() {
+        removeComponent(UITextComponent.class);
+        addComponent(new UITextComponent(text, font, color, true));
+    }
+
     public String getText() { return text; }
     public Font getFont() { return font; }
     public Color getColor() { return color; }
 
-    public void setText(String text) { this.text = text; }
-    public void setFont(Font font) { this.font = font; }
-    public void setColor(Color color) { this.color = color; }
+    public void setText(String text) { this.text = text; updateText(); }
+    public void setFont(Font font) { this.font = font; updateText(); }
+    public void setColor(Color color) { this.color = color; updateText(); }
 }

@@ -7,10 +7,11 @@ import de.craftix.engine.objects.GameObject;
 import de.craftix.engine.objects.components.Collider;
 import de.craftix.engine.objects.components.PhysicsComponent;
 import de.craftix.engine.render.*;
-import de.craftix.engine.render.Shape;
+import de.craftix.engine.render.MShape;
 import de.craftix.engine.ui.UIAlignment;
 import de.craftix.engine.ui.UIElement;
-import de.craftix.engine.ui.elements.UITextBox;
+import de.craftix.engine.ui.elements.UIButton;
+import de.craftix.engine.ui.elements.UICheckBox;
 import de.craftix.engine.var.*;
 import de.craftix.engine.var.Dimension;
 
@@ -24,38 +25,19 @@ public class Main extends GameEngine {
         EngineSettings.setAntialiasing(true);
         EngineSettings.setAntialiasingForTextures(false);
         EngineSettings.showFrames(true);
-        EngineSettings.setResizable(false);
-        EngineSettings.setFPS(120);
+        EngineSettings.setResizable(true);
         EngineSettings.setFullscreenKey(KeyEvent.VK_F11);
         EngineSettings.setCloseKey(KeyEvent.VK_ESCAPE);
         EngineSettings.printSystemLog(false);
-        EngineSettings.setFullscreen(true);
-        setup(800, 600, "GameEngine 3.0", new Main(), 60);
+        setup(1280, 720, "GameEngine 3.0", new Main(), 60);
     }
 
     @Override
     public void initialise() {
         getScene().setBackgroundColor(Color.CYAN);
 
-        Mesh block = new Mesh(new Vector2[]{
-                new Vector2(-0.5f, -0.5f),
-                new Vector2( 0.5f, -0.5f),
-                new Vector2(-0.5f,  0.5f),
-                new Vector2(-0.5f,  0.5f),
-                new Vector2( 0.5f, -0.5f),
-                new Vector2( 0.5f,  0.5f)
-        }, new Vector2[]{
-                new Vector2(0, 0),
-                new Vector2(1, 0),
-                new Vector2(0, 1),
-                new Vector2(0, 1),
-                new Vector2(1, 0),
-                new Vector2(1, 1)
-        }, blocks.getSprite(2));
-        Mesh rect = new Mesh(Shape.RECTANGLE, Color.GREEN);
-
-        GameObject ground = new GameObject("ground", rect, new Transform(new Vector2(0, -5), new Dimension(20, 2), Quaternion.IDENTITY()));
-        GameObject player = new GameObject("player", block, new Transform(new Vector2(0, 0), new Dimension(1), Quaternion.IDENTITY()));
+        GameObject ground = new GameObject("ground", new Mesh(MShape.RECTANGLE, Color.GREEN), new Transform(new Vector2(0, -6.5f), new Dimension(26, 2)));
+        GameObject player = new GameObject("player", blocks.getSprite(2), new Transform(new Vector2(0, 0), new Dimension(1)));
 
         player.addComponent(new PhysicsComponent());
         player.addComponent(new Collider(player.getMesh(), false));
@@ -67,15 +49,20 @@ public class Main extends GameEngine {
         instantiate(ground);
         instantiate(player);
 
-        UIElement sun = new UIElement(new Mesh(Shape.CIRCLE, Color.YELLOW), new Transform(new Vector2(50, -50), new Dimension(75, 75), Quaternion.IDENTITY()), UIAlignment.TOP_LEFT);
+        UIElement sun = new UIElement(new Mesh(MShape.CIRCLE, Color.YELLOW), new Transform(new Vector2(50, -50), new Dimension(75)), UIAlignment.TOP_LEFT);
         instantiateUI(sun);
+
+        UICheckBox checkBox = new UICheckBox(true, "CheckBox", new Transform(new Vector2(), new Dimension(40)), UIAlignment.CENTER);
+        checkBox.setFont(new Font("Arial", Font.PLAIN, 40));
+        checkBox.setColor(Color.RED);
+        instantiateUI(checkBox);
 
         //setScene(new LoginScene());
     }
 
     @Override
     public void update() {
-        float speed = 5.0f;
+        float speed = 10.0f;
         PhysicsComponent physics = getObjectByName("player").getComponent(PhysicsComponent.class);
         physics.setGravity(false);
 
@@ -83,7 +70,5 @@ public class Main extends GameEngine {
         float horizontal = InputManager.getAxis("Horizontal") * speed * Screen.getDeltaTime();
 
         physics.addVelocity(new Vector2(horizontal, vertical));
-
-        getCamera().transform.position = physics.gameObject().transform.position;
     }
 }

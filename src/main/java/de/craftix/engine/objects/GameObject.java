@@ -82,7 +82,6 @@ public class GameObject extends ScreenObject implements Serializable {
 
     public void setLayer(String layer) { this.layer = GameEngine.getLayer(layer); }
     public void setSprite(Sprite texture) { this.sprite = texture; }
-    public void setVisible(boolean visible) { this.visible = visible; }
     public void renderObject(boolean renderObject) { this.renderObject = renderObject; }
 
     public String getName() { return name; }

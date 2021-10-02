@@ -11,6 +11,12 @@ public class Mathf {
         return (mMax - mMin) * norm + mMin;
     }
 
+    public static float boundInRange(float value, float min, float max) {
+        value = Math.min(value, max);
+        value = Math.max(value, min);
+        return value;
+    }
+
     //Normal java.lang.Math methods
     public static final double E = 2.7182818284590452354;
     public static final double PI = 3.14159265358979323846;

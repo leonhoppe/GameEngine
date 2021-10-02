@@ -1,7 +1,6 @@
 package de.craftix.engine.render;
 
 import de.craftix.engine.GameEngine;
-import de.craftix.engine.var.Mathf;
 import de.craftix.engine.var.Transform;
 import de.craftix.engine.var.Vector2;
 
@@ -14,7 +13,7 @@ import java.util.Arrays;
 
 public class Mesh implements Serializable {
     public Vector2[] points;
-    public Shape shape;
+    public MShape mShape;
     public Vector2[] UVs;
     public transient Sprite texture;
     public Color[] colors;
@@ -23,7 +22,7 @@ public class Mesh implements Serializable {
         if (points.length % 3 != 0)
             throw new IllegalArgumentException("points not convertible to Triangles");
         this.points = points;
-        this.shape = null;
+        this.mShape = null;
         this.UVs = null;
         this.texture = null;
         this.colors = meshColors;
@@ -32,7 +31,7 @@ public class Mesh implements Serializable {
         if (points.length % 3 != 0)
             throw new IllegalArgumentException("points not convertible to Triangles");
         this.points = points;
-        this.shape = null;
+        this.mShape = null;
         this.UVs = null;
         this.texture = null;
         this.colors = new Color[points.length / 3];
@@ -43,24 +42,25 @@ public class Mesh implements Serializable {
         if (points.length % 3 != 0)
             throw new IllegalArgumentException("points not convertible to Triangles");
         this.points = points;
-        this.shape = null;
+        this.mShape = null;
         this.UVs = UVs;
         this.texture = texture;
         this.colors = null;
     }
 
-    public Mesh(Shape shape, Color color) {
+    public Mesh(MShape mShape, Color color) {
         this.points = null;
-        this.shape = shape;
+        this.mShape = mShape;
         this.UVs = null;
         this.texture = null;
         this.colors = new Color[] { color };
     }
 
     public void render(Graphics2D g, boolean useCamScale, Transform transform) {
-        if (shape != null) {
+        if (mShape != null) {
             g.setColor(colors[0]);
-            g.fill(shape.getRender(transform, useCamScale));
+            g.fill(mShape.getRender(transform, useCamScale));
+            g.setColor(Color.BLACK);
             return;
         }
 
@@ -112,6 +112,8 @@ public class Mesh implements Serializable {
 
         if (Screen.antialiasing())
             g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+        g.setColor(Color.BLACK);
     }
 
     private Point getTextureBounds(Rectangle area, Rectangle2D uvArea) {
@@ -125,8 +127,8 @@ public class Mesh implements Serializable {
     }
 
     public Area getMesh(boolean useCamScale, Transform transform) {
-        if (shape != null)
-            return shape.getRender(transform, useCamScale);
+        if (mShape != null)
+            return mShape.getRender(transform, useCamScale);
 
         Area mesh = new Area();
         for (Vector2[] triangle : getTriangles(useCamScale)) {
@@ -191,19 +193,6 @@ public class Mesh implements Serializable {
             triangles[i / 3][0] = Vector2.normalize(new Vector2(p1.x, -p1.y), -1, 1);
             triangles[i / 3][1] = Vector2.normalize(new Vector2(p2.x, -p2.y), -1, 1);
             triangles[i / 3][2] = Vector2.normalize(new Vector2(p3.x, -p3.y), -1, 1);
-        }
-        return triangles;
-    }
-    public Polygon2D[] getUVTriangleShapes() {
-        Vector2[][] vectors = getUVTriangles();
-        Polygon2D[] triangles = new Polygon2D[vectors.length];
-        int index = 0;
-        for (Vector2[] tris : vectors) {
-            Vector2 p1 = tris[0];
-            Vector2 p2 = tris[1];
-            Vector2 p3 = tris[2];
-            triangles[index] = new Polygon2D(new float[] { p1.x, p2.x, p3.x }, new float[] { p1.y, p2.y, p3.y }, 3);
-            index++;
         }
         return triangles;
     }

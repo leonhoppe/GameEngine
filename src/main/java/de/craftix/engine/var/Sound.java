@@ -6,7 +6,9 @@ import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.sound.sampled.FloatControl;
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URI;
 
@@ -14,9 +16,9 @@ public class Sound implements Serializable {
     private AudioInputStream stream;
     private Clip clip;
 
-    public Sound(URI audioFile) {
+    public Sound(InputStream audioStream) {
         try {
-            stream = AudioSystem.getAudioInputStream(new File(audioFile));
+            stream = AudioSystem.getAudioInputStream(new BufferedInputStream(audioStream));
             clip = AudioSystem.getClip();
             clip.open(stream);
         }catch (Exception e) {
@@ -39,7 +41,7 @@ public class Sound implements Serializable {
 
     public void setVolume(int volume) {
         FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-        float value = Mathf.map(volume, 0, 100, control.getMinimum(), control.getMaximum());
+        float value = Mathf.map(volume, 0, 100, control.getMinimum(), 0);
         control.setValue(value);
     }
 

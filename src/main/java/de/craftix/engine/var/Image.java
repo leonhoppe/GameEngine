@@ -15,7 +15,8 @@ public class Image implements Serializable {
     private JLabel canvas;
     private Transform transform;
 
-    public Image(URI URL) {
+    public Image(URI URL, Transform transform) {
+        this.transform = transform;
         try {
             this.url = URL.toURL();
         } catch (Exception e) {
@@ -24,12 +25,11 @@ public class Image implements Serializable {
         GameEngine.addUpdater(this);
     }
 
-    public void show(Vector2 pos, Dimension size) {
+    public void show() {
         if (Arrays.asList(Screen.getDisplay().getComponents()).contains(canvas)) return;
         ImageIcon icon = new ImageIcon(url);
-        icon.setImage(icon.getImage().getScaledInstance(size.getWidth(), size.getHeight(), java.awt.Image.SCALE_DEFAULT));
+        icon.setImage(icon.getImage().getScaledInstance(transform.scale.getWidth(), transform.scale.getHeight(), java.awt.Image.SCALE_DEFAULT));
         canvas = new JLabel(icon);
-        transform = new Transform(pos, size);
         Point point = Screen.calculateRawScreenPosition(transform);
         canvas.setBounds(point.x, point.y, icon.getIconWidth(), icon.getIconHeight());
         Screen.getDisplay().add(canvas);

@@ -3,18 +3,16 @@ package de.craftix.engine.ui.elements;
 import de.craftix.engine.GameEngine;
 import de.craftix.engine.InputManager;
 import de.craftix.engine.render.Mesh;
-import de.craftix.engine.render.Shape;
+import de.craftix.engine.render.MShape;
 import de.craftix.engine.ui.UIAlignment;
 import de.craftix.engine.ui.UIElement;
 import de.craftix.engine.ui.components.UIInteractionComponent;
 import de.craftix.engine.ui.components.UITextComponent;
 import de.craftix.engine.var.Input;
 import de.craftix.engine.var.Transform;
-import de.craftix.engine.var.Vector2;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,7 +42,7 @@ public class UITextBox extends UIElement implements ActionListener {
         this.transform = transform;
         this.alignment = alignment;
         this.type = type;
-        this.mesh = new Mesh(Shape.RECTANGLE, backgroundColor);
+        this.mesh = new Mesh(MShape.RECTANGLE, backgroundColor);
         GameEngine.addInputs(new Inputs(this));
         textComponent = new UITextComponent(this.placeholder, font, placeholderColor, false);
         addComponent(textComponent);
@@ -55,14 +53,9 @@ public class UITextBox extends UIElement implements ActionListener {
     @Override
     public void render(Graphics2D g) {
         super.render(g);
-        AffineTransform original = (AffineTransform) g.getTransform().clone();
-        Vector2 pos = alignment.getScreenPosition(transform);
-        g.translate(pos.x + (transform.scale.width / 2f), pos.y + (transform.scale.height / 2f));
-        g.rotate(transform.rotation.getAngle(), 0, 0);
         if (!focus) g.setColor(borderColor);
         else g.setColor(focusColor);
         g.draw(mesh.getMesh(false, transform));
-        g.setTransform(original);
     }
 
     public void setBackgroundColor(Color backgroundColor) { this.backgroundColor = backgroundColor; }
@@ -113,6 +106,7 @@ public class UITextBox extends UIElement implements ActionListener {
 
         @Override
         public void keyPressed(KeyEvent e) {
+            if (GameEngine.getScene() != element.scene) return;
             if (!element.focus) return;
 
             if (e.getKeyCode() == KeyEvent.VK_TAB) {

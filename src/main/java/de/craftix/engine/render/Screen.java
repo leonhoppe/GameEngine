@@ -5,6 +5,7 @@ import de.craftix.engine.InputManager;
 import de.craftix.engine.Logger;
 import de.craftix.engine.objects.components.Component;
 import de.craftix.engine.objects.GameObject;
+import de.craftix.engine.ui.UIAlignment;
 import de.craftix.engine.ui.UIElement;
 import de.craftix.engine.ui.components.UIComponent;
 import de.craftix.engine.var.*;
@@ -42,9 +43,9 @@ public class Screen extends Canvas {
     private static long fixedUpdateTimestamp;
     private static Rectangle bufferedBounds;
     private static boolean antialiasingEffectTextures = true;
-    private static int framesPerSecond = 60;
+    private static int framesPerSecond = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices()[0].getDisplayMode().getRefreshRate();
     private static BufferStrategy bs;
-    private static boolean render = true;
+    private static boolean render = false;
     private static final long programStart = System.currentTimeMillis();
     private static boolean started = false;
     private static boolean fullscreen = false;
@@ -145,6 +146,7 @@ public class Screen extends Canvas {
 
         try {
             GameEngine.getInstance().update();
+            GameEngine.getScene().update();
             for (ScreenObject object : GameEngine.getScene().getRawObjects()) {
                 object.update();
                 if (object instanceof GameObject)
@@ -213,11 +215,13 @@ public class Screen extends Canvas {
         Collections.sort(layers);
         for (Float layer : layers) {
             for (ScreenObject object : GameEngine.getScene().getRawObjects()) {
+                if (!object.isVisible()) continue;
                 Area shape = object.getScreenShape();
                 shape.intersect(new Area(self));
                 if (shape.isEmpty()) continue;
-                if (object.layer == layer)
+                if (object.layer == layer) {
                     object.render(g);
+                }
             }
         }
         g.setTransform(orig);
@@ -351,6 +355,7 @@ public class Screen extends Canvas {
     public static long getProgramStartTime() { return programStart; }
     public static int width() { return instance.getWidth(); }
     public static int height() { return instance.getHeight(); }
+    public static void setRender(boolean render) { Screen.render = render; }
     public static void setFramesPerSecond(int framesPerSecond) { Screen.framesPerSecond = framesPerSecond; }
     public static void addEarlyRenderingListener(RenderingListener listener) { earlyRenderingListener.add(listener); }
     public static void addLateRenderingListener(RenderingListener listener) { lateRenderingListener.add(listener); }

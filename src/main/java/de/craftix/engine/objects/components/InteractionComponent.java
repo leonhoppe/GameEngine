@@ -43,6 +43,7 @@ public class InteractionComponent extends Component {
 
         @Override
         public void mousePressed(MouseEvent e) {
+            if (GameEngine.getScene() != object.getScene()) return;
             if (click == null) return;
             if (checkIntersection())
                 click.actionPerformed(new ActionEvent(c, 0, "click"));
