@@ -1,0 +1,50 @@
+.title {
+    color: #E2E8CE;
+    font-size: 40px;
+    font-family: Bahnschrift, sans-serif;
+    text-decoration: underline;
+}
+
+.subtitle {
+    color: #ACBFA4;
+    font-family: Bahnschrift, sans-serif;
+    font-size: 20px;
+}
+
+body {
+    background-color: #262626;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    text-align: center;
+}
+
+div {
+    width: 400px;
+    height: 400px;
+    background-color: #323232;
+    margin-top: 20px;
+    border: 2px solid #414141;
+    padding: 0 20px 0 20px;
+    text-align: center;
+}
+
+.dienste {
+    color: #E2E8CE;
+    font-size: 25px;
+    font-family: Bahnschrift, sans-serif;
+    text-decoration: underline;
+}
+
+.diensteText {
+    color: #ACBFA4;
+    font-size: 15px;
+}
+
+.readMore {
+    width: 200px;
+    font-size: 20px;
+    background-color: #E2E8CE;
+    border: 2px solid #ACBFA4;
+    margin-top: 50px;
+}

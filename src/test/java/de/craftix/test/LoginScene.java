@@ -20,7 +20,8 @@ public class LoginScene extends Scene implements ActionListener {
     private UIButton login;
     private UIButton register;
 
-    public LoginScene() {
+    @Override
+    public void onStart() {
         setBackgroundColor(Color.GRAY);
         Font font = new Font("Arial", Font.PLAIN, 30);
 

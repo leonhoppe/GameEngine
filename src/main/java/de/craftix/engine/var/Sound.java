@@ -39,7 +39,7 @@ public class Sound implements Serializable {
         return control.getValue();
     }
 
-    public void setVolume(int volume) {
+    public void setVolume(float volume) {
         FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
         float value = Mathf.map(volume, 0, 100, control.getMinimum(), 0);
         control.setValue(value);
@@ -50,4 +50,8 @@ public class Sound implements Serializable {
 
     public Clip getClip() { return clip; }
     public AudioInputStream getStream() { return stream; }
+    public float getVolume() {
+        FloatControl control = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+        return Mathf.map(control.getValue(), control.getMinimum(), 0, 0, 100);
+    }
 }

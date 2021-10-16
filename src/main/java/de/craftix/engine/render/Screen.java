@@ -117,15 +117,13 @@ public class Screen extends Canvas {
                 g.drawImage(frame, 0, 0, null);
                 g.dispose();
                 try { bs.show(); }catch (Exception e) {
-                    createBufferStrategy(3);
-                    bs = getBufferStrategy();
+                    createBuffers();
                 }
 
                 bufferedFPS++;
             }
         };
-        createBufferStrategy(3);
-        bs = getBufferStrategy();
+        createBuffers();
         GameEngine.getScreenTimer().scheduleAtFixedRate(updateTask, 0, 1000 / framesPerSecond);
         logger.info("FPS Management System started");
 
@@ -138,6 +136,13 @@ public class Screen extends Canvas {
         started = true;
     }
 
+    private void createBuffers() {
+        try {
+            createBufferStrategy(3);
+            bs = getBufferStrategy();
+        }catch (Exception ignored) {}
+    }
+
     private static long lastFrame;
     protected void executeUpdates() {
         deltaTime = (System.nanoTime() - lastFrame) / 1000000000f;
@@ -147,14 +152,16 @@ public class Screen extends Canvas {
         try {
             GameEngine.getInstance().update();
             GameEngine.getScene().update();
-            for (ScreenObject object : GameEngine.getScene().getRawObjects()) {
+            for (int i = 0; i < GameEngine.getScene().getRawObjects().length; i++) {
+                ScreenObject object = GameEngine.getScene().getRawObjects()[i];
                 object.update();
                 if (object instanceof GameObject)
                     for (Component component : ((GameObject) object).getComponents())
                         component.update();
             }
 
-            for (UIElement element : GameEngine.getUIManager().getElements()) {
+            for (int i = 0; i < GameEngine.getUIManager().getElements().size(); i++) {
+                UIElement element = GameEngine.getUIManager().getElements().get(i);
                 element.update();
                 for (UIComponent component : element.getComponents()) {
                     component.update();
@@ -214,7 +221,8 @@ public class Screen extends Canvas {
         ArrayList<Float> layers = new ArrayList<>(GameEngine.getLayers().values());
         Collections.sort(layers);
         for (Float layer : layers) {
-            for (ScreenObject object : GameEngine.getScene().getRawObjects()) {
+            for (int i = 0; i < GameEngine.getScene().getRawObjects().length; i++) {
+                ScreenObject object = GameEngine.getScene().getRawObjects()[i];
                 if (!object.isVisible()) continue;
                 Area shape = object.getScreenShape();
                 shape.intersect(new Area(self));

@@ -162,6 +162,7 @@ public class GameEngine {
     }
 
     public static InputStream loadFile(String path) {
+        if (path == null) return null;
         try {
             return GameEngine.class.getClassLoader().getResourceAsStream(path);
         }catch (Exception e) { throwError(e); }
