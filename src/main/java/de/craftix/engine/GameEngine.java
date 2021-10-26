@@ -45,9 +45,6 @@ public class GameEngine {
         screenTimer = new Timer();
         fixedTimer = new Timer();
         logger.info("Timer initialised");
-        scene = new Scene();
-        scene.start();
-        logger.info("Scene initialised");
         GameEngine.instance = instance;
         logger.info("instance initialised");
 
@@ -58,6 +55,10 @@ public class GameEngine {
 
         screen = new Screen(width, height, title, (1000f / TPS) / 1000f);
         logger.info("Graphics initialised");
+
+        scene = new Scene();
+        scene.start();
+        logger.info("Scene initialised");
 
         instance.initialise();
         logger.info("Initialising Method executed");

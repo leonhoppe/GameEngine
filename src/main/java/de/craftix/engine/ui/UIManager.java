@@ -1,8 +1,13 @@
 package de.craftix.engine.ui;
 
 import de.craftix.engine.GameEngine;
+import de.craftix.engine.render.MShape;
+import de.craftix.engine.render.Mesh;
 import de.craftix.engine.render.Screen;
+import de.craftix.engine.ui.containers.UICanvas;
+import de.craftix.engine.var.Dimension;
 import de.craftix.engine.var.Scene;
+import de.craftix.engine.var.Transform;
 
 import javax.swing.*;
 import javax.swing.text.html.HTMLEditorKit;
@@ -27,10 +32,11 @@ public class UIManager implements Serializable {
     private ArrayList<UIElement> elements = new ArrayList<>();
     private ArrayList<Float> layers = new ArrayList<>();
     private Scene scene;
+    private UIContainer rootContainer = new UICanvas(new Transform(), UIAlignment.CENTER);
 
-    public UIManager(Scene scene) { layers.add(-10f); layers.add(0f); layers.add(10f); this.scene = scene; }
+    public UIManager(Scene scene) { layers.add(-10f); layers.add(0f); layers.add(10f); this.scene = scene; addElement(rootContainer); rootContainer.update(); }
 
-    public void addElement(UIElement component) { component.initialise(scene); elements.add(component); }
+    public void addElement(UIElement component) { component.initialise(scene, this); elements.add(component); }
     public void removeElement(UIElement component) { elements.remove(component); }
     public boolean containsElement(UIElement component) { return elements.contains(component); }
     public void removeElements() { elements.clear(); }
@@ -105,4 +111,6 @@ public class UIManager implements Serializable {
         }
     }
 
+    public void setRootContainer(UIContainer container) { removeElement(rootContainer); this.rootContainer = container; addElement(rootContainer); }
+    public UIContainer getRootContainer() { return this.rootContainer; }
 }

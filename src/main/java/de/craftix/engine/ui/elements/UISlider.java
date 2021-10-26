@@ -68,7 +68,7 @@ public class UISlider extends UIElement {
             if (!mouseControl) return;
             if (!getScreenShape().contains(e.getPoint()) && !clickedInBounds) return;
             float mouse = e.getX();
-            float origin = alignment.getScreenPosition(transform).x;
+            float origin = alignment.getScreenPosition(transform, object.getContainer()).x;
             mouse -= origin;
             value = Mathf.map(mouse, 0, transform.scale.width, minValue, maxValue);
         }
@@ -91,7 +91,7 @@ public class UISlider extends UIElement {
             if (!clickedInBounds) clickedInBounds = true;
             InputManager.setCursor(Cursor.E_RESIZE_CURSOR);
             float mouse = e.getX();
-            float origin = alignment.getScreenPosition(transform).x;
+            float origin = alignment.getScreenPosition(transform, object.getContainer()).x;
             mouse -= origin;
             value = Mathf.map(mouse, 0, transform.scale.width, minValue, maxValue);
         }

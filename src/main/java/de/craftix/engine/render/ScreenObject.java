@@ -1,6 +1,7 @@
 package de.craftix.engine.render;
 
 import de.craftix.engine.GameEngine;
+import de.craftix.engine.ui.UIManager;
 import de.craftix.engine.var.Quaternion;
 import de.craftix.engine.var.Scene;
 import de.craftix.engine.var.Transform;

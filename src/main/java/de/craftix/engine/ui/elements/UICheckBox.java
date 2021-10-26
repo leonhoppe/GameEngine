@@ -82,7 +82,7 @@ public class UICheckBox extends UIElement implements ActionListener {
 
     @Override
     public Area getScreenShape() {
-        Vector2 pos = alignment.getScreenPosition(new Transform(transform.position, fullBounds, transform.rotation));
+        Vector2 pos = alignment.getScreenPosition(new Transform(transform.position, fullBounds, transform.rotation), getContainer());
         return new Area(new Rectangle2D.Float(pos.x, pos.y, fullBounds.width, fullBounds.height));
     }
 
